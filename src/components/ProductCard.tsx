@@ -65,29 +65,29 @@ export default function ProductCard({
 
   return (
     <Card 
-      className="group hover:shadow-lg transition-all duration-200 hover:-translate-y-1 relative overflow-hidden cursor-pointer"
+      className="group hover:shadow-lg transition-all duration-200 hover:-translate-y-1 relative overflow-hidden cursor-pointer bg-darkbg-light/80 backdrop-blur-sm border border-gold/20 hover:border-gold/40"
       onClick={handleCardClick}
     >
       <div className="relative">
         {/* Badges */}
         <div className="absolute top-2 left-2 z-10 space-y-1">
           {product.isFeatured && (
-            <Badge className="bg-primary-600 text-white">
+            <Badge className="bg-gradient-to-r from-gold to-cyan text-darkbg font-bold">
               Destacado
             </Badge>
           )}
           {discountPercentage && (
-            <Badge className="bg-red-500 text-white">
+            <Badge className="bg-red-500 text-white font-bold">
               -{discountPercentage}%
             </Badge>
           )}
           {isOutOfStock && (
-            <Badge variant="secondary" className="bg-gray-500 text-white">
+            <Badge variant="secondary" className="bg-gray-700 text-white">
               Agotado
             </Badge>
           )}
           {isLowStock && (
-            <Badge className="bg-orange-500 text-white">
+            <Badge className="bg-orange-500 text-white font-bold">
               ¡Últimos disponibles!
             </Badge>
           )}
@@ -101,13 +101,13 @@ export default function ProductCard({
               productName={product.name}
               variant="icon"
               size="md"
-              className="bg-white/80 hover:bg-white"
+              className="bg-darkbg-light/90 hover:bg-gold/20 border border-gold/30"
             />
           </div>
         )}
 
         {/* Product image */}
-        <div className="aspect-square overflow-hidden bg-gray-100">
+        <div className="aspect-square overflow-hidden bg-darkbg">
           <Image
             src={primaryImage}
             alt={product.name}
@@ -125,7 +125,7 @@ export default function ProductCard({
         {showAddToCart && !isOutOfStock && (
           <Button
             onClick={handleAddToCart}
-            className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-primary-600 hover:bg-primary-700"
+            className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-bold"
             size="sm"
             data-interactive="true"
           >
@@ -141,7 +141,7 @@ export default function ProductCard({
           <div className="mb-1">
             <button
               onClick={handleCategoryClick}
-              className="text-xs text-gray-500 hover:text-primary-600 uppercase tracking-wide transition-colors"
+              className="text-xs text-cyan hover:text-gold uppercase tracking-wide transition-colors"
               data-interactive="true"
             >
               {product.category.name}
@@ -150,20 +150,20 @@ export default function ProductCard({
         )}
 
         {/* Product name */}
-        <h3 className="font-medium text-gray-900 line-clamp-2 mb-2 group-hover:text-primary-600 transition-colors">
+        <h3 className="font-medium text-white line-clamp-2 mb-2 group-hover:text-gold transition-colors">
           {product.name}
         </h3>
 
         {/* Brand */}
         {product.brand && (
-          <p className="text-sm text-gray-600 mb-2">
+          <p className="text-sm text-gray-400 mb-2">
             {product.brand}
           </p>
         )}
 
         {/* Short description */}
         {product.shortDesc && (
-          <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+          <p className="text-sm text-gray-400 line-clamp-2 mb-3">
             {product.shortDesc}
           </p>
         )}
@@ -174,17 +174,17 @@ export default function ProductCard({
             {[1, 2, 3, 4, 5].map((star) => (
               <Star
                 key={star}
-                className="h-3 w-3 fill-yellow-400 text-yellow-400"
+                className="h-3 w-3 fill-gold text-gold"
               />
             ))}
           </div>
-          <span className="text-xs text-gray-500 ml-1">(25)</span>
+          <span className="text-xs text-gray-400 ml-1">(25)</span>
         </div>
 
         {/* Price */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <span className="font-bold text-lg text-gray-900">
+            <span className="font-bold text-lg bg-gradient-to-r from-gold to-cyan bg-clip-text text-transparent">
               {formatPrice(product.price)}
             </span>
             {product.comparePrice && (
@@ -197,13 +197,13 @@ export default function ProductCard({
           {/* Stock indicator */}
           <div className="text-xs">
             {isOutOfStock ? (
-              <span className="text-red-500 font-medium">Agotado</span>
+              <span className="text-red-400 font-medium">Agotado</span>
             ) : isLowStock ? (
-              <span className="text-orange-500 font-medium">
+              <span className="text-orange-400 font-medium">
                 Solo {product.stockCount} left
               </span>
             ) : (
-              <span className="text-green-500 font-medium">Disponible</span>
+              <span className="text-green-400 font-medium">Disponible</span>
             )}
           </div>
         </div>
@@ -212,7 +212,7 @@ export default function ProductCard({
         {isOutOfStock && (
           <Button
             variant="outline"
-            className="w-full mt-3"
+            className="w-full mt-3 border-gold/30 text-white hover:bg-gold/10 hover:border-gold/50"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();

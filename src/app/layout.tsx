@@ -1,4 +1,4 @@
-// src/app/layout.tsx - Layout principal
+// src/app/layout.tsx - Layout principal BeztShop
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
@@ -8,8 +8,8 @@ import { AuthProvider } from '@/components/providers/AuthProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'ServiPro Garcia - Tu tienda de confianza',
-  description: 'Productos especializados, tecnología y mucho más',
+  title: 'BeztShop - Premium Tech Store',
+  description: 'Your premium destination for cutting-edge technology and electronics',
   icons: {
     icon: [
       { url: '/logo.png', sizes: '32x32', type: 'image/png' },
@@ -26,8 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
-      <body>
+    <html lang="en" className="dark">
+      <body className={inter.className}>
         <AuthProvider>
           {children}
           <ToastProvider />

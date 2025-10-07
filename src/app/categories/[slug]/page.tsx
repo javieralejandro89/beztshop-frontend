@@ -92,14 +92,14 @@ export default function CategoryPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+      <div className="min-h-screen bg-gradient-to-br from-darkbg via-darkbg-light to-darkbg">
         <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-64 mb-8"></div>
+            <div className="h-8 bg-darkbg-light rounded w-64 mb-8"></div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                <div key={i} className="h-80 bg-gray-200 rounded-lg"></div>
+                <div key={i} className="h-80 bg-darkbg-light rounded-lg"></div>
               ))}
             </div>
           </div>
@@ -110,24 +110,24 @@ export default function CategoryPage() {
 
   if (!category) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+      <div className="min-h-screen bg-gradient-to-br from-darkbg via-darkbg-light to-darkbg">
         <Header />
         <div className="container mx-auto px-4 py-8 text-center">
           <div className="max-w-md mx-auto">
-            <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Package className="h-12 w-12 text-gray-400" />
+            <div className="w-24 h-24 bg-gradient-to-br from-gold/20 to-cyan/20 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-gold/30">
+              <Package className="h-12 w-12 text-gold" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Categoría no encontrada</h1>
-            <p className="text-gray-600 mb-6">
+            <h1 className="text-2xl font-bold text-white mb-4">Categoría no encontrada</h1>
+            <p className="text-gray-400 mb-6">
               La categoría que buscas no existe o ha sido eliminada.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild>
+              <Button asChild className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg">
                 <Link href="/categories">
                   Ver todas las categorías
                 </Link>
               </Button>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="bg-darkbg border-gold/30 text-white hover:bg-gold/10 hover:border-gold/50">
                 <Link href="/products">
                   Ver todos los productos
                 </Link>
@@ -140,17 +140,17 @@ export default function CategoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+    <div className="min-h-screen bg-gradient-to-br from-darkbg via-darkbg-light to-darkbg">
       <Header />
       
       <main className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-6 animate-fade-in">
-          <Link href="/" className="hover:text-primary-600 transition-colors">Inicio</Link>
+        <nav className="flex items-center space-x-2 text-sm text-gray-400 mb-6 animate-fade-in">
+          <Link href="/" className="hover:text-gold transition-colors">Inicio</Link>
           <span>/</span>
-          <Link href="/categories" className="hover:text-primary-600 transition-colors">Categorías</Link>
+          <Link href="/categories" className="hover:text-gold transition-colors">Categorías</Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">{category.name}</span>
+          <span className="text-white font-medium">{category.name}</span>
         </nav>
 
         {/* Header de categoría */}
@@ -158,7 +158,7 @@ export default function CategoryPage() {
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center space-x-4 mb-2">
-                <Button asChild variant="ghost" size="sm">
+                <Button asChild variant="ghost" size="sm" className="text-gray-400 hover:text-gold hover:bg-darkbg-light">
                   <Link href="/categories">
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Volver a categorías
@@ -166,16 +166,16 @@ export default function CategoryPage() {
                 </Button>
               </div>
               
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                <Tag className="h-8 w-8 mr-3 text-primary-600" />
+              <h1 className="text-3xl font-bold text-white flex items-center">
+                <Tag className="h-8 w-8 mr-3 text-gold" />
                 {category.name}
-                <Badge className="ml-3 bg-primary-100 text-primary-800">
+                <Badge className="ml-3 bg-gold/20 text-gold border border-gold/30">
                   {products.length} productos
                 </Badge>
               </h1>
               
               {category.description && (
-                <p className="text-gray-600 mt-2 max-w-2xl">
+                <p className="text-gray-400 mt-2 max-w-2xl">
                   {category.description}
                 </p>
               )}
@@ -186,7 +186,7 @@ export default function CategoryPage() {
         {/* Controles de vista y ordenamiento */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 animate-fade-in">
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-400">
               {products.length} productos encontrados
             </span>
           </div>
@@ -196,7 +196,7 @@ export default function CategoryPage() {
             <select
               value={sortBy}
               onChange={(e) => handleSortChange(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="border border-gold/30 rounded-lg px-3 py-2 text-sm bg-darkbg text-white focus:ring-2 focus:ring-gold/50 focus:border-gold"
             >
               <option value="name-asc">Nombre: A-Z</option>
               <option value="name-desc">Nombre: Z-A</option>
@@ -205,15 +205,15 @@ export default function CategoryPage() {
             </select>
 
             {/* Cambio de vista */}
-            <div className="flex items-center bg-white rounded-lg p-1 shadow-sm border">
+            <div className="flex items-center bg-darkbg-light rounded-lg p-1 shadow-sm border border-gold/20">
               <Button
                 variant={viewMode === 'grid' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('grid')}
                 className={`transition-all duration-200 ${
                   viewMode === 'grid' 
-                    ? 'bg-primary-600 text-white' 
-                    : 'text-gray-600 hover:text-primary-600'
+                    ? 'bg-gradient-to-r from-gold to-cyan text-darkbg' 
+                    : 'text-gray-400 hover:text-gold'
                 }`}
               >
                 <Grid className="h-4 w-4" />
@@ -224,8 +224,8 @@ export default function CategoryPage() {
                 onClick={() => setViewMode('list')}
                 className={`transition-all duration-200 ${
                   viewMode === 'list' 
-                    ? 'bg-primary-600 text-white' 
-                    : 'text-gray-600 hover:text-primary-600'
+                    ? 'bg-gradient-to-r from-gold to-cyan text-darkbg' 
+                    : 'text-gray-400 hover:text-gold'
                 }`}
               >
                 <List className="h-4 w-4" />
@@ -261,22 +261,22 @@ export default function CategoryPage() {
           </div>
         ) : (
           <div className="text-center py-16 animate-fade-in">
-            <div className="bg-gradient-to-br from-gray-100 to-gray-200 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Package className="h-16 w-16 text-gray-400" />
+            <div className="bg-gradient-to-br from-gold/20 to-cyan/20 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-gold/30">
+              <Package className="h-16 w-16 text-gold" />
             </div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">
+            <h3 className="text-xl font-medium text-white mb-2">
               No hay productos en esta categoría
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-400 mb-6">
               Aún no hemos agregado productos a esta categoría. ¡Vuelve pronto!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild>
+              <Button asChild className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg">
                 <Link href="/products">
                   Ver todos los productos
                 </Link>
               </Button>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="bg-darkbg border-gold/30 text-white hover:bg-gold/10 hover:border-gold/50">
                 <Link href="/categories">
                   Otras categorías
                 </Link>
@@ -287,11 +287,11 @@ export default function CategoryPage() {
 
         {/* Categorías relacionadas */}
         <section className="mt-16 animate-fade-in">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+          <h2 className="text-2xl font-bold text-white mb-8 text-center">
             Explora otras categorías
           </h2>
           <div className="text-center">
-            <Button asChild variant="outline" size="lg" className="bg-gradient-to-r from-green-500/90 to-green-600/90 hover:from-yellow-600 hover:to-yellow-700 backdrop-blur-sm text-white font-bold py-4 px-8 rounded-xl shadow-lg transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 border border-yellow-300/30">
+            <Button asChild variant="outline" size="lg" className="bg-gradient-to-r from-gold/20 to-cyan/20 backdrop-blur-sm border-gold/30 text-white hover:bg-gold/30 hover:border-gold/50 font-bold py-4 px-8 rounded-xl shadow-lg transform hover:scale-105 hover:-translate-y-1 transition-all duration-300">
               <Link href="/categories">
                 Ver todas las categorías
                 <ArrowLeft className="h-4 w-4 ml-2 rotate-180" />
