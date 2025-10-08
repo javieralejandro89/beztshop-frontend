@@ -1,4 +1,4 @@
-// src/app/auth/register/page.tsx - Página de registro con efectos visuales
+// src/app/auth/register/page.tsx - Página de registro - Dark Tech Theme
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -68,14 +68,12 @@ export default function RegisterPage() {
   const [registerSuccess, setRegisterSuccess] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
 
-  // Redirigir si ya está autenticado
   useEffect(() => {
     if (isAuthenticated && !registerSuccess) {
       router.push(redirectTo);
     }
   }, [isAuthenticated, router, redirectTo, registerSuccess]);
 
-  // Calcular fuerza de contraseña
   useEffect(() => {
     const calculateStrength = (password: string) => {
       let strength = 0;
@@ -93,7 +91,6 @@ export default function RegisterPage() {
   const handleInputChange = (field: keyof RegisterFormData, value: string | boolean) => {
   setFormData((prev: RegisterFormData) => ({ ...prev, [field]: value }));
   
-  // Limpiar error específico
   if (errors[field]) {
     setErrors((prev: Record<string, string>) => ({ ...prev, [field]: '' }));
   }
@@ -158,11 +155,9 @@ export default function RegisterPage() {
         password: formData.password,
       });
       
-      // Éxito
       setRegisterSuccess(true);
       login(response.user, response.accessToken);
       
-      // Delay para mostrar animación
       setTimeout(() => {
         router.push(redirectTo);
       }, 2000);
@@ -189,7 +184,7 @@ export default function RegisterPage() {
       case 3: return 'bg-yellow-500';
       case 4: return 'bg-blue-500';
       case 5: return 'bg-green-500';
-      default: return 'bg-gray-300';
+      default: return 'bg-gray-600';
     }
   };
 
@@ -207,34 +202,34 @@ export default function RegisterPage() {
 
   if (registerSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 flex items-center justify-center px-4">
-        <Card className="w-full max-w-md shadow-card-hover border-0 bg-white/90 backdrop-blur-sm animate-fade-in">
+      <div className="min-h-screen bg-darkbg flex items-center justify-center px-4">
+        <Card className="w-full max-w-md shadow-glow-cyan border-gold/20 bg-darkbg-light/90 backdrop-blur-sm animate-fade-in">
           <CardContent className="p-8 text-center">
-            <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-glow animate-bounce-gentle">
-              <CheckCircle className="h-10 w-10 text-white" />
+            <div className="w-20 h-20 bg-gradient-to-r from-cyan to-gold rounded-full flex items-center justify-center mx-auto mb-6 shadow-glow-cyan animate-bounce-gentle">
+              <CheckCircle className="h-10 w-10 text-darkbg" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl font-bold text-white mb-4">
               ¡Cuenta creada exitosamente!
             </h2>
-            <p className="text-gray-600 mb-6">
-              Bienvenido a ServiPro Garcia. Tu cuenta ha sido creada y ya puedes disfrutar de todos nuestros beneficios.
+            <p className="text-gray-300 mb-6">
+              Bienvenido a BeztShop. Tu cuenta ha sido creada y ya puedes disfrutar de todos nuestros beneficios.
             </p>
-            <div className="space-y-3 text-left bg-gradient-to-r from-green-50 to-yellow-50 rounded-lg p-4">
-              <div className="flex items-center text-green-700">
+            <div className="space-y-3 text-left bg-gradient-to-r from-cyan/10 to-gold/10 rounded-lg p-4 border border-cyan/20">
+              <div className="flex items-center text-cyan">
                 <Gift className="h-4 w-4 mr-2" />
                 <span className="text-sm">10% de descuento en tu primera compra</span>
               </div>
-              <div className="flex items-center text-green-700">
+              <div className="flex items-center text-cyan">
                 <Shield className="h-4 w-4 mr-2" />
                 <span className="text-sm">Envío gratuito en pedidos +$100</span>
               </div>
-              <div className="flex items-center text-green-700">
+              <div className="flex items-center text-cyan">
                 <Star className="h-4 w-4 mr-2" />
                 <span className="text-sm">Acceso a ofertas exclusivas</span>
               </div>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2 mt-6">
-              <div className="bg-gradient-to-r from-primary-500 to-yellow-500 h-2 rounded-full animate-pulse w-full shadow-glow" />
+            <div className="w-full bg-darkbg-light rounded-full h-2 mt-6">
+              <div className="bg-gradient-to-r from-gold to-cyan h-2 rounded-full animate-pulse w-full shadow-glow-gold" />
             </div>
           </CardContent>
         </Card>
@@ -243,11 +238,11 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-darkbg flex items-center justify-center px-4 py-8">
       {/* Efectos de fondo */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-primary-100/20 to-transparent rounded-full animate-pulse-gentle" />
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-yellow-100/20 to-transparent rounded-full animate-pulse-gentle" style={{ animationDelay: '1s' }} />
+        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-gold/5 to-transparent rounded-full animate-pulse-gentle" />
+        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-cyan/5 to-transparent rounded-full animate-pulse-gentle" style={{ animationDelay: '1s' }} />
       </div>
 
       <div className="relative z-10 w-full max-w-md">
@@ -256,7 +251,7 @@ export default function RegisterPage() {
           <Button 
             asChild 
             variant="ghost" 
-            className="text-gray-600 hover:text-primary-600 -ml-2"
+            className="text-gray-400 hover:text-gold -ml-2"
           >
             <Link href={`/auth/login${redirectTo !== '/' ? `?redirect=${encodeURIComponent(redirectTo)}` : ''}`}>
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -265,22 +260,22 @@ export default function RegisterPage() {
           </Button>
         </div>
 
-        <Card className="shadow-card-hover border-0 bg-white/90 backdrop-blur-sm animate-fade-in">
+        <Card className="shadow-glow-gold border-gold/20 bg-darkbg-light/90 backdrop-blur-sm animate-fade-in">
           <CardHeader className="text-center pb-2">
             {/* Logo */}
             <div className="flex justify-center mb-4">
-              <div className="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-6 py-2 rounded-lg font-bold text-2xl shadow-glow animate-bounce-gentle">
-                SP
+              <div className="bg-gradient-to-r from-gold to-cyan text-darkbg px-6 py-2 rounded-lg font-bold text-2xl shadow-glow-gold animate-bounce-gentle">
+                BS
               </div>
             </div>
             
-            <CardTitle className="text-2xl font-bold text-gray-900">
+            <CardTitle className="text-2xl font-bold text-white">
               Crear Cuenta
             </CardTitle>
-            <CardDescription className="text-gray-600">
-              Únete a ServiPro Garcia y disfruta de beneficios exclusivos
+            <CardDescription className="text-gray-400">
+              Únete a BeztShop y disfruta de beneficios exclusivos
               {totalItems > 0 && (
-                <span className="block mt-2 text-primary-600 font-medium">
+                <span className="block mt-2 text-gold font-medium">
                   Tienes {totalItems} producto{totalItems !== 1 ? 's' : ''} esperándote
                 </span>
               )}
@@ -290,8 +285,8 @@ export default function RegisterPage() {
           <CardContent className="space-y-6">
             {/* Error global */}
             {errors.submit && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 animate-fade-in">
-                <div className="flex items-center text-red-700">
+              <div className="bg-red-500/10 border border-red-400/30 rounded-lg p-4 animate-fade-in">
+                <div className="flex items-center text-red-400">
                   <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
                   <span className="text-sm">{errors.submit}</span>
                 </div>
@@ -299,22 +294,22 @@ export default function RegisterPage() {
             )}
 
             {/* Beneficios destacados */}
-            <div className="bg-gradient-to-r from-green-50 to-yellow-50 rounded-lg p-4 border border-green-200">
-              <h4 className="font-medium text-gray-900 mb-3 flex items-center">
-                <Gift className="h-5 w-5 mr-2 text-primary-600" />
+            <div className="bg-gradient-to-r from-cyan/10 to-gold/10 rounded-lg p-4 border border-cyan/20">
+              <h4 className="font-medium text-white mb-3 flex items-center">
+                <Gift className="h-5 w-5 mr-2 text-gold" />
                 Al crear tu cuenta obtienes:
               </h4>
-              <div className="space-y-2 text-sm text-gray-700">
+              <div className="space-y-2 text-sm text-gray-300">
                 <div className="flex items-center">
-                  <Check className="h-4 w-4 mr-2 text-green-600" />
+                  <Check className="h-4 w-4 mr-2 text-cyan" />
                   <span>10% de descuento en tu primera compra</span>
                 </div>
                 <div className="flex items-center">
-                  <Check className="h-4 w-4 mr-2 text-green-600" />
+                  <Check className="h-4 w-4 mr-2 text-cyan" />
                   <span>Envío gratis en compras +$100</span>
                 </div>
                 <div className="flex items-center">
-                  <Check className="h-4 w-4 mr-2 text-green-600" />
+                  <Check className="h-4 w-4 mr-2 text-cyan" />
                   <span>Acceso a ofertas exclusivas</span>
                 </div>
               </div>
@@ -325,7 +320,7 @@ export default function RegisterPage() {
               {/* Nombres */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName" className="text-gray-700 font-medium">
+                  <Label htmlFor="firstName" className="text-gray-300 font-medium">
                     Nombre *
                   </Label>
                   <div className="relative">
@@ -336,14 +331,14 @@ export default function RegisterPage() {
                       placeholder="Tu nombre"
                       value={formData.firstName}
                       onChange={(e) => handleInputChange('firstName', e.target.value)}
-                      className={`pl-10 border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-200 ${
-                        errors.firstName ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                      className={`pl-10 bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold focus:ring-2 focus:ring-gold/50 transition-all duration-200 ${
+                        errors.firstName ? 'border-red-500 focus:border-red-500 focus:ring-red-500/50' : ''
                       }`}
                       disabled={isLoading}
                     />
                   </div>
                   {errors.firstName && (
-                    <p className="text-red-500 text-xs flex items-center animate-fade-in">
+                    <p className="text-red-400 text-xs flex items-center animate-fade-in">
                       <AlertCircle className="h-3 w-3 mr-1" />
                       {errors.firstName}
                     </p>
@@ -351,7 +346,7 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="lastName" className="text-gray-700 font-medium">
+                  <Label htmlFor="lastName" className="text-gray-300 font-medium">
                     Apellido *
                   </Label>
                   <Input
@@ -360,13 +355,13 @@ export default function RegisterPage() {
                     placeholder="Tu apellido"
                     value={formData.lastName}
                     onChange={(e) => handleInputChange('lastName', e.target.value)}
-                    className={`border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-200 ${
-                      errors.lastName ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                    className={`bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold focus:ring-2 focus:ring-gold/50 transition-all duration-200 ${
+                      errors.lastName ? 'border-red-500 focus:border-red-500 focus:ring-red-500/50' : ''
                     }`}
                     disabled={isLoading}
                   />
                   {errors.lastName && (
-                    <p className="text-red-500 text-xs flex items-center animate-fade-in">
+                    <p className="text-red-400 text-xs flex items-center animate-fade-in">
                       <AlertCircle className="h-3 w-3 mr-1" />
                       {errors.lastName}
                     </p>
@@ -376,7 +371,7 @@ export default function RegisterPage() {
 
               {/* Email */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-700 font-medium">
+                <Label htmlFor="email" className="text-gray-300 font-medium">
                   Correo electrónico *
                 </Label>
                 <div className="relative">
@@ -387,14 +382,14 @@ export default function RegisterPage() {
                     placeholder="tu@email.com"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    className={`pl-10 border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-200 ${
-                      errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                    className={`pl-10 bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold focus:ring-2 focus:ring-gold/50 transition-all duration-200 ${
+                      errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500/50' : ''
                     }`}
                     disabled={isLoading}
                   />
                 </div>
                 {errors.email && (
-                  <p className="text-red-500 text-sm flex items-center animate-fade-in">
+                  <p className="text-red-400 text-sm flex items-center animate-fade-in">
                     <AlertCircle className="h-4 w-4 mr-1" />
                     {errors.email}
                   </p>
@@ -403,7 +398,7 @@ export default function RegisterPage() {
 
               {/* Teléfono */}
               <div className="space-y-2">
-                <Label htmlFor="phone" className="text-gray-700 font-medium">
+                <Label htmlFor="phone" className="text-gray-300 font-medium">
                   Teléfono (opcional)
                 </Label>
                 <div className="relative">
@@ -414,7 +409,7 @@ export default function RegisterPage() {
                     placeholder="+1 (555) 123-4567"
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
-                    className="pl-10 border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-200"
+                    className="pl-10 bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold focus:ring-2 focus:ring-gold/50 transition-all duration-200"
                     disabled={isLoading}
                   />
                 </div>
@@ -422,7 +417,7 @@ export default function RegisterPage() {
 
               {/* Contraseña */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-gray-700 font-medium">
+                <Label htmlFor="password" className="text-gray-300 font-medium">
                   Contraseña *
                 </Label>
                 <div className="relative">
@@ -433,15 +428,15 @@ export default function RegisterPage() {
                     placeholder="Crea una contraseña segura"
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
-                    className={`pl-10 pr-10 border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-200 ${
-                      errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                    className={`pl-10 pr-10 bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold focus:ring-2 focus:ring-gold/50 transition-all duration-200 ${
+                      errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-500/50' : ''
                     }`}
                     disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gold transition-colors"
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -455,32 +450,32 @@ export default function RegisterPage() {
                 {formData.password && (
                   <div className="space-y-2 animate-fade-in">
                     <div className="flex items-center space-x-2">
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
+                      <div className="flex-1 bg-darkbg-light rounded-full h-2">
                         <div 
                           className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor()}`}
                           style={{ width: `${(passwordStrength / 5) * 100}%` }}
                         />
                       </div>
-                      <span className="text-xs text-gray-600 min-w-[70px]">
+                      <span className="text-xs text-gray-400 min-w-[70px]">
                         {getPasswordStrengthText()}
                       </span>
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-400">
                       <p>La contraseña debe incluir:</p>
                       <ul className="list-none space-y-1 mt-1">
-                        <li className={`flex items-center ${formData.password.length >= 8 ? 'text-green-600' : 'text-gray-400'}`}>
+                        <li className={`flex items-center ${formData.password.length >= 8 ? 'text-cyan' : 'text-gray-500'}`}>
                           <Check className="h-3 w-3 mr-1" />
                           Al menos 8 caracteres
                         </li>
-                        <li className={`flex items-center ${/[a-z]/.test(formData.password) ? 'text-green-600' : 'text-gray-400'}`}>
+                        <li className={`flex items-center ${/[a-z]/.test(formData.password) ? 'text-cyan' : 'text-gray-500'}`}>
                           <Check className="h-3 w-3 mr-1" />
                           Una letra minúscula
                         </li>
-                        <li className={`flex items-center ${/[A-Z]/.test(formData.password) ? 'text-green-600' : 'text-gray-400'}`}>
+                        <li className={`flex items-center ${/[A-Z]/.test(formData.password) ? 'text-cyan' : 'text-gray-500'}`}>
                           <Check className="h-3 w-3 mr-1" />
                           Una letra mayúscula
                         </li>
-                        <li className={`flex items-center ${/[0-9]/.test(formData.password) ? 'text-green-600' : 'text-gray-400'}`}>
+                        <li className={`flex items-center ${/[0-9]/.test(formData.password) ? 'text-cyan' : 'text-gray-500'}`}>
                           <Check className="h-3 w-3 mr-1" />
                           Un número
                         </li>
@@ -490,7 +485,7 @@ export default function RegisterPage() {
                 )}
 
                 {errors.password && (
-                  <p className="text-red-500 text-sm flex items-center animate-fade-in">
+                  <p className="text-red-400 text-sm flex items-center animate-fade-in">
                     <AlertCircle className="h-4 w-4 mr-1" />
                     {errors.password}
                   </p>
@@ -499,7 +494,7 @@ export default function RegisterPage() {
 
               {/* Confirmar contraseña */}
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-gray-700 font-medium">
+                <Label htmlFor="confirmPassword" className="text-gray-300 font-medium">
                   Confirmar contraseña *
                 </Label>
                 <div className="relative">
@@ -510,15 +505,15 @@ export default function RegisterPage() {
                     placeholder="Confirma tu contraseña"
                     value={formData.confirmPassword}
                     onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                    className={`pl-10 pr-10 border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-200 ${
-                      errors.confirmPassword ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                    className={`pl-10 pr-10 bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold focus:ring-2 focus:ring-gold/50 transition-all duration-200 ${
+                      errors.confirmPassword ? 'border-red-500 focus:border-red-500 focus:ring-red-500/50' : ''
                     }`}
                     disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gold transition-colors"
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -528,13 +523,13 @@ export default function RegisterPage() {
                   </button>
                 </div>
                 {formData.confirmPassword && formData.password === formData.confirmPassword && (
-                  <div className="flex items-center text-green-600 text-sm animate-fade-in">
+                  <div className="flex items-center text-cyan text-sm animate-fade-in">
                     <CheckCircle className="h-4 w-4 mr-1" />
                     Las contraseñas coinciden
                   </div>
                 )}
                 {errors.confirmPassword && (
-                  <p className="text-red-500 text-sm flex items-center animate-fade-in">
+                  <p className="text-red-400 text-sm flex items-center animate-fade-in">
                     <AlertCircle className="h-4 w-4 mr-1" />
                     {errors.confirmPassword}
                   </p>
@@ -548,23 +543,23 @@ export default function RegisterPage() {
                     id="acceptTerms"
                     checked={formData.acceptTerms}
                     onCheckedChange={(checked) => handleInputChange('acceptTerms', !!checked)}
-                    className="data-[state=checked]:bg-primary-600 data-[state=checked]:border-primary-600 mt-1"
+                    className="data-[state=checked]:bg-gold data-[state=checked]:border-gold mt-1"
                   />
                   <div className="grid gap-1.5 leading-none">
-                    <Label htmlFor="acceptTerms" className="text-sm text-gray-700 cursor-pointer">
+                    <Label htmlFor="acceptTerms" className="text-sm text-gray-300 cursor-pointer">
                       Acepto los{' '}
-                      <Link href="/terms" className="text-primary-600 hover:underline">
+                      <Link href="/terms" className="text-gold hover:underline">
                         términos y condiciones
                       </Link>{' '}
                       y la{' '}
-                      <Link href="/privacy" className="text-primary-600 hover:underline">
+                      <Link href="/privacy" className="text-gold hover:underline">
                         política de privacidad
                       </Link>
                     </Label>
                   </div>
                 </div>
                 {errors.acceptTerms && (
-                  <p className="text-red-500 text-sm flex items-center animate-fade-in">
+                  <p className="text-red-400 text-sm flex items-center animate-fade-in">
                     <AlertCircle className="h-4 w-4 mr-1" />
                     {errors.acceptTerms}
                   </p>
@@ -575,9 +570,9 @@ export default function RegisterPage() {
                     id="subscribeNewsletter"
                     checked={formData.subscribeNewsletter}
                     onCheckedChange={(checked) => handleInputChange('subscribeNewsletter', !!checked)}
-                    className="data-[state=checked]:bg-primary-600 data-[state=checked]:border-primary-600"
+                    className="data-[state=checked]:bg-gold data-[state=checked]:border-gold"
                   />
-                  <Label htmlFor="subscribeNewsletter" className="text-sm text-gray-600 cursor-pointer">
+                  <Label htmlFor="subscribeNewsletter" className="text-sm text-gray-400 cursor-pointer">
                     Quiero recibir ofertas y novedades por email
                   </Label>
                 </div>
@@ -589,13 +584,13 @@ export default function RegisterPage() {
                 disabled={isLoading}
                 className={`w-full py-3 font-medium transition-all duration-300 ${
                   isLoading
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow-glow hover:shadow-glow-yellow transform hover:scale-105'
-                } text-white`}
+                    ? 'bg-gray-600 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold shadow-glow-gold hover:shadow-glow-cyan transform hover:scale-105'
+                } text-darkbg`}
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-darkbg mr-2" />
                     Creando cuenta...
                   </div>
                 ) : (
@@ -605,52 +600,15 @@ export default function RegisterPage() {
                   </div>
                 )}
               </Button>
-            </form>
-
-            {/* Divider */}
-            <div className="relative">
-              <Separator />
-              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-4 text-sm text-gray-500">
-                o regístrate con
-              </span>
-            </div>
-
-            {/* Registro social */}
-            <div className="grid grid-cols-2 gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleSocialRegister('google')}
-                disabled={isLoading}
-                className="border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
-              >
-                <div className="w-5 h-5 mr-2 bg-gradient-to-r from-red-500 to-yellow-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">G</span>
-                </div>
-                Google
-              </Button>
-              
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleSocialRegister('facebook')}
-                disabled={isLoading}
-                className="border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
-              >
-                <div className="w-5 h-5 mr-2 bg-blue-600 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">f</span>
-                </div>
-                Facebook
-              </Button>
-            </div>
+            </form>            
 
             {/* Login */}
             <div className="text-center">
-              <p className="text-gray-600">
+              <p className="text-gray-400">
                 ¿Ya tienes una cuenta?{' '}
                 <Link 
                   href={`/auth/login${redirectTo !== '/' ? `?redirect=${encodeURIComponent(redirectTo)}` : ''}`}
-                  className="text-primary-600 hover:text-primary-700 font-medium transition-colors"
+                  className="text-gold hover:text-cyan font-medium transition-colors"
                 >
                   Inicia sesión aquí
                 </Link>
@@ -662,7 +620,7 @@ export default function RegisterPage() {
         {/* Seguridad */}
         <div className="text-center mt-6 animate-fade-in">
           <div className="flex items-center justify-center text-sm text-gray-500 mb-2">
-            <Shield className="h-4 w-4 mr-2" />
+            <Shield className="h-4 w-4 mr-2 text-cyan" />
             Tus datos están seguros y protegidos
           </div>
         </div>

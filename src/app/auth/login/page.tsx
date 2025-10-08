@@ -1,4 +1,4 @@
-// src/app/auth/login/page.tsx - Página de login con efectos visuales
+// src/app/auth/login/page.tsx - Página de login - Dark Tech Theme
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -52,7 +52,6 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
 
-  // Redirigir si ya está autenticado
   useEffect(() => {
     if (isAuthenticated && !loginSuccess) {
       router.push(redirectTo);
@@ -62,7 +61,6 @@ export default function LoginPage() {
   const handleInputChange = (field: keyof LoginFormData, value: string | boolean) => {
   setFormData((prev: LoginFormData) => ({ ...prev, [field]: value }));
   
-  // Limpiar error específico cuando el usuario empiece a escribir
   if (errors[field]) {
     setErrors((prev: Record<string, string>) => ({ ...prev, [field]: '' }));
   }
@@ -87,7 +85,6 @@ export default function LoginPage() {
   return Object.keys(newErrors).length === 0;
 };
 
- // Reemplaza esta parte en tu handleSubmit existente:
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   
@@ -103,12 +100,9 @@ const handleSubmit = async (e: React.FormEvent) => {
       password: formData.password,
     });    
     
-    // Éxito - el sistema automáticamente guardará los tokens
     setLoginSuccess(true);
     login(response.user, response.accessToken);
     
-    
-    // Delay para mostrar animación de éxito
     setTimeout(() => {
       router.push(redirectTo);
     }, 1500);
@@ -124,26 +118,25 @@ const handleSubmit = async (e: React.FormEvent) => {
 };
 
   const handleSocialLogin = (provider: 'google' | 'facebook') => {
-    // Implementar login social
     console.log(`Login with ${provider}`);
   };
 
   if (loginSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 flex items-center justify-center px-4">
-        <Card className="w-full max-w-md shadow-card-hover border-0 bg-white/90 backdrop-blur-sm animate-fade-in">
+      <div className="min-h-screen bg-darkbg flex items-center justify-center px-4">
+        <Card className="w-full max-w-md shadow-glow-cyan border-gold/20 bg-darkbg-light/90 backdrop-blur-sm animate-fade-in">
           <CardContent className="p-8 text-center">
-            <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-glow animate-bounce-gentle">
-              <CheckCircle className="h-10 w-10 text-white" />
+            <div className="w-20 h-20 bg-gradient-to-r from-cyan to-gold rounded-full flex items-center justify-center mx-auto mb-6 shadow-glow-cyan animate-bounce-gentle">
+              <CheckCircle className="h-10 w-10 text-darkbg" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl font-bold text-white mb-4">
               ¡Bienvenido de vuelta!
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-300 mb-6">
               Has iniciado sesión exitosamente. Redirigiendo...
             </p>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-gradient-to-r from-primary-500 to-yellow-500 h-2 rounded-full animate-pulse w-full shadow-glow" />
+            <div className="w-full bg-darkbg-light rounded-full h-2">
+              <div className="bg-gradient-to-r from-gold to-cyan h-2 rounded-full animate-pulse w-full shadow-glow-gold" />
             </div>
           </CardContent>
         </Card>
@@ -152,11 +145,11 @@ const handleSubmit = async (e: React.FormEvent) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-darkbg flex items-center justify-center px-4 py-8">
       {/* Efectos de fondo */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-primary-100/20 to-transparent rounded-full animate-pulse-gentle" />
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-yellow-100/20 to-transparent rounded-full animate-pulse-gentle" style={{ animationDelay: '1s' }} />
+        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-gold/5 to-transparent rounded-full animate-pulse-gentle" />
+        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-cyan/5 to-transparent rounded-full animate-pulse-gentle" style={{ animationDelay: '1s' }} />
       </div>
 
       <div className="relative z-10 w-full max-w-md">
@@ -165,7 +158,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           <Button 
             asChild 
             variant="ghost" 
-            className="text-gray-600 hover:text-primary-600 -ml-2"
+            className="text-gray-400 hover:text-gold -ml-2"
           >
             <Link href={redirectTo === '/' ? '/' : '/products'}>
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -174,22 +167,22 @@ const handleSubmit = async (e: React.FormEvent) => {
           </Button>
         </div>
 
-        <Card className="shadow-card-hover border-0 bg-white/90 backdrop-blur-sm animate-fade-in">
+        <Card className="shadow-glow-gold border-gold/20 bg-darkbg-light/90 backdrop-blur-sm animate-fade-in">
           <CardHeader className="text-center pb-2">
             {/* Logo */}
             <div className="flex justify-center mb-4">
-              <div className="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-6 py-2 rounded-lg font-bold text-2xl shadow-glow animate-bounce-gentle">
-                SP
+              <div className="bg-gradient-to-r from-gold to-cyan text-darkbg px-6 py-2 rounded-lg font-bold text-2xl shadow-glow-gold animate-bounce-gentle">
+                BS
               </div>
             </div>
             
-            <CardTitle className="text-2xl font-bold text-gray-900">
+            <CardTitle className="text-2xl font-bold text-white">
               Iniciar Sesión
             </CardTitle>
-            <CardDescription className="text-gray-600">
-              Accede a tu cuenta de ServiPro Garcia
+            <CardDescription className="text-gray-400">
+              Accede a tu cuenta de BeztShop
               {totalItems > 0 && (
-                <span className="block mt-2 text-primary-600 font-medium">
+                <span className="block mt-2 text-gold font-medium">
                   Tienes {totalItems} producto{totalItems !== 1 ? 's' : ''} en tu carrito
                 </span>
               )}
@@ -199,8 +192,8 @@ const handleSubmit = async (e: React.FormEvent) => {
           <CardContent className="space-y-6">
             {/* Error global */}
             {errors.submit && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 animate-fade-in">
-                <div className="flex items-center text-red-700">
+              <div className="bg-red-500/10 border border-red-400/30 rounded-lg p-4 animate-fade-in">
+                <div className="flex items-center text-red-400">
                   <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
                   <span className="text-sm">{errors.submit}</span>
                 </div>
@@ -211,7 +204,7 @@ const handleSubmit = async (e: React.FormEvent) => {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-700 font-medium">
+                <Label htmlFor="email" className="text-gray-300 font-medium">
                   Correo electrónico
                 </Label>
                 <div className="relative">
@@ -222,14 +215,14 @@ const handleSubmit = async (e: React.FormEvent) => {
                     placeholder="tu@email.com"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    className={`pl-10 border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-200 ${
-                      errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                    className={`pl-10 bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold focus:ring-2 focus:ring-gold/50 transition-all duration-200 ${
+                      errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500/50' : ''
                     }`}
                     disabled={isLoading}
                   />
                 </div>
                 {errors.email && (
-                  <p className="text-red-500 text-sm flex items-center animate-fade-in">
+                  <p className="text-red-400 text-sm flex items-center animate-fade-in">
                     <AlertCircle className="h-4 w-4 mr-1" />
                     {errors.email}
                   </p>
@@ -238,7 +231,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
               {/* Contraseña */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-gray-700 font-medium">
+                <Label htmlFor="password" className="text-gray-300 font-medium">
                   Contraseña
                 </Label>
                 <div className="relative">
@@ -249,15 +242,15 @@ const handleSubmit = async (e: React.FormEvent) => {
                     placeholder="Tu contraseña"
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
-                    className={`pl-10 pr-10 border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-200 ${
-                      errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''
+                    className={`pl-10 pr-10 bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold focus:ring-2 focus:ring-gold/50 transition-all duration-200 ${
+                      errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-500/50' : ''
                     }`}
                     disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gold transition-colors"
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -267,7 +260,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="text-red-500 text-sm flex items-center animate-fade-in">
+                  <p className="text-red-400 text-sm flex items-center animate-fade-in">
                     <AlertCircle className="h-4 w-4 mr-1" />
                     {errors.password}
                   </p>
@@ -281,16 +274,16 @@ const handleSubmit = async (e: React.FormEvent) => {
                     id="rememberMe"
                     checked={formData.rememberMe}
                     onCheckedChange={(checked) => handleInputChange('rememberMe', !!checked)}
-                    className="data-[state=checked]:bg-primary-600 data-[state=checked]:border-primary-600"
+                    className="data-[state=checked]:bg-gold data-[state=checked]:border-gold"
                   />
-                  <Label htmlFor="rememberMe" className="text-sm text-gray-600 cursor-pointer">
+                  <Label htmlFor="rememberMe" className="text-sm text-gray-400 cursor-pointer">
                     Recordarme
                   </Label>
                 </div>
                 
                 <Link 
                   href="/auth/forgot-password" 
-                  className="text-sm text-primary-600 hover:text-primary-700 transition-colors"
+                  className="text-sm text-gold hover:text-cyan transition-colors"
                 >
                   ¿Olvidaste tu contraseña?
                 </Link>
@@ -302,13 +295,13 @@ const handleSubmit = async (e: React.FormEvent) => {
                 disabled={isLoading}
                 className={`w-full py-3 font-medium transition-all duration-300 ${
                   isLoading
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow-glow hover:shadow-glow-yellow transform hover:scale-105'
-                } text-white`}
+                    ? 'bg-gray-600 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold shadow-glow-gold hover:shadow-glow-cyan transform hover:scale-105'
+                } text-darkbg`}
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-darkbg mr-2" />
                     Iniciando sesión...
                   </div>
                 ) : (
@@ -320,15 +313,13 @@ const handleSubmit = async (e: React.FormEvent) => {
               </Button>
             </form>
 
-            
-
             {/* Registro */}
             <div className="text-center">
-              <p className="text-gray-600">
+              <p className="text-gray-400">
                 ¿No tienes una cuenta?{' '}
                 <Link 
                   href={`/auth/register${redirectTo !== '/' ? `?redirect=${encodeURIComponent(redirectTo)}` : ''}`}
-                  className="text-primary-600 hover:text-primary-700 font-medium transition-colors"
+                  className="text-gold hover:text-cyan font-medium transition-colors"
                 >
                   Regístrate aquí
                 </Link>
@@ -336,19 +327,19 @@ const handleSubmit = async (e: React.FormEvent) => {
             </div>
 
             {/* Beneficios de crear cuenta */}
-            <div className="bg-gradient-to-r from-green-50 to-yellow-50 rounded-lg p-4 border border-green-200">
-              <h4 className="font-medium text-gray-900 mb-2">Beneficios de tener una cuenta:</h4>
-              <div className="space-y-1 text-sm text-gray-600">
+            <div className="bg-gradient-to-r from-cyan/10 to-gold/10 rounded-lg p-4 border border-cyan/20">
+              <h4 className="font-medium text-white mb-2">Beneficios de tener una cuenta:</h4>
+              <div className="space-y-1 text-sm text-gray-300">
                 <div className="flex items-center">
-                  <Zap className="h-4 w-4 mr-2 text-primary-600" />
+                  <Zap className="h-4 w-4 mr-2 text-gold" />
                   <span>Checkout más rápido</span>
                 </div>
                 <div className="flex items-center">
-                  <Shield className="h-4 w-4 mr-2 text-primary-600" />
+                  <Shield className="h-4 w-4 mr-2 text-gold" />
                   <span>Seguimiento de pedidos</span>
                 </div>
                 <div className="flex items-center">
-                  <Star className="h-4 w-4 mr-2 text-primary-600" />
+                  <Star className="h-4 w-4 mr-2 text-gold" />
                   <span>Ofertas exclusivas</span>
                 </div>
               </div>
@@ -360,11 +351,11 @@ const handleSubmit = async (e: React.FormEvent) => {
         <div className="text-center mt-6 animate-fade-in">
           <p className="text-xs text-gray-500">
             Al iniciar sesión, aceptas nuestros{' '}
-            <Link href="/terms" className="text-primary-600 hover:underline">
+            <Link href="/terms" className="text-gold hover:underline">
               Términos de Servicio
             </Link>{' '}
             y{' '}
-            <Link href="/privacy" className="text-primary-600 hover:underline">
+            <Link href="/privacy" className="text-gold hover:underline">
               Política de Privacidad
             </Link>
           </p>

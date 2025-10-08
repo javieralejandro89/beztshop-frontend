@@ -1,4 +1,4 @@
-// src/app/wishlist/page.tsx - Página completa de favoritos
+// src/app/wishlist/page.tsx - Página completa de favoritos - Dark Tech Theme
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -116,7 +116,7 @@ export default function WishlistPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+    <div className="min-h-screen bg-darkbg">
       <Header />
       
       <main className="container mx-auto px-4 py-8">
@@ -125,16 +125,16 @@ export default function WishlistPage() {
           <Button 
             variant="ghost" 
             onClick={() => router.back()}
-            className="p-2"
+            className="p-2 text-white hover:text-gold hover:bg-darkbg-light"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-              <Heart className="h-8 w-8 text-red-500" />
+            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+              <Heart className="h-8 w-8 text-red-400" />
               Mi Lista de Favoritos
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-400 mt-2">
               {pagination.total} producto{pagination.total !== 1 ? 's' : ''} guardado{pagination.total !== 1 ? 's' : ''}
             </p>
           </div>
@@ -142,20 +142,20 @@ export default function WishlistPage() {
 
         {isLoading ? (
           <div className="text-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-            <div className="text-lg">Cargando favoritos...</div>
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-gold" />
+            <div className="text-lg text-white">Cargando favoritos...</div>
           </div>
         ) : wishlistItems.length === 0 ? (
           <div className="text-center py-16">
             <div className="max-w-md mx-auto">
-              <Heart className="h-24 w-24 text-gray-300 mx-auto mb-6" />
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+              <Heart className="h-24 w-24 text-gray-600 mx-auto mb-6" />
+              <h2 className="text-2xl font-semibold text-white mb-4">
                 Tu lista de favoritos está vacía
               </h2>
-              <p className="text-gray-600 mb-8">
+              <p className="text-gray-400 mb-8">
                 Explora nuestros productos y guarda los que más te gusten para verlos después
               </p>
-              <Button asChild size="lg">
+              <Button asChild size="lg" className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg">
                 <Link href="/products">
                   <Package className="h-5 w-5 mr-2" />
                   Explorar Productos
@@ -172,6 +172,7 @@ export default function WishlistPage() {
                   variant={viewMode === 'grid' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setViewMode('grid')}
+                  className={viewMode === 'grid' ? 'bg-gradient-to-r from-gold to-cyan text-darkbg' : 'border-gold/30 text-white hover:bg-darkbg-light'}
                 >
                   <Grid3X3 className="h-4 w-4" />
                 </Button>
@@ -179,6 +180,7 @@ export default function WishlistPage() {
                   variant={viewMode === 'list' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setViewMode('list')}
+                  className={viewMode === 'list' ? 'bg-gradient-to-r from-gold to-cyan text-darkbg' : 'border-gold/30 text-white hover:bg-darkbg-light'}
                 >
                   <List className="h-4 w-4" />
                 </Button>
@@ -187,7 +189,7 @@ export default function WishlistPage() {
               <Button 
                 variant="outline" 
                 onClick={() => setClearDialog(true)}
-                className="text-red-600 border-red-600 hover:bg-red-50"
+                className="text-red-400 border-red-400/50 hover:bg-red-500/10"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Limpiar Lista
@@ -198,7 +200,7 @@ export default function WishlistPage() {
             {viewMode === 'grid' ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {wishlistItems.map((item) => (
-                  <Card key={item.id} className="group hover:shadow-lg transition-shadow duration-200">
+                  <Card key={item.id} className="group hover:shadow-glow-gold transition-shadow duration-200 bg-darkbg-light/80 backdrop-blur-sm border-gold/20">
                     <CardContent className="p-4">
                       <div className="relative mb-4">
                         <Link href={`/products/${item.product.slug}`}>
@@ -207,7 +209,7 @@ export default function WishlistPage() {
                             alt={item.product.name}
                             width={300}
                             height={300}
-                            className="w-full h-48 object-cover rounded-lg"
+                            className="w-full h-48 object-cover rounded-lg border border-gold/20"
                           />
                         </Link>
                         <div className="absolute top-2 right-2">
@@ -218,7 +220,7 @@ export default function WishlistPage() {
                           />
                         </div>
                         {!item.product.inStock && (
-                          <Badge variant="secondary" className="absolute top-2 left-2">
+                          <Badge variant="secondary" className="absolute top-2 left-2 bg-gray-700 text-white">
                             Agotado
                           </Badge>
                         )}
@@ -228,25 +230,25 @@ export default function WishlistPage() {
                         <div>
                           <Link 
                             href={`/products/${item.product.slug}`}
-                            className="font-semibold text-gray-900 hover:text-primary-600 line-clamp-2"
+                            className="font-semibold text-white hover:text-gold line-clamp-2"
                           >
                             {item.product.name}
                           </Link>
                           {item.product.brand && (
-                            <p className="text-sm text-gray-500">{item.product.brand}</p>
+                            <p className="text-sm text-gray-400">{item.product.brand}</p>
                           )}
                         </div>
 
                         {item.product.rating && (
                           <div className="flex items-center gap-1">
-                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            <span className="text-sm font-medium">{item.product.rating}</span>
-                            <span className="text-sm text-gray-500">({item.product.reviewCount})</span>
+                            <Star className="h-4 w-4 fill-gold text-gold" />
+                            <span className="text-sm font-medium text-white">{item.product.rating}</span>
+                            <span className="text-sm text-gray-400">({item.product.reviewCount})</span>
                           </div>
                         )}
 
                         <div className="flex items-center gap-2">
-                          <span className="text-lg font-bold text-gray-900">
+                          <span className="text-lg font-bold bg-gradient-to-r from-gold to-cyan bg-clip-text text-transparent">
                             {formatPrice(item.product.price)}
                           </span>
                           {item.product.comparePrice && item.product.comparePrice > item.product.price && (
@@ -257,7 +259,7 @@ export default function WishlistPage() {
                         </div>
 
                         <Button 
-                          className="w-full" 
+                          className="w-full bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg" 
                           disabled={!item.product.inStock}
                           asChild
                         >
@@ -274,7 +276,7 @@ export default function WishlistPage() {
             ) : (
               <div className="space-y-4">
                 {wishlistItems.map((item) => (
-                  <Card key={item.id} className="hover:shadow-md transition-shadow">
+                  <Card key={item.id} className="hover:shadow-glow-gold transition-shadow bg-darkbg-light/80 backdrop-blur-sm border-gold/20">
                     <CardContent className="p-6">
                       <div className="flex gap-6">
                         <div className="relative flex-shrink-0">
@@ -284,11 +286,11 @@ export default function WishlistPage() {
                               alt={item.product.name}
                               width={120}
                               height={120}
-                              className="w-30 h-30 object-cover rounded-lg"
+                              className="w-30 h-30 object-cover rounded-lg border border-gold/20"
                             />
                           </Link>
                           {!item.product.inStock && (
-                            <Badge variant="secondary" className="absolute top-2 left-2">
+                            <Badge variant="secondary" className="absolute top-2 left-2 bg-gray-700 text-white">
                               Agotado
                             </Badge>
                           )}
@@ -299,12 +301,12 @@ export default function WishlistPage() {
                             <div>
                               <Link 
                                 href={`/products/${item.product.slug}`}
-                                className="text-lg font-semibold text-gray-900 hover:text-primary-600"
+                                className="text-lg font-semibold text-white hover:text-gold"
                               >
                                 {item.product.name}
                               </Link>
                               {item.product.brand && (
-                                <p className="text-gray-500">{item.product.brand}</p>
+                                <p className="text-gray-400">{item.product.brand}</p>
                               )}
                             </div>
                             <WishlistButton 
@@ -316,15 +318,15 @@ export default function WishlistPage() {
 
                           {item.product.rating && (
                             <div className="flex items-center gap-1 mb-3">
-                              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                              <span className="text-sm font-medium">{item.product.rating}</span>
-                              <span className="text-sm text-gray-500">({item.product.reviewCount})</span>
+                              <Star className="h-4 w-4 fill-gold text-gold" />
+                              <span className="text-sm font-medium text-white">{item.product.rating}</span>
+                              <span className="text-sm text-gray-400">({item.product.reviewCount})</span>
                             </div>
                           )}
 
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <span className="text-xl font-bold text-gray-900">
+                              <span className="text-xl font-bold bg-gradient-to-r from-gold to-cyan bg-clip-text text-transparent">
                                 {formatPrice(item.product.price)}
                               </span>
                               {item.product.comparePrice && item.product.comparePrice > item.product.price && (
@@ -337,6 +339,7 @@ export default function WishlistPage() {
                             <Button 
                               disabled={!item.product.inStock}
                               asChild
+                              className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg"
                             >
                               <Link href={`/products/${item.product.slug}`}>
                                 <ShoppingCart className="h-4 w-4 mr-2" />
@@ -359,11 +362,12 @@ export default function WishlistPage() {
                   variant="outline"
                   disabled={!pagination.hasPrev}
                   onClick={() => setPage(page - 1)}
+                  className="border-gold/30 text-white hover:bg-darkbg-light disabled:opacity-50 disabled:text-gray-600"
                 >
                   Anterior
                 </Button>
                 
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-gray-400">
                   Página {page} de {pagination.pages}
                 </span>
                 
@@ -371,6 +375,7 @@ export default function WishlistPage() {
                   variant="outline"
                   disabled={!pagination.hasNext}
                   onClick={() => setPage(page + 1)}
+                  className="border-gold/30 text-white hover:bg-darkbg-light disabled:opacity-50 disabled:text-gray-600"
                 >
                   Siguiente
                 </Button>
@@ -381,19 +386,21 @@ export default function WishlistPage() {
 
         {/* Dialog de confirmación para limpiar */}
         <AlertDialog open={clearDialog} onOpenChange={setClearDialog}>
-          <AlertDialogContent>
+          <AlertDialogContent className="bg-darkbg-light border-gold/30">
             <AlertDialogHeader>
-              <AlertDialogTitle>¿Limpiar lista de favoritos?</AlertDialogTitle>
-              <AlertDialogDescription>
+              <AlertDialogTitle className="text-white">¿Limpiar lista de favoritos?</AlertDialogTitle>
+              <AlertDialogDescription className="text-gray-400">
                 Esta acción eliminará todos los productos de tu lista de favoritos. 
                 No se puede deshacer.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogCancel className="bg-darkbg border-gold/30 text-white hover:bg-darkbg-light">
+                Cancelar
+              </AlertDialogCancel>
               <AlertDialogAction 
                 onClick={handleClearWishlist}
-                className="bg-red-600 hover:bg-red-700"
+                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white"
               >
                 Limpiar Lista
               </AlertDialogAction>

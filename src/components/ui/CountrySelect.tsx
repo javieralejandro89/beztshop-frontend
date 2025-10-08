@@ -1,4 +1,4 @@
-// src/components/ui/CountrySelect.tsx - Componente reutilizable para selección de país
+// src/components/ui/CountrySelect.tsx - Componente reutilizable para selección de país - Dark Tech
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
 import { COUNTRIES } from '@/lib/countries';
@@ -24,12 +24,16 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
       onValueChange={onValueChange}
       disabled={disabled}
     >
-      <SelectTrigger className={className}>
+      <SelectTrigger className={`bg-darkbg border-gold/30 text-white ${className}`}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="bg-darkbg-light border-gold/30">
         {COUNTRIES.map((country) => (
-          <SelectItem key={country.code} value={country.code}>
+          <SelectItem 
+            key={country.code} 
+            value={country.code}
+            className="text-white hover:bg-darkbg hover:text-gold focus:bg-darkbg focus:text-gold"
+          >
             {country.name}
           </SelectItem>
         ))}
