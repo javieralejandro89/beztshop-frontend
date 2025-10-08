@@ -1,4 +1,4 @@
-// src/app/admin/products/[id]/edit/page.tsx - Editar producto CON IMÁGENES
+// src/app/admin/products/[id]/edit/page.tsx - Editar producto CON IMÁGENES - Dark Tech Theme
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -22,7 +22,7 @@ import {
 import { ArrowLeft, Save } from 'lucide-react';
 import { productsApi } from '@/lib/api';
 import { useAdminStore } from '@/lib/adminStore';
-import ImageUpload from '@/components/ImageUpload'; // ← AGREGADO
+import ImageUpload from '@/components/ImageUpload';
 import type { Category, Product } from '@/types';
 
 const productSchema = z.object({
@@ -52,7 +52,7 @@ export default function EditProductPage() {
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [categories, setCategories] = useState<Category[]>([]);
   const [product, setProduct] = useState<Product | null>(null);
-  const [productImages, setProductImages] = useState<any[]>([]); // ← AGREGADO
+  const [productImages, setProductImages] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const params = useParams();
@@ -84,9 +84,8 @@ export default function EditProductPage() {
       
       const response = await productsApi.getProductById(productId);
       setProduct(response);
-      setProductImages(response.images || []); // ← AGREGADO
+      setProductImages(response.images || []);
       
-      // Pre-llenar el formulario con los datos del producto
       reset({
         name: response.name,
         description: response.description,
@@ -136,7 +135,7 @@ export default function EditProductPage() {
 
       const productData = {
         ...data,
-        images: productImages, // ← AGREGADO
+        images: productImages,
         comparePrice: data.comparePrice || undefined,
         shortDesc: data.shortDesc || undefined,
         brand: data.brand || undefined,
@@ -147,8 +146,6 @@ export default function EditProductPage() {
       };
 
       await productsApi.updateProduct(product.id, productData);
-      
-      // Actualizar en el store local
       updateProduct(product.id, data);
 
       alert('Producto actualizado exitosamente');
@@ -167,9 +164,9 @@ export default function EditProductPage() {
 
   if (isLoadingData) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#0D0D0D]">
         <div className="text-center">
-          <div className="text-lg">Cargando producto...</div>
+          <div className="text-lg text-white">Cargando producto...</div>
         </div>
       </div>
     );
@@ -177,21 +174,25 @@ export default function EditProductPage() {
 
   if (error) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 bg-[#0D0D0D] min-h-screen p-6">
         <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={() => router.back()}>
+          <Button 
+            variant="outline" 
+            onClick={() => router.back()}
+            className="bg-[#1F1F1F] border-[#FFD700]/30 text-white hover:bg-[#FFD700] hover:text-[#0D0D0D]"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Volver
           </Button>
         </div>
         
-        <Card>
+        <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
           <CardContent className="p-6">
             <div className="text-center">
-              <div className="text-red-600 text-lg font-medium">{error}</div>
+              <div className="text-red-400 text-lg font-medium">{error}</div>
               <Button 
                 onClick={() => router.push('/admin/products')} 
-                className="mt-4"
+                className="mt-4 bg-[#FFD700] hover:bg-[#00C8FF] text-[#0D0D0D]"
               >
                 Volver a Productos
               </Button>
@@ -207,16 +208,20 @@ export default function EditProductPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-[#0D0D0D] min-h-screen p-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="outline" onClick={() => router.back()}>
+        <Button 
+          variant="outline" 
+          onClick={() => router.back()}
+          className="bg-[#1F1F1F] border-[#FFD700]/30 text-white hover:bg-[#FFD700] hover:text-[#0D0D0D]"
+        >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Volver
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Editar Producto</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-white">Editar Producto</h1>
+          <p className="text-gray-400 mt-1">
             Modifica la información de: {product.name}
           </p>
         </div>
@@ -226,63 +231,68 @@ export default function EditProductPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Información Básica */}
           <div className="lg:col-span-2">
-            <Card>
+            <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
               <CardHeader>
-                <CardTitle>Información Básica</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-white">Información Básica</CardTitle>
+                <CardDescription className="text-gray-400">
                   Detalles principales del producto
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="name">Nombre del Producto *</Label>
+                  <Label htmlFor="name" className="text-white">Nombre del Producto *</Label>
                   <Input
                     id="name"
                     {...register('name')}
                     placeholder="Ej: iPhone 15 Pro Max"
+                    className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                   />
                   {errors.name && (
-                    <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
+                    <p className="text-sm text-red-400 mt-1">{errors.name.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <Label htmlFor="description">Descripción *</Label>
+                  <Label htmlFor="description" className="text-white">Descripción *</Label>
                   <Textarea
                     id="description"
                     {...register('description')}
                     placeholder="Descripción detallada del producto..."
                     rows={4}
+                    className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                   />
                   {errors.description && (
-                    <p className="text-sm text-red-500 mt-1">{errors.description.message}</p>
+                    <p className="text-sm text-red-400 mt-1">{errors.description.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <Label htmlFor="shortDesc">Descripción Corta</Label>
+                  <Label htmlFor="shortDesc" className="text-white">Descripción Corta</Label>
                   <Input
                     id="shortDesc"
                     {...register('shortDesc')}
                     placeholder="Resumen breve para listados"
+                    className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="brand">Marca</Label>
+                    <Label htmlFor="brand" className="text-white">Marca</Label>
                     <Input
                       id="brand"
                       {...register('brand')}
                       placeholder="Ej: Apple, Samsung"
+                      className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="model">Modelo</Label>
+                    <Label htmlFor="model" className="text-white">Modelo</Label>
                     <Input
                       id="model"
                       {...register('model')}
                       placeholder="Ej: iPhone 15 Pro"
+                      className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                     />
                   </div>
                 </div>
@@ -292,46 +302,46 @@ export default function EditProductPage() {
 
           {/* Configuración */}
           <div>
-            <Card>
+            <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
               <CardHeader>
-                <CardTitle>Configuración</CardTitle>
+                <CardTitle className="text-white">Configuración</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="categoryId">Categoría *</Label>
+                  <Label htmlFor="categoryId" className="text-white">Categoría *</Label>
                   <Select 
                     value={watch('categoryId')} 
                     onValueChange={(value) => setValue('categoryId', value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-[#0D0D0D] border-[#FFD700]/30 text-white">
                       <SelectValue placeholder="Seleccionar categoría" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-[#1F1F1F] border-[#FFD700]/30">
                       {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
+                        <SelectItem key={category.id} value={category.id} className="text-white hover:bg-[#FFD700]/20">
                           {category.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                   {errors.categoryId && (
-                    <p className="text-sm text-red-500 mt-1">{errors.categoryId.message}</p>
+                    <p className="text-sm text-red-400 mt-1">{errors.categoryId.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <Label htmlFor="stockType">Tipo de Stock</Label>
+                  <Label htmlFor="stockType" className="text-white">Tipo de Stock</Label>
                   <Select 
                     value={watch('stockType')} 
                     onValueChange={(value) => setValue('stockType', value as 'PHYSICAL' | 'DROPSHIPPING' | 'BOTH')}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-[#0D0D0D] border-[#FFD700]/30 text-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="PHYSICAL">Físico</SelectItem>
-                      <SelectItem value="DROPSHIPPING">Dropshipping</SelectItem>
-                      <SelectItem value="BOTH">Ambos</SelectItem>
+                    <SelectContent className="bg-[#1F1F1F] border-[#FFD700]/30">
+                      <SelectItem value="PHYSICAL" className="text-white hover:bg-[#FFD700]/20">Físico</SelectItem>
+                      <SelectItem value="DROPSHIPPING" className="text-white hover:bg-[#FFD700]/20">Dropshipping</SelectItem>
+                      <SelectItem value="BOTH" className="text-white hover:bg-[#FFD700]/20">Ambos</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -342,8 +352,9 @@ export default function EditProductPage() {
                       id="isActive"
                       checked={watch('isActive')}
                       onCheckedChange={(checked) => setValue('isActive', !!checked)}
+                      className="border-[#FFD700]/30 data-[state=checked]:bg-[#FFD700] data-[state=checked]:text-[#0D0D0D]"
                     />
-                    <Label htmlFor="isActive">Producto Activo</Label>
+                    <Label htmlFor="isActive" className="text-white">Producto Activo</Label>
                   </div>
 
                   <div className="flex items-center space-x-2">
@@ -351,8 +362,9 @@ export default function EditProductPage() {
                       id="isFeatured"
                       checked={watch('isFeatured')}
                       onCheckedChange={(checked) => setValue('isFeatured', !!checked)}
+                      className="border-[#FFD700]/30 data-[state=checked]:bg-[#FFD700] data-[state=checked]:text-[#0D0D0D]"
                     />
-                    <Label htmlFor="isFeatured">Producto Destacado</Label>
+                    <Label htmlFor="isFeatured" className="text-white">Producto Destacado</Label>
                   </div>
 
                   <div className="flex items-center space-x-2">
@@ -360,8 +372,9 @@ export default function EditProductPage() {
                       id="isDigital"
                       checked={watch('isDigital')}
                       onCheckedChange={(checked) => setValue('isDigital', !!checked)}
+                      className="border-[#FFD700]/30 data-[state=checked]:bg-[#FFD700] data-[state=checked]:text-[#0D0D0D]"
                     />
-                    <Label htmlFor="isDigital">Producto Digital</Label>
+                    <Label htmlFor="isDigital" className="text-white">Producto Digital</Label>
                   </div>
                 </div>
               </CardContent>
@@ -369,11 +382,11 @@ export default function EditProductPage() {
           </div>
         </div>
 
-        {/* ← NUEVA SECCIÓN: Imágenes del Producto */}
-        <Card>
+        {/* Imágenes del Producto */}
+        <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
           <CardHeader>
-            <CardTitle>Imágenes del Producto</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-white">Imágenes del Producto</CardTitle>
+            <CardDescription className="text-gray-400">
               Sube hasta 5 imágenes del producto. La primera será la imagen principal.
             </CardDescription>
           </CardHeader>
@@ -388,54 +401,58 @@ export default function EditProductPage() {
         </Card>
 
         {/* Precios e Inventario */}
-        <Card>
+        <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
           <CardHeader>
-            <CardTitle>Precios e Inventario</CardTitle>
+            <CardTitle className="text-white">Precios e Inventario</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
-                <Label htmlFor="price">Precio *</Label>
+                <Label htmlFor="price" className="text-white">Precio *</Label>
                 <Input
                   id="price"
                   type="number"
                   step="0.01"
                   {...register('price', { valueAsNumber: true })}
                   placeholder="0.00"
+                  className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                 />
                 {errors.price && (
-                  <p className="text-sm text-red-500 mt-1">{errors.price.message}</p>
+                  <p className="text-sm text-red-400 mt-1">{errors.price.message}</p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="comparePrice">Precio de Comparación</Label>
+                <Label htmlFor="comparePrice" className="text-white">Precio de Comparación</Label>
                 <Input
                   id="comparePrice"
                   type="number"
                   step="0.01"
                   {...register('comparePrice', { valueAsNumber: true })}
                   placeholder="0.00"
+                  className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                 />
               </div>
 
               <div>
-                <Label htmlFor="stockCount">Stock</Label>
+                <Label htmlFor="stockCount" className="text-white">Stock</Label>
                 <Input
                   id="stockCount"
                   type="number"
                   {...register('stockCount', { valueAsNumber: true })}
                   placeholder="0"
+                  className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                 />
               </div>
 
               <div>
-                <Label htmlFor="lowStockThreshold">Alerta Stock Bajo</Label>
+                <Label htmlFor="lowStockThreshold" className="text-white">Alerta Stock Bajo</Label>
                 <Input
                   id="lowStockThreshold"
                   type="number"
                   {...register('lowStockThreshold', { valueAsNumber: true })}
                   placeholder="5"
+                  className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                 />
               </div>
             </div>
@@ -443,37 +460,40 @@ export default function EditProductPage() {
         </Card>
 
         {/* Información Adicional */}
-        <Card>
+        <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
           <CardHeader>
-            <CardTitle>Información Adicional</CardTitle>
+            <CardTitle className="text-white">Información Adicional</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="sku">SKU</Label>
+                <Label htmlFor="sku" className="text-white">SKU</Label>
                 <Input
                   id="sku"
                   {...register('sku')}
                   placeholder="Código único del producto"
+                  className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                 />
               </div>
 
               <div>
-                <Label htmlFor="metaTitle">Meta Título (SEO)</Label>
+                <Label htmlFor="metaTitle" className="text-white">Meta Título (SEO)</Label>
                 <Input
                   id="metaTitle"
                   {...register('metaTitle')}
                   placeholder="Título para motores de búsqueda"
+                  className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                 />
               </div>
 
               <div className="md:col-span-2">
-                <Label htmlFor="metaDesc">Meta Descripción (SEO)</Label>
+                <Label htmlFor="metaDesc" className="text-white">Meta Descripción (SEO)</Label>
                 <Textarea
                   id="metaDesc"
                   {...register('metaDesc')}
                   placeholder="Descripción para motores de búsqueda (máx. 160 caracteres)"
                   rows={2}
+                  className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                 />
               </div>
             </div>
@@ -485,7 +505,7 @@ export default function EditProductPage() {
           <Button
             type="submit"
             disabled={isLoading}
-            className="bg-primary-600 hover:bg-primary-700"
+            className="bg-[#FFD700] hover:bg-[#00C8FF] text-[#0D0D0D] font-semibold transition-all duration-300"
           >
             <Save className="h-4 w-4 mr-2" />
             {isLoading ? 'Guardando...' : 'Actualizar Producto'}
@@ -494,6 +514,7 @@ export default function EditProductPage() {
             type="button"
             variant="outline"
             onClick={() => router.back()}
+            className="bg-[#1F1F1F] border-[#FFD700]/30 text-white hover:bg-[#FFD700] hover:text-[#0D0D0D]"
           >
             Cancelar
           </Button>

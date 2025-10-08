@@ -84,7 +84,7 @@ export default function Layout({
 
       {/* WhatsApp Float Button */}
       <a
-        href="https://wa.me/18325230060"
+        href="https://wa.me/529985780385"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 left-6 z-50 bg-gradient-to-r from-cyan to-gold hover:from-gold hover:to-cyan text-darkbg p-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 animate-pulse-gentle"
@@ -304,7 +304,7 @@ function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-center md:text-left">
               <p className="text-gray-400 text-sm">
-                © {currentYear} BeztShop LLC. All rights reserved.
+                © {currentYear} BeztShop. All rights reserved.
               </p>
               <p className="text-gray-500 text-xs mt-1">
                 Designed with 🖤 in Houston, Texas

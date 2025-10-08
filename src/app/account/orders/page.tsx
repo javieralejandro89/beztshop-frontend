@@ -1,4 +1,4 @@
-// src/app/account/orders/page.tsx - Historial de pedidos con filtros
+// src/app/account/orders/page.tsx - Historial de pedidos con filtros Dark Tech
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
@@ -189,14 +189,14 @@ useEffect(() => {
   const getStatusIcon = (status: Order['status']) => {
     switch (status) {
       case 'pending':
-        return <Clock className="h-4 w-4 text-yellow-500" />;
+        return <Clock className="h-4 w-4 text-gold" />;
       case 'processing':
       case 'confirmed':
-        return <Package className="h-4 w-4 text-blue-500" />;
+        return <Package className="h-4 w-4 text-cyan" />;
       case 'shipped':
-        return <Truck className="h-4 w-4 text-purple-500" />;
+        return <Truck className="h-4 w-4 text-cyan" />;
       case 'delivered':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+        return <CheckCircle className="h-4 w-4 text-gold" />;
       case 'cancelled':
       case 'refunded':
         return <XCircle className="h-4 w-4 text-red-500" />;
@@ -238,7 +238,7 @@ useEffect(() => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+    <div className="min-h-screen bg-darkbg">
       <Header />
       
       <main className="container mx-auto px-4 py-8">
@@ -247,32 +247,32 @@ useEffect(() => {
           <Button 
             variant="ghost" 
             onClick={() => router.push('/account')}
-            className="p-2"
+            className="p-2 text-white hover:text-gold hover:bg-darkbg-light"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-              <Package className="h-8 w-8 text-primary-600" />
+            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+              <Package className="h-8 w-8 text-gold" />
               Historial de Pedidos
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-400 mt-2">
               {pagination.total} pedido{pagination.total !== 1 ? 's' : ''} encontrado{pagination.total !== 1 ? 's' : ''}
             </p>
           </div>
         </div>
 
         {/* Filtros */}
-        <Card className="mb-6">
-          <CardHeader>
+        <Card className="mb-6 bg-darkbg-light border-gold/20">
+          <CardHeader className="border-b border-gold/10">
   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
-    <CardTitle className="text-lg sm:text-xl">Filtros de Búsqueda</CardTitle>
+    <CardTitle className="text-lg sm:text-xl text-white">Filtros de Búsqueda</CardTitle>
     <div className="flex flex-col sm:flex-row gap-2 sm:gap-2">
       <Button
         variant="outline"
         size="sm"
         onClick={() => setShowFilters(!showFilters)}
-        className="w-full sm:w-auto text-xs sm:text-sm"
+        className="w-full sm:w-auto text-xs sm:text-sm bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold"
       >
         <Filter className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
         {showFilters ? 'Ocultar' : 'Mostrar'} Filtros
@@ -281,7 +281,7 @@ useEffect(() => {
         variant="outline"
         size="sm"
         onClick={clearFilters}
-        className="w-full sm:w-auto text-xs sm:text-sm"
+        className="w-full sm:w-auto text-xs sm:text-sm bg-darkbg border-cyan/30 text-white hover:bg-cyan hover:text-darkbg hover:border-cyan"
       >
         <RefreshCcw className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
         Limpiar
@@ -291,115 +291,117 @@ useEffect(() => {
 </CardHeader>
           
           {showFilters && (
-            <CardContent className="pt-0">
+            <CardContent className="pt-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {/* Búsqueda */}
                 <div>
-                  <Label htmlFor="search">Buscar por número de pedido</Label>
+                  <Label htmlFor="search" className="text-gray-300">Buscar por número de pedido</Label>
                   <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
                     <Input
                       id="search"
                       placeholder="Ej: ORD-123456"
                       value={filters.search}
                       onChange={(e) => handleFilterChange('search', e.target.value)}
-                      className="pl-10"
+                      className="pl-10 bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50"
                     />
                   </div>
                 </div>
 
                 {/* Estado del pedido */}
                 <div>
-                  <Label>Estado del Pedido</Label>
+                  <Label className="text-gray-300">Estado del Pedido</Label>
                   <Select 
                     value={filters.status} 
                     onValueChange={(value) => handleFilterChange('status', value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                       <SelectValue placeholder="Todos los estados" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos los estados</SelectItem>
-                      <SelectItem value="pending">Pendiente</SelectItem>
-                      <SelectItem value="confirmed">Confirmado</SelectItem>
-                      <SelectItem value="processing">Procesando</SelectItem>
-                      <SelectItem value="shipped">Enviado</SelectItem>
-                      <SelectItem value="delivered">Entregado</SelectItem>
-                      <SelectItem value="cancelled">Cancelado</SelectItem>
-                      <SelectItem value="refunded">Reembolsado</SelectItem>
+                    <SelectContent className="bg-darkbg-light border-gold/20">
+                      <SelectItem value="all" className="text-white hover:bg-darkbg hover:text-gold">Todos los estados</SelectItem>
+                      <SelectItem value="pending" className="text-white hover:bg-darkbg hover:text-gold">Pendiente</SelectItem>
+                      <SelectItem value="confirmed" className="text-white hover:bg-darkbg hover:text-gold">Confirmado</SelectItem>
+                      <SelectItem value="processing" className="text-white hover:bg-darkbg hover:text-gold">Procesando</SelectItem>
+                      <SelectItem value="shipped" className="text-white hover:bg-darkbg hover:text-gold">Enviado</SelectItem>
+                      <SelectItem value="delivered" className="text-white hover:bg-darkbg hover:text-gold">Entregado</SelectItem>
+                      <SelectItem value="cancelled" className="text-white hover:bg-darkbg hover:text-gold">Cancelado</SelectItem>
+                      <SelectItem value="refunded" className="text-white hover:bg-darkbg hover:text-gold">Reembolsado</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {/* Estado del pago */}
                 <div>
-                  <Label>Estado del Pago</Label>
+                  <Label className="text-gray-300">Estado del Pago</Label>
                   <Select 
                     value={filters.paymentStatus} 
                     onValueChange={(value) => handleFilterChange('paymentStatus', value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                       <SelectValue placeholder="Todos los estados" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos los estados</SelectItem>
-                      <SelectItem value="pending">Pendiente</SelectItem>
-                      <SelectItem value="paid">Pagado</SelectItem>
-                      <SelectItem value="failed">Fallido</SelectItem>
-                      <SelectItem value="refunded">Reembolsado</SelectItem>
+                    <SelectContent className="bg-darkbg-light border-gold/20">
+                      <SelectItem value="all" className="text-white hover:bg-darkbg hover:text-gold">Todos los estados</SelectItem>
+                      <SelectItem value="pending" className="text-white hover:bg-darkbg hover:text-gold">Pendiente</SelectItem>
+                      <SelectItem value="paid" className="text-white hover:bg-darkbg hover:text-gold">Pagado</SelectItem>
+                      <SelectItem value="failed" className="text-white hover:bg-darkbg hover:text-gold">Fallido</SelectItem>
+                      <SelectItem value="refunded" className="text-white hover:bg-darkbg hover:text-gold">Reembolsado</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {/* Fecha desde */}
                 <div>
-                  <Label htmlFor="dateFrom">Fecha desde</Label>
+                  <Label htmlFor="dateFrom" className="text-gray-300">Fecha desde</Label>
                   <Input
                     id="dateFrom"
                     type="date"
                     value={filters.dateFrom}
                     onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
+                    className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50"
                   />
                 </div>
 
                 {/* Fecha hasta */}
                 <div>
-                  <Label htmlFor="dateTo">Fecha hasta</Label>
+                  <Label htmlFor="dateTo" className="text-gray-300">Fecha hasta</Label>
                   <Input
                     id="dateTo"
                     type="date"
                     value={filters.dateTo}
                     onChange={(e) => handleFilterChange('dateTo', e.target.value)}
+                    className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50"
                   />
                 </div>
 
                 {/* Ordenar por */}
                 <div>
-                  <Label>Ordenar por</Label>
+                  <Label className="text-gray-300">Ordenar por</Label>
                   <div className="flex gap-2">
                     <Select 
                       value={filters.sortBy} 
                       onValueChange={(value) => handleFilterChange('sortBy', value)}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="createdAt">Fecha de creación</SelectItem>
-                        <SelectItem value="totalAmount">Monto total</SelectItem>
-                        <SelectItem value="orderNumber">Número de pedido</SelectItem>
+                      <SelectContent className="bg-darkbg-light border-gold/20">
+                        <SelectItem value="createdAt" className="text-white hover:bg-darkbg hover:text-gold">Fecha de creación</SelectItem>
+                        <SelectItem value="totalAmount" className="text-white hover:bg-darkbg hover:text-gold">Monto total</SelectItem>
+                        <SelectItem value="orderNumber" className="text-white hover:bg-darkbg hover:text-gold">Número de pedido</SelectItem>
                       </SelectContent>
                     </Select>
                     <Select 
                       value={filters.sortOrder} 
                       onValueChange={(value) => handleFilterChange('sortOrder', value)}
                     >
-                      <SelectTrigger className="w-24">
+                      <SelectTrigger className="w-24 bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="desc">↓</SelectItem>
-                        <SelectItem value="asc">↑</SelectItem>
+                      <SelectContent className="bg-darkbg-light border-gold/20">
+                        <SelectItem value="desc" className="text-white hover:bg-darkbg hover:text-gold">↓</SelectItem>
+                        <SelectItem value="asc" className="text-white hover:bg-darkbg hover:text-gold">↑</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -412,24 +414,24 @@ useEffect(() => {
         {/* Lista de pedidos */}
         {isLoading ? (
           <div className="text-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-            <div className="text-lg">Cargando pedidos...</div>
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-gold" />
+            <div className="text-lg text-white">Cargando pedidos...</div>
           </div>
         ) : orders.length === 0 ? (
-          <Card>
+          <Card className="bg-darkbg-light border-gold/20">
             <CardContent className="text-center py-12">
-              <Package className="h-16 w-16 text-gray-300 mx-auto mb-6" />
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <Package className="h-16 w-16 text-gray-600 mx-auto mb-6" />
+              <h2 className="text-xl font-semibold text-white mb-4">
                 No se encontraron pedidos
               </h2>
-              <p className="text-gray-600 mb-8">
+              <p className="text-gray-400 mb-8">
                 {Object.values(filters).some(v => v) 
                   ? 'Intenta ajustar los filtros de búsqueda'
                   : 'Aún no has realizado ningún pedido'
                 }
               </p>
               {!Object.values(filters).some(v => v) && (
-                <Button asChild>
+                <Button asChild className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-semibold">
                   <Link href="/products">Empezar a comprar</Link>
                 </Button>
               )}
@@ -438,7 +440,7 @@ useEffect(() => {
         ) : (
           <div className="space-y-4">
             {orders.map((order) => (
-              <Card key={order.id} className="hover:shadow-md transition-shadow">
+              <Card key={order.id} className="hover:shadow-glow-gold transition-all bg-darkbg-light border-gold/20">
                 <CardContent className="p-6">
                   <div className="flex flex-col space-y-4 sm:space-y-6 lg:flex-row lg:gap-6 lg:space-y-0">
   {/* Información principal */}
@@ -446,18 +448,18 @@ useEffect(() => {
     {/* Header móvil - vertical */}
     <div className="block sm:hidden space-y-3 mb-4">
       <div>
-        <h3 className="text-base font-semibold">
+        <h3 className="text-base font-semibold text-white">
           Pedido #{order.orderNumber}
         </h3>
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-gray-400">
           {formatDate(order.date)}
         </p>
       </div>
       <div className="flex items-center justify-between">
-        <div className="text-lg font-bold">
+        <div className="text-lg font-bold text-gold">
           {formatPrice(order.total)}
         </div>
-        <Badge variant="outline" className="flex items-center gap-1 text-xs">
+        <Badge variant="outline" className="flex items-center gap-1 text-xs border-cyan/30 text-cyan">
           {getStatusIcon(order.status)}
           {getStatusText(order.status)}
         </Badge>
@@ -467,19 +469,19 @@ useEffect(() => {
     {/* Header escritorio - horizontal */}
     <div className="hidden sm:flex sm:items-center sm:justify-between mb-4">
       <div>
-        <h3 className="text-lg font-semibold">
+        <h3 className="text-lg font-semibold text-white">
           Pedido #{order.orderNumber}
         </h3>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-400">
           {formatDate(order.date)}
         </p>
       </div>
       <div className="text-right">
-        <div className="text-xl font-bold">
+        <div className="text-xl font-bold text-gold">
           {formatPrice(order.total)}
         </div>
         <div className="flex items-center gap-2 mt-1">
-          <Badge variant="outline" className="flex items-center gap-1">
+          <Badge variant="outline" className="flex items-center gap-1 border-cyan/30 text-cyan">
             {getStatusIcon(order.status)}
             {getStatusText(order.status)}
           </Badge>
@@ -492,7 +494,7 @@ useEffect(() => {
                         {order.items.slice(0, 3).map((item) => (
                           <div key={item.id} className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm">
   <div className="flex-shrink-0">
-    <div className="w-12 h-12 sm:w-20 sm:h-20 bg-gray-100 rounded-lg overflow-hidden">
+    <div className="w-12 h-12 sm:w-20 sm:h-20 bg-darkbg rounded-lg overflow-hidden border border-gold/20">
                                                       {item.product ? (
                                                         <Image
                                                           src={item.product.image || '/placeholder-product.jpg'}
@@ -506,22 +508,22 @@ useEffect(() => {
                                                         />
                                                       ) : (
                                                         <div className="w-full h-full flex items-center justify-center">
-                                                          <Package className="h-8 w-8 text-gray-400" />
+                                                          <Package className="h-8 w-8 text-gray-600" />
                                                         </div>
                                                       )}
                                                     </div>
                                                   </div>
                             <div className="flex-1">
-                              <span className="font-medium">{item.productName}</span>
-                              <span className="text-gray-500 ml-2">x{item.quantity}</span>
+                              <span className="font-medium text-white">{item.productName}</span>
+                              <span className="text-gray-400 ml-2">x{item.quantity}</span>
                             </div>
-                            <span className="font-medium">
+                            <span className="font-medium text-gray-300">
                               {formatPrice(item.totalPrice)}
                             </span>
                           </div>
                         ))}
                         {order.items.length > 3 && (
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-gray-400">
                             +{order.items.length - 3} producto{order.items.length - 3 !== 1 ? 's' : ''} más
                           </p>
                         )}
@@ -534,6 +536,7 @@ useEffect(() => {
                         variant="outline" 
                         size="sm" 
                         asChild
+                        className="bg-darkbg border-cyan/30 text-white hover:bg-cyan hover:text-darkbg hover:border-cyan"
                       >
                         <Link href={`/account/orders/${order.id}`}>
                           <Eye className="h-4 w-4 mr-2" />
@@ -547,6 +550,7 @@ useEffect(() => {
                           size="sm"
                           onClick={() => downloadInvoice(order.id, order.orderNumber)}
                           disabled={isDownloading === order.id}
+                          className="bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold"
                         >
                           {isDownloading === order.id ? (
                             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -558,7 +562,7 @@ useEffect(() => {
                       )}
 
                       {order.trackingNumber && (
-                        <Badge variant="outline" className="justify-center">
+                        <Badge variant="outline" className="justify-center border-cyan/30 text-cyan">
                           <Truck className="h-3 w-3 mr-1" />
                           {order.trackingNumber}
                         </Badge>
@@ -566,7 +570,7 @@ useEffect(() => {
 
                       <Badge 
                         variant={order.paymentStatus === 'paid' ? 'default' : 'secondary'}
-                        className="justify-center"
+                        className={order.paymentStatus === 'paid' ? 'justify-center bg-gradient-to-r from-gold to-cyan text-darkbg border-0' : 'justify-center bg-darkbg-light border-gray-600 text-gray-300'}
                       >
                         {getPaymentStatusText(order.paymentStatus)}
                       </Badge>
@@ -585,7 +589,7 @@ useEffect(() => {
       variant="outline"
       disabled={!pagination.hasPrev}
       onClick={() => setCurrentPage(currentPage - 1)}
-      className="flex-shrink-0 text-xs sm:text-sm"
+      className="flex-shrink-0 text-xs sm:text-sm bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold disabled:opacity-50 disabled:cursor-not-allowed"
       size="sm"
     >
       <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
@@ -609,6 +613,10 @@ useEffect(() => {
                     variant={currentPage === pageNum ? "default" : "outline"}
                     size="sm"
                     onClick={() => setCurrentPage(pageNum)}
+                    className={currentPage === pageNum 
+                      ? "bg-gradient-to-r from-gold to-cyan text-darkbg border-0" 
+                      : "bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold"
+                    }
                   >
                     {pageNum}
                   </Button>
@@ -620,7 +628,7 @@ useEffect(() => {
   variant="outline"
   disabled={!pagination.hasNext}
   onClick={() => setCurrentPage(currentPage + 1)}
-  className="flex-shrink-0 text-xs sm:text-sm"
+  className="flex-shrink-0 text-xs sm:text-sm bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold disabled:opacity-50 disabled:cursor-not-allowed"
   size="sm"
 >
   <span className="hidden xs:inline">Siguiente</span>

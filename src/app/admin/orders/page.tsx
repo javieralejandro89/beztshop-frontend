@@ -1,4 +1,4 @@
-// src/app/admin/orders/page.tsx - Gestión de ordenes con filtros CORREGIDOS
+// src/app/admin/orders/page.tsx - Gestión de ordenes Dark Tech
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -115,7 +115,7 @@ export default function AdminOrdersPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [showNotifyModal, setShowNotifyModal] = useState(false);
 
-  // NUEVO: Estado para debounce de búsqueda
+  // Estado para debounce de búsqueda
   const [searchInput, setSearchInput] = useState('');
 
   // Paginación
@@ -152,7 +152,7 @@ export default function AdminOrdersPage() {
     type: 'ORDER_UPDATE' as const
   });
 
-  // NUEVO: Debounce para búsqueda
+  // Debounce para búsqueda
   useEffect(() => {
     const timer = setTimeout(() => {
       setFilters(prev => ({ ...prev, search: searchInput }));
@@ -187,16 +187,14 @@ export default function AdminOrdersPage() {
     }
   };
 
-  // CORREGIDO: Función handleFilterChange
   const handleFilterChange = (key: keyof OrderFilters, value: string) => {
     const actualValue = value === 'all' ? '' : value;
     setFilters(prev => ({ ...prev, [key]: actualValue }));
     setCurrentPage(1);
   };
 
-  // CORREGIDO: Función clearFilters
   const clearFilters = () => {
-    setSearchInput(''); // Limpiar también el input
+    setSearchInput('');
     setFilters({
       search: '',
       status: '',
@@ -230,7 +228,7 @@ export default function AdminOrdersPage() {
     const customerName = order.user ? `${order.user.firstName} ${order.user.lastName}` : 'Cliente';
     setNotificationForm({
       subject: `Actualización de tu pedido #${order.orderNumber}`,
-      message: `Hola ${customerName},\n\nTe informamos sobre una actualización en tu pedido #${order.orderNumber}.\n\nGracias por comprar con ServiPro Garcia LLC.`,
+      message: `Hola ${customerName},\n\nTe informamos sobre una actualización en tu pedido #${order.orderNumber}.\n\nGracias por comprar con BeztShop.`,
       type: 'ORDER_UPDATE'
     });
     setShowNotifyModal(true);
@@ -306,14 +304,14 @@ export default function AdminOrdersPage() {
   const getStatusIcon = (status: Order['status']) => {
     switch (status) {
       case 'PENDING':
-        return <Clock className="h-4 w-4 text-yellow-500" />;
+        return <Clock className="h-4 w-4 text-gold" />;
       case 'CONFIRMED':
       case 'PROCESSING':
-        return <Package className="h-4 w-4 text-blue-500" />;
+        return <Package className="h-4 w-4 text-cyan" />;
       case 'SHIPPED':
-        return <Truck className="h-4 w-4 text-purple-500" />;
+        return <Truck className="h-4 w-4 text-cyan" />;
       case 'DELIVERED':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+        return <CheckCircle className="h-4 w-4 text-gold" />;
       case 'CANCELLED':
       case 'REFUNDED':
         return <XCircle className="h-4 w-4 text-red-500" />;
@@ -337,15 +335,15 @@ export default function AdminOrdersPage() {
 
   const getStatusColor = (status: Order['status']) => {
     const colorMap = {
-      PENDING: 'bg-yellow-100 text-yellow-800',
-      CONFIRMED: 'bg-blue-100 text-blue-800',
-      PROCESSING: 'bg-blue-100 text-blue-800',
-      SHIPPED: 'bg-purple-100 text-purple-800',
-      DELIVERED: 'bg-green-100 text-green-800',
-      CANCELLED: 'bg-red-100 text-red-800',
-      REFUNDED: 'bg-red-100 text-red-800'
+      PENDING: 'bg-gold/10 text-gold border-gold/30',
+      CONFIRMED: 'bg-cyan/10 text-cyan border-cyan/30',
+      PROCESSING: 'bg-cyan/10 text-cyan border-cyan/30',
+      SHIPPED: 'bg-cyan/10 text-cyan border-cyan/30',
+      DELIVERED: 'bg-gold/10 text-gold border-gold/30',
+      CANCELLED: 'bg-red-500/10 text-red-400 border-red-500/30',
+      REFUNDED: 'bg-red-500/10 text-red-400 border-red-500/30'
     };
-    return colorMap[status] || 'bg-gray-100 text-gray-800';
+    return colorMap[status] || 'bg-gray-600/10 text-gray-400 border-gray-600/30';
   };
 
   const getPaymentStatusText = (status: Order['paymentStatus']) => {
@@ -361,49 +359,50 @@ export default function AdminOrdersPage() {
 
   const getPaymentStatusColor = (status: Order['paymentStatus']) => {
     const colorMap = {
-      PENDING: 'bg-yellow-100 text-yellow-800',
-      PAID: 'bg-green-100 text-green-800',
-      FAILED: 'bg-red-100 text-red-800',
-      REFUNDED: 'bg-red-100 text-red-800',
-      PARTIALLY_REFUNDED: 'bg-orange-100 text-orange-800'
+      PENDING: 'bg-gold/10 text-gold border-gold/30',
+      PAID: 'bg-gold/10 text-gold border-gold/30',
+      FAILED: 'bg-red-500/10 text-red-400 border-red-500/30',
+      REFUNDED: 'bg-red-500/10 text-red-400 border-red-500/30',
+      PARTIALLY_REFUNDED: 'bg-orange-500/10 text-orange-400 border-orange-500/30'
     };
-    return colorMap[status] || 'bg-gray-100 text-gray-800';
+    return colorMap[status] || 'bg-gray-600/10 text-gray-400 border-gray-600/30';
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
+    <div className="min-h-screen bg-darkbg p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Button 
             variant="ghost" 
             onClick={() => router.push('/admin/dashboard')}
-            className="p-2"
+            className="p-2 text-white hover:text-gold hover:bg-darkbg-light"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-              <Package className="h-8 w-8 text-primary-600" />
+            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+              <Package className="h-8 w-8 text-gold" />
               Gestión de Pedidos
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-400 mt-2">
               {pagination.total} pedido{pagination.total !== 1 ? 's' : ''} en total
             </p>
           </div>
         </div>
 
         {/* Filtros */}
-        <Card>
-          <CardHeader>
+        <Card className="bg-darkbg-light border-gold/20">
+          <CardHeader className="border-b border-gold/10">
             <div className="flex justify-between items-center">
-              <CardTitle className="text-lg">Filtros de Búsqueda</CardTitle>
+              <CardTitle className="text-lg text-white">Filtros de Búsqueda</CardTitle>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setShowFilters(!showFilters)}
                   type="button"
+                  className="bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold"
                 >
                   <Filter className="h-4 w-4 mr-2" />
                   {showFilters ? 'Ocultar' : 'Mostrar'} Filtros
@@ -413,6 +412,7 @@ export default function AdminOrdersPage() {
                   size="sm" 
                   onClick={clearFilters}
                   type="button"
+                  className="bg-darkbg border-cyan/30 text-white hover:bg-cyan hover:text-darkbg hover:border-cyan"
                 >
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Limpiar
@@ -422,6 +422,7 @@ export default function AdminOrdersPage() {
                   size="sm" 
                   onClick={loadOrders}
                   type="button"
+                  className="bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold"
                 >
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Actualizar
@@ -431,121 +432,123 @@ export default function AdminOrdersPage() {
           </CardHeader>
           
           {showFilters && (
-            <CardContent className="pt-0">
+            <CardContent className="pt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-                {/* Búsqueda CORREGIDA */}
+                {/* Búsqueda */}
                 <div>
-                  <Label htmlFor="search">Buscar</Label>
+                  <Label htmlFor="search" className="text-gray-300">Buscar</Label>
                   <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
                     <Input
                       id="search"
                       placeholder="Número, email..."
                       value={searchInput}
                       onChange={(e) => setSearchInput(e.target.value)}
-                      className="pl-10"
+                      className="pl-10 bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50"
                     />
                     {searchInput !== filters.search && searchInput.length > 0 && (
                       <div className="absolute right-3 top-3">
-                        <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+                        <Loader2 className="h-4 w-4 animate-spin text-gold" />
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* Estado del pedido CORREGIDO */}
+                {/* Estado del pedido */}
                 <div>
-                  <Label>Estado del Pedido</Label>
+                  <Label className="text-gray-300">Estado del Pedido</Label>
                   <Select 
                     value={filters.status || 'all'} 
                     onValueChange={(value) => handleFilterChange('status', value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                       <SelectValue placeholder="Todos los estados" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos los estados</SelectItem>
-                      <SelectItem value="PENDING">Pendiente</SelectItem>
-                      <SelectItem value="CONFIRMED">Confirmado</SelectItem>
-                      <SelectItem value="PROCESSING">Procesando</SelectItem>
-                      <SelectItem value="SHIPPED">Enviado</SelectItem>
-                      <SelectItem value="DELIVERED">Entregado</SelectItem>
-                      <SelectItem value="CANCELLED">Cancelado</SelectItem>
-                      <SelectItem value="REFUNDED">Reembolsado</SelectItem>
+                    <SelectContent className="bg-darkbg-light border-gold/20">
+                      <SelectItem value="all" className="text-white hover:bg-darkbg hover:text-gold">Todos los estados</SelectItem>
+                      <SelectItem value="PENDING" className="text-white hover:bg-darkbg hover:text-gold">Pendiente</SelectItem>
+                      <SelectItem value="CONFIRMED" className="text-white hover:bg-darkbg hover:text-gold">Confirmado</SelectItem>
+                      <SelectItem value="PROCESSING" className="text-white hover:bg-darkbg hover:text-gold">Procesando</SelectItem>
+                      <SelectItem value="SHIPPED" className="text-white hover:bg-darkbg hover:text-gold">Enviado</SelectItem>
+                      <SelectItem value="DELIVERED" className="text-white hover:bg-darkbg hover:text-gold">Entregado</SelectItem>
+                      <SelectItem value="CANCELLED" className="text-white hover:bg-darkbg hover:text-gold">Cancelado</SelectItem>
+                      <SelectItem value="REFUNDED" className="text-white hover:bg-darkbg hover:text-gold">Reembolsado</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                {/* Estado del pago CORREGIDO */}
+                {/* Estado del pago */}
                 <div>
-                  <Label>Estado del Pago</Label>
+                  <Label className="text-gray-300">Estado del Pago</Label>
                   <Select 
                     value={filters.paymentStatus || 'all'} 
                     onValueChange={(value) => handleFilterChange('paymentStatus', value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                       <SelectValue placeholder="Todos los estados" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos los estados</SelectItem>
-                      <SelectItem value="PENDING">Pendiente</SelectItem>
-                      <SelectItem value="PAID">Pagado</SelectItem>
-                      <SelectItem value="FAILED">Fallido</SelectItem>
-                      <SelectItem value="REFUNDED">Reembolsado</SelectItem>
+                    <SelectContent className="bg-darkbg-light border-gold/20">
+                      <SelectItem value="all" className="text-white hover:bg-darkbg hover:text-gold">Todos los estados</SelectItem>
+                      <SelectItem value="PENDING" className="text-white hover:bg-darkbg hover:text-gold">Pendiente</SelectItem>
+                      <SelectItem value="PAID" className="text-white hover:bg-darkbg hover:text-gold">Pagado</SelectItem>
+                      <SelectItem value="FAILED" className="text-white hover:bg-darkbg hover:text-gold">Fallido</SelectItem>
+                      <SelectItem value="REFUNDED" className="text-white hover:bg-darkbg hover:text-gold">Reembolsado</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {/* Fecha desde */}
                 <div>
-                  <Label htmlFor="dateFrom">Fecha desde</Label>
+                  <Label htmlFor="dateFrom" className="text-gray-300">Fecha desde</Label>
                   <Input
                     id="dateFrom"
                     type="date"
                     value={filters.dateFrom}
                     onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
+                    className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50"
                   />
                 </div>
 
                 {/* Fecha hasta */}
                 <div>
-                  <Label htmlFor="dateTo">Fecha hasta</Label>
+                  <Label htmlFor="dateTo" className="text-gray-300">Fecha hasta</Label>
                   <Input
                     id="dateTo"
                     type="date"
                     value={filters.dateTo}
                     onChange={(e) => handleFilterChange('dateTo', e.target.value)}
+                    className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50"
                   />
                 </div>
 
                 {/* Ordenar */}
                 <div>
-                  <Label>Ordenar por</Label>
+                  <Label className="text-gray-300">Ordenar por</Label>
                   <div className="flex gap-2">
                     <Select 
                       value={filters.sortBy} 
                       onValueChange={(value) => handleFilterChange('sortBy', value)}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="createdAt">Fecha</SelectItem>
-                        <SelectItem value="totalAmount">Monto</SelectItem>
-                        <SelectItem value="orderNumber">Número</SelectItem>
-                        <SelectItem value="status">Estado</SelectItem>
+                      <SelectContent className="bg-darkbg-light border-gold/20">
+                        <SelectItem value="createdAt" className="text-white hover:bg-darkbg hover:text-gold">Fecha</SelectItem>
+                        <SelectItem value="totalAmount" className="text-white hover:bg-darkbg hover:text-gold">Monto</SelectItem>
+                        <SelectItem value="orderNumber" className="text-white hover:bg-darkbg hover:text-gold">Número</SelectItem>
+                        <SelectItem value="status" className="text-white hover:bg-darkbg hover:text-gold">Estado</SelectItem>
                       </SelectContent>
                     </Select>
                     <Select 
                       value={filters.sortOrder} 
                       onValueChange={(value) => handleFilterChange('sortOrder', value)}
                     >
-                      <SelectTrigger className="w-20">
+                      <SelectTrigger className="w-20 bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="desc">↓</SelectItem>
-                        <SelectItem value="asc">↑</SelectItem>
+                      <SelectContent className="bg-darkbg-light border-gold/20">
+                        <SelectItem value="desc" className="text-white hover:bg-darkbg hover:text-gold">↓</SelectItem>
+                        <SelectItem value="asc" className="text-white hover:bg-darkbg hover:text-gold">↑</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -556,34 +559,34 @@ export default function AdminOrdersPage() {
         </Card>
 
         {/* Lista de pedidos */}
-        <Card>
+        <Card className="bg-darkbg-light border-gold/20">
           <CardContent className="p-0">
             {isLoading ? (
               <div className="text-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-                <div className="text-lg">Cargando pedidos...</div>
+                <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-gold" />
+                <div className="text-lg text-white">Cargando pedidos...</div>
               </div>
             ) : orders.length === 0 ? (
               <div className="text-center py-12">
-                <Package className="h-16 w-16 text-gray-300 mx-auto mb-6" />
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                <Package className="h-16 w-16 text-gray-600 mx-auto mb-6" />
+                <h2 className="text-xl font-semibold text-white mb-4">
                   No se encontraron pedidos
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-gray-400">
                   Ajusta los filtros de búsqueda
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-gray-200">
+              <div className="divide-y divide-gold/10">
                 {orders.map((order) => (
-                  <div key={order.id} className="p-6 hover:bg-gray-50 transition-colors">
+                  <div key={order.id} className="p-6 hover:bg-darkbg transition-colors">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-4">
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-900">
+                          <h3 className="text-lg font-semibold text-white">
                             Pedido #{order.orderNumber}
                           </h3>
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-gray-400">
                             {formatDate(order.createdAt)}
                           </p>
                         </div>
@@ -596,24 +599,24 @@ export default function AdminOrdersPage() {
                           {getPaymentStatusText(order.paymentStatus)}
                         </Badge>
                         {order.trackingNumber && (
-                          <Badge variant="outline" className="flex items-center gap-1">
+                          <Badge variant="outline" className="flex items-center gap-1 border-cyan/30 text-cyan">
                             <Truck className="h-3 w-3" />
                             {order.trackingNumber}
                           </Badge>
                         )}
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-gray-900">
+                        <div className="text-2xl font-bold text-gold">
                           {formatPrice(order.totalAmount)}
                         </div>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-400">
                           {order.items.length} producto{order.items.length !== 1 ? 's' : ''}
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                      <div className="flex items-center gap-4 text-sm text-gray-400">
                         {order.user ? (
                           <div className="flex items-center gap-1">
                             <User className="h-4 w-4" />
@@ -636,6 +639,7 @@ export default function AdminOrdersPage() {
                           variant="outline"
                           size="sm"
                           onClick={() => openOrderDetails(order)}
+                          className="bg-darkbg border-cyan/30 text-white hover:bg-cyan hover:text-darkbg hover:border-cyan"
                         >
                           <Eye className="h-4 w-4 mr-2" />
                           Ver Detalles
@@ -644,6 +648,7 @@ export default function AdminOrdersPage() {
                           variant="outline"
                           size="sm"
                           onClick={() => openStatusUpdate(order)}
+                          className="bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold"
                         >
                           <Edit className="h-4 w-4 mr-2" />
                           Actualizar Estado
@@ -652,6 +657,7 @@ export default function AdminOrdersPage() {
                           variant="outline"
                           size="sm"
                           onClick={() => openNotifyModal(order)}
+                          className="bg-darkbg border-cyan/30 text-white hover:bg-cyan hover:text-darkbg hover:border-cyan"
                         >
                           <Send className="h-4 w-4 mr-2" />
                           Notificar
@@ -661,6 +667,7 @@ export default function AdminOrdersPage() {
                             variant="outline"
                             size="sm"
                             onClick={() => downloadInvoice(order)}
+                            className="bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold"
                           >
                             <Download className="h-4 w-4 mr-2" />
                             Factura
@@ -682,12 +689,13 @@ export default function AdminOrdersPage() {
               variant="outline"
               disabled={!pagination.hasPrev}
               onClick={() => setCurrentPage(currentPage - 1)}
+              className="bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold disabled:opacity-50"
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
               Anterior
             </Button>
             
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-400">
               Página {currentPage} de {pagination.pages}
             </span>
             
@@ -695,6 +703,7 @@ export default function AdminOrdersPage() {
               variant="outline"
               disabled={!pagination.hasNext}
               onClick={() => setCurrentPage(currentPage + 1)}
+              className="bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold disabled:opacity-50"
             >
               Siguiente
               <ChevronRight className="h-4 w-4 ml-2" />
@@ -704,13 +713,13 @@ export default function AdminOrdersPage() {
 
         {/* Modal de detalles del pedido */}
         <Dialog open={showOrderModal} onOpenChange={setShowOrderModal}>
-          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Package className="h-5 w-5" />
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-darkbg-light border-gold/20">
+            <DialogHeader className="border-b border-gold/10 pb-4">
+              <DialogTitle className="flex items-center gap-2 text-white">
+                <Package className="h-5 w-5 text-gold" />
                 Detalles del Pedido #{selectedOrder?.orderNumber}
               </DialogTitle>
-              <DialogDescription>
+              <DialogDescription className="text-gray-400">
                 Información completa del pedido y cliente
               </DialogDescription>
             </DialogHeader>
@@ -719,67 +728,67 @@ export default function AdminOrdersPage() {
               <div className="space-y-6">
                 {/* Información del pedido */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Información del Pedido</CardTitle>
+                  <Card className="bg-darkbg border-gold/20">
+                    <CardHeader className="border-b border-gold/10">
+                      <CardTitle className="text-lg text-white">Información del Pedido</CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-3">
+                    <CardContent className="space-y-3 pt-4">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Estado:</span>
+                        <span className="text-gray-400">Estado:</span>
                         <Badge className={getStatusColor(selectedOrder.status)}>
                           {getStatusIcon(selectedOrder.status)}
                           <span className="ml-1">{getStatusText(selectedOrder.status)}</span>
                         </Badge>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Pago:</span>
+                        <span className="text-gray-400">Pago:</span>
                         <Badge className={getPaymentStatusColor(selectedOrder.paymentStatus)}>
                           {getPaymentStatusText(selectedOrder.paymentStatus)}
                         </Badge>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Método de pago:</span>
-                        <span>{selectedOrder.paymentMethod || 'No especificado'}</span>
+                        <span className="text-gray-400">Método de pago:</span>
+                        <span className="text-white">{selectedOrder.paymentMethod || 'No especificado'}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Fecha del pedido:</span>
-                        <span>{formatDate(selectedOrder.createdAt)}</span>
+                        <span className="text-gray-400">Fecha del pedido:</span>
+                        <span className="text-white">{formatDate(selectedOrder.createdAt)}</span>
                       </div>
                       {selectedOrder.trackingNumber && (
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Número de seguimiento:</span>
-                          <span className="font-mono">{selectedOrder.trackingNumber}</span>
+                          <span className="text-gray-400">Número de seguimiento:</span>
+                          <span className="font-mono text-cyan">{selectedOrder.trackingNumber}</span>
                         </div>
                       )}
                     </CardContent>
                   </Card>
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Información del Cliente</CardTitle>
+                  <Card className="bg-darkbg border-gold/20">
+                    <CardHeader className="border-b border-gold/10">
+                      <CardTitle className="text-lg text-white">Información del Cliente</CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-3">
+                    <CardContent className="space-y-3 pt-4">
                       {selectedOrder.user ? (
                         <>
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Nombre:</span>
-                            <span>{selectedOrder.user.firstName} {selectedOrder.user.lastName}</span>
+                            <span className="text-gray-400">Nombre:</span>
+                            <span className="text-white">{selectedOrder.user.firstName} {selectedOrder.user.lastName}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Email:</span>
-                            <span>{selectedOrder.user.email}</span>
+                            <span className="text-gray-400">Email:</span>
+                            <span className="text-white">{selectedOrder.user.email}</span>
                           </div>
                           {selectedOrder.user.phone && (
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Teléfono:</span>
-                              <span>{selectedOrder.user.phone}</span>
+                              <span className="text-gray-400">Teléfono:</span>
+                              <span className="text-white">{selectedOrder.user.phone}</span>
                             </div>
                           )}
                         </>
                       ) : (
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Email (invitado):</span>
-                          <span>{selectedOrder.guestEmail}</span>
+                          <span className="text-gray-400">Email (invitado):</span>
+                          <span className="text-white">{selectedOrder.guestEmail}</span>
                         </div>
                       )}
                     </CardContent>
@@ -788,12 +797,12 @@ export default function AdminOrdersPage() {
 
                 {/* Direcciones */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Dirección de Envío</CardTitle>
+                  <Card className="bg-darkbg border-gold/20">
+                    <CardHeader className="border-b border-gold/10">
+                      <CardTitle className="text-lg text-white">Dirección de Envío</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <div className="text-sm space-y-1">
+                    <CardContent className="pt-4">
+                      <div className="text-sm space-y-1 text-gray-300">
                         <p>{selectedOrder.shippingAddress.name}</p>
                         <p>{selectedOrder.shippingAddress.street}</p>
                         <p>{selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} {selectedOrder.shippingAddress.zipCode}</p>
@@ -803,12 +812,12 @@ export default function AdminOrdersPage() {
                   </Card>
 
                   {selectedOrder.billingAddress && (
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-lg">Dirección de Facturación</CardTitle>
+                    <Card className="bg-darkbg border-gold/20">
+                      <CardHeader className="border-b border-gold/10">
+                        <CardTitle className="text-lg text-white">Dirección de Facturación</CardTitle>
                       </CardHeader>
-                      <CardContent>
-                        <div className="text-sm space-y-1">
+                      <CardContent className="pt-4">
+                        <div className="text-sm space-y-1 text-gray-300">
                           <p>{selectedOrder.billingAddress.name}</p>
                           <p>{selectedOrder.billingAddress.street}</p>
                           <p>{selectedOrder.billingAddress.city}, {selectedOrder.billingAddress.state} {selectedOrder.billingAddress.zipCode}</p>
@@ -820,77 +829,77 @@ export default function AdminOrdersPage() {
                 </div>
 
                 {/* Productos */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Productos del Pedido</CardTitle>
+                <Card className="bg-darkbg border-gold/20">
+                  <CardHeader className="border-b border-gold/10">
+                    <CardTitle className="text-lg text-white">Productos del Pedido</CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="pt-4">
                     <div className="space-y-4">
                       {selectedOrder.items.map((item) => (
-                        <div key={item.id} className="flex items-center justify-between border-b pb-4">
+                        <div key={item.id} className="flex items-center justify-between border-b border-gold/10 pb-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
-                              <Package className="h-6 w-6 text-gray-400" />
+                            <div className="w-12 h-12 bg-darkbg rounded flex items-center justify-center border border-gold/20">
+                              <Package className="h-6 w-6 text-gray-600" />
                             </div>
                             <div>
-                              <p className="font-medium">{item.productName}</p>
-                              <p className="text-sm text-gray-500">Cantidad: {item.quantity}</p>
-                              <p className="text-sm text-gray-500">Precio unitario: {formatPrice(item.price)}</p>
+                              <p className="font-medium text-white">{item.productName}</p>
+                              <p className="text-sm text-gray-400">Cantidad: {item.quantity}</p>
+                              <p className="text-sm text-gray-400">Precio unitario: {formatPrice(item.price)}</p>
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="font-bold">{formatPrice(item.totalPrice)}</p>
+                            <p className="font-bold text-gold">{formatPrice(item.totalPrice)}</p>
                           </div>
                         </div>
                       ))}
                     </div>
 
-                    <div className="mt-6 space-y-2 border-t pt-4">
-                      <div className="flex justify-between">
+                    <div className="mt-6 space-y-2 border-t border-gold/10 pt-4">
+                      <div className="flex justify-between text-gray-300">
                         <span>Subtotal:</span>
                         <span>{formatPrice(selectedOrder.subtotal)}</span>
                       </div>
                       {selectedOrder.discountAmount > 0 && (
-                        <div className="flex justify-between text-green-600">
+                        <div className="flex justify-between text-gold">
                           <span>Descuento:</span>
                           <span>-{formatPrice(selectedOrder.discountAmount)}</span>
                         </div>
                       )}
-                      <div className="flex justify-between">
+                      <div className="flex justify-between text-gray-300">
                         <span>Envío:</span>
                         <span>{formatPrice(selectedOrder.shippingAmount)}</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between text-gray-300">
                         <span>Impuestos:</span>
                         <span>{formatPrice(selectedOrder.taxAmount)}</span>
                       </div>
-                      <div className="flex justify-between text-lg font-bold border-t pt-2">
+                      <div className="flex justify-between text-lg font-bold border-t border-gold/10 pt-2 text-white">
                         <span>Total:</span>
-                        <span>{formatPrice(selectedOrder.totalAmount)}</span>
+                        <span className="text-gold">{formatPrice(selectedOrder.totalAmount)}</span>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
                 {selectedOrder.notes && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Notas del Pedido</CardTitle>
+                  <Card className="bg-darkbg border-gold/20">
+                    <CardHeader className="border-b border-gold/10">
+                      <CardTitle className="text-lg text-white">Notas del Pedido</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-gray-700">{selectedOrder.notes}</p>
+                    <CardContent className="pt-4">
+                      <p className="text-sm text-gray-300">{selectedOrder.notes}</p>
                     </CardContent>
                   </Card>
                 )}
               </div>
             )}
 
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setShowOrderModal(false)}>
+            <DialogFooter className="border-t border-gold/10 pt-4">
+              <Button variant="outline" onClick={() => setShowOrderModal(false)} className="bg-darkbg border-gray-600 text-white hover:bg-darkbg-light">
                 Cerrar
               </Button>
               {selectedOrder && ['CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED'].includes(selectedOrder.status) && (
-                <Button onClick={() => downloadInvoice(selectedOrder)}>
+                <Button onClick={() => downloadInvoice(selectedOrder)} className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-semibold">
                   <Download className="h-4 w-4 mr-2" />
                   Descargar Factura
                 </Button>
@@ -901,56 +910,58 @@ export default function AdminOrdersPage() {
 
         {/* Modal de actualización de estado */}
         <Dialog open={showStatusModal} onOpenChange={setShowStatusModal}>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>Actualizar Estado del Pedido</DialogTitle>
-              <DialogDescription>
+          <DialogContent className="max-w-md bg-darkbg-light border-gold/20">
+            <DialogHeader className="border-b border-gold/10 pb-4">
+              <DialogTitle className="text-white">Actualizar Estado del Pedido</DialogTitle>
+              <DialogDescription className="text-gray-400">
                 Pedido #{selectedOrder?.orderNumber}
               </DialogDescription>
             </DialogHeader>
             
             <div className="space-y-4">
               <div>
-                <Label>Nuevo Estado</Label>
+                <Label className="text-gray-300">Nuevo Estado</Label>
                 <Select 
                   value={statusForm.status} 
                   onValueChange={(value) => setStatusForm({...statusForm, status: value})}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="PENDING">Pendiente</SelectItem>
-                    <SelectItem value="CONFIRMED">Confirmado</SelectItem>
-                    <SelectItem value="PROCESSING">Procesando</SelectItem>
-                    <SelectItem value="SHIPPED">Enviado</SelectItem>
-                    <SelectItem value="DELIVERED">Entregado</SelectItem>
-                    <SelectItem value="CANCELLED">Cancelado</SelectItem>
-                    <SelectItem value="REFUNDED">Reembolsado</SelectItem>
+                  <SelectContent className="bg-darkbg-light border-gold/20">
+                    <SelectItem value="PENDING" className="text-white hover:bg-darkbg hover:text-gold">Pendiente</SelectItem>
+                    <SelectItem value="CONFIRMED" className="text-white hover:bg-darkbg hover:text-gold">Confirmado</SelectItem>
+                    <SelectItem value="PROCESSING" className="text-white hover:bg-darkbg hover:text-gold">Procesando</SelectItem>
+                    <SelectItem value="SHIPPED" className="text-white hover:bg-darkbg hover:text-gold">Enviado</SelectItem>
+                    <SelectItem value="DELIVERED" className="text-white hover:bg-darkbg hover:text-gold">Entregado</SelectItem>
+                    <SelectItem value="CANCELLED" className="text-white hover:bg-darkbg hover:text-gold">Cancelado</SelectItem>
+                    <SelectItem value="REFUNDED" className="text-white hover:bg-darkbg hover:text-gold">Reembolsado</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               {(statusForm.status === 'SHIPPED' || statusForm.status === 'DELIVERED') && (
                 <div>
-                  <Label htmlFor="trackingNumber">Número de Seguimiento</Label>
+                  <Label htmlFor="trackingNumber" className="text-gray-300">Número de Seguimiento</Label>
                   <Input
                     id="trackingNumber"
                     value={statusForm.trackingNumber}
                     onChange={(e) => setStatusForm({...statusForm, trackingNumber: e.target.value})}
                     placeholder="Ej: 1234567890"
+                    className="bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50"
                   />
                 </div>
               )}
 
               <div>
-                <Label htmlFor="notes">Notas Adicionales (opcional)</Label>
+                <Label htmlFor="notes" className="text-gray-300">Notas Adicionales (opcional)</Label>
                 <Textarea
                   id="notes"
                   value={statusForm.notes}
                   onChange={(e) => setStatusForm({...statusForm, notes: e.target.value})}
                   placeholder="Información adicional sobre el cambio de estado..."
                   rows={3}
+                  className="bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50"
                 />
               </div>
 
@@ -960,17 +971,17 @@ export default function AdminOrdersPage() {
                   id="notifyCustomer"
                   checked={statusForm.notifyCustomer}
                   onChange={(e) => setStatusForm({...statusForm, notifyCustomer: e.target.checked})}
-                  className="rounded border-gray-300"
+                  className="rounded border-gray-600 bg-darkbg"
                 />
-                <Label htmlFor="notifyCustomer">Notificar al cliente por email</Label>
+                <Label htmlFor="notifyCustomer" className="text-gray-300">Notificar al cliente por email</Label>
               </div>
             </div>
 
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setShowStatusModal(false)}>
+            <DialogFooter className="border-t border-gold/10 pt-4">
+              <Button variant="outline" onClick={() => setShowStatusModal(false)} className="bg-darkbg border-gray-600 text-white hover:bg-darkbg-light">
                 Cancelar
               </Button>
-              <Button onClick={handleStatusUpdate}>
+              <Button onClick={handleStatusUpdate} className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-semibold">
                 Actualizar Estado
               </Button>
             </DialogFooter>
@@ -979,41 +990,43 @@ export default function AdminOrdersPage() {
 
         {/* Modal de notificación personalizada */}
         <Dialog open={showNotifyModal} onOpenChange={setShowNotifyModal}>
-          <DialogContent className="max-w-lg">
-            <DialogHeader>
-              <DialogTitle>Enviar Notificación al Cliente</DialogTitle>
-              <DialogDescription>
+          <DialogContent className="max-w-lg bg-darkbg-light border-gold/20">
+            <DialogHeader className="border-b border-gold/10 pb-4">
+              <DialogTitle className="text-white">Enviar Notificación al Cliente</DialogTitle>
+              <DialogDescription className="text-gray-400">
                 Pedido #{selectedOrder?.orderNumber} - {selectedOrder?.user ? `${selectedOrder.user.firstName} ${selectedOrder.user.lastName}` : selectedOrder?.guestEmail}
               </DialogDescription>
             </DialogHeader>
             
             <div className="space-y-4">
               <div>
-                <Label htmlFor="subject">Asunto</Label>
+                <Label htmlFor="subject" className="text-gray-300">Asunto</Label>
                 <Input
                   id="subject"
                   value={notificationForm.subject}
                   onChange={(e) => setNotificationForm({...notificationForm, subject: e.target.value})}
+                  className="bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50"
                 />
               </div>
 
               <div>
-                <Label htmlFor="message">Mensaje</Label>
+                <Label htmlFor="message" className="text-gray-300">Mensaje</Label>
                 <Textarea
                   id="message"
                   value={notificationForm.message}
                   onChange={(e) => setNotificationForm({...notificationForm, message: e.target.value})}
                   rows={6}
                   placeholder="Escribe tu mensaje personalizado aquí..."
+                  className="bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50"
                 />
               </div>
             </div>
 
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setShowNotifyModal(false)}>
+            <DialogFooter className="border-t border-gold/10 pt-4">
+              <Button variant="outline" onClick={() => setShowNotifyModal(false)} className="bg-darkbg border-gray-600 text-white hover:bg-darkbg-light">
                 Cancelar
               </Button>
-              <Button onClick={handleSendNotification}>
+              <Button onClick={handleSendNotification} className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-semibold">
                 <Send className="h-4 w-4 mr-2" />
                 Enviar Notificación
               </Button>

@@ -1,4 +1,4 @@
-// src/app/admin/layout.tsx - Layout del panel de administración
+// src/app/admin/layout.tsx - Layout del panel de administración Dark Tech
 'use client';
 
 import { useEffect } from 'react';
@@ -90,14 +90,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-darkbg">
       {/* Sidebar */}
-      <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg">
+      <div className="fixed inset-y-0 left-0 z-50 w-64 bg-darkbg-light shadow-glow-gold border-r border-gold/20">
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-center h-16 px-4 border-b border-gray-200">
-            <h1 className="text-xl font-bold text-primary-700">
-              ServiPro Garcia
+          <div className="flex items-center justify-center h-16 px-4 border-b border-gold/20">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-gold to-cyan bg-clip-text text-transparent">
+              BeztShop
             </h1>
           </div>
 
@@ -110,14 +110,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   key={item.name}
                   href={item.href}
                   className={`
-                    flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors
+                    flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all
                     ${item.current
-                      ? 'bg-primary-100 text-primary-700 border-r-2 border-primary-600'
-                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                      ? 'bg-gradient-to-r from-gold/10 to-cyan/10 text-gold border-r-2 border-gold shadow-glow-gold'
+                      : 'text-gray-400 hover:bg-darkbg hover:text-white hover:border-l-2 hover:border-cyan'
                     }
                   `}
                 >
-                  <Icon className="w-5 h-5 mr-3" />
+                  <Icon className={`w-5 h-5 mr-3 ${item.current ? 'text-gold' : ''}`} />
                   {item.name}
                 </Link>
               );
@@ -125,27 +125,27 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </nav>
 
           {/* User info and logout */}
-          <div className="border-t border-gray-200 p-4">
+          <div className="border-t border-gold/20 p-4">
             <div className="flex items-center mb-4">
               <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
-                  <span className="text-sm font-medium text-white">
+                <div className="w-8 h-8 bg-gradient-to-r from-gold to-cyan rounded-full flex items-center justify-center shadow-lg">
+                  <span className="text-sm font-medium text-darkbg">
                     {(user.firstName || 'User').charAt(0)}{(user.lastName || 'System').charAt(0)}
                   </span>
                 </div>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-white">
                   {user.firstName} {user.lastName}
                 </p>
-                <p className="text-xs text-gray-500">{user.email}</p>
+                <p className="text-xs text-gray-400">{user.email}</p>
               </div>
             </div>
             <Button
               onClick={handleLogout}
               variant="outline"
               size="sm"
-              className="w-full justify-start"
+              className="w-full justify-start bg-darkbg border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white hover:border-red-500"
             >
               <LogOut className="w-4 h-4 mr-2" />
               Cerrar Sesión
@@ -157,14 +157,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       {/* Main content */}
       <div className="pl-64">
         {/* Top bar */}
-        <div className="bg-white shadow-sm border-b border-gray-200">
+        <div className="bg-darkbg-light shadow-sm border-b border-gold/20">
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-lg font-semibold text-white">
                 Panel de Administración
               </h2>
               <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-gray-400">
                   Bienvenido, {user.firstName}
                 </span>
               </div>

@@ -5,15 +5,15 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore, useAuth } from '@/lib/store';
 
-// Componente de loading para la inicialización
+// Componente de loading para la inicialización - Dark Tech Theme
 const AuthLoadingScreen = () => (
-  <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 flex items-center justify-center">
+  <div className="min-h-screen bg-darkbg flex items-center justify-center">
     <div className="text-center">
-      <div className="w-16 h-16 bg-gradient-to-r from-primary-600 to-primary-700 rounded-lg flex items-center justify-center mx-auto mb-4 animate-pulse">
-        <span className="text-white font-bold text-2xl">SP</span>
+      <div className="w-16 h-16 bg-gradient-to-r from-gold to-cyan rounded-lg flex items-center justify-center mx-auto mb-4 animate-pulse shadow-glow-gold">
+        <span className="text-darkbg font-bold text-2xl">BS</span>
       </div>
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
-      <p className="text-gray-600">Inicializando sesión...</p>
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gold mx-auto mb-4"></div>
+      <p className="text-gray-400">Inicializando sesión...</p>
     </div>
   </div>
 );

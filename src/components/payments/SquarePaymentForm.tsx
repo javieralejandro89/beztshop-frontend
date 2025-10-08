@@ -146,7 +146,7 @@ const SquarePaymentForm: React.FC<SquarePaymentFormProps> = ({
     
     // Determinar el entorno basado en SQUARE_ENV o URL actual
     const isSquareProduction = process.env.NEXT_PUBLIC_SQUARE_ENV === 'production' || 
-                              window.location.hostname.includes('serviprogarcia.com');
+                              window.location.hostname.includes('beztshop.com');
     
     script.src = isSquareProduction 
       ? 'https://web.squarecdn.com/v1/square.js'           // ✅ PRODUCCIÓN

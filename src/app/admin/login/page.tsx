@@ -1,4 +1,4 @@
-// src/app/admin/login/page.tsx - Página de login del admin
+// src/app/admin/login/page.tsx - Página de login del admin Dark Tech
 'use client';
 
 import { useState } from 'react';
@@ -66,55 +66,55 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50 p-4">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold text-primary-700">
-            ServiPro Garcia
+    <div className="min-h-screen flex items-center justify-center bg-darkbg p-4">
+      <Card className="w-full max-w-md shadow-glow-gold bg-darkbg-light border-gold/20">
+        <CardHeader className="space-y-1 text-center border-b border-gold/10 pb-6">
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-gold to-cyan bg-clip-text text-transparent">
+            BeztShop
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-gray-400">
             Panel de Administración
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-gray-300">Email</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@servipro-garcia.com"
+                placeholder="admin@beztshop.com"
                 {...register('email')}
-                className="transition-colors focus:border-primary-500"
+                className="transition-colors bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50"
               />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email.message}</p>
+                <p className="text-sm text-red-400">{errors.email.message}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Contraseña</Label>
+              <Label htmlFor="password" className="text-gray-300">Contraseña</Label>
               <Input
                 id="password"
                 type="password"
                 placeholder="••••••••"
                 {...register('password')}
-                className="transition-colors focus:border-primary-500"
+                className="transition-colors bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50"
               />
               {errors.password && (
-                <p className="text-sm text-red-500">{errors.password.message}</p>
+                <p className="text-sm text-red-400">{errors.password.message}</p>
               )}
             </div>
 
             {error && (
-              <div className="p-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-md">
+              <div className="p-3 text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-md">
                 {error}
               </div>
             )}
 
             <Button
               type="submit"
-              className="w-full bg-primary-600 hover:bg-primary-700 transition-colors"
+              className="w-full bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-semibold transition-all shadow-lg hover:shadow-glow-gold"
               disabled={isLoading}
             >
               {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}

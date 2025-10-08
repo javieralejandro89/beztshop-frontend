@@ -685,7 +685,7 @@ export default function HomePage() {
               Quality guaranteed and exceptional service from Houston, TX.
             </p>
             <p className="text-gray-500">
-              © 2024 BeztShop LLC. All rights reserved.
+              © 2024 BeztShop. All rights reserved.
             </p>
             <p className="text-sm text-gray-600 mt-2">
               Designed with 🖤 in Houston, Texas

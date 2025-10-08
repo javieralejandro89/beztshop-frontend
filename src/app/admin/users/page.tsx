@@ -1,4 +1,4 @@
-// src/app/admin/users/page.tsx - Gestión de usuarios CORREGIDO
+// src/app/admin/users/page.tsx - Gestión de usuarios Dark Tech
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -53,7 +53,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import { useToast } from '@/hooks/useToast';
-import { adminApi } from '@/lib/api'; // CORRECCIÓN: Usar adminApi
+import { adminApi } from '@/lib/api';
 
 interface User {
   id: string;
@@ -132,7 +132,7 @@ useEffect(() => {
   const timer = setTimeout(() => {
     setFilters(prev => ({ ...prev, search: searchInput }));
     setCurrentPage(1);
-  }, 500); // 500ms de delay
+  }, 500);
 
   return () => clearTimeout(timer);
 }, [searchInput]);
@@ -145,7 +145,6 @@ useEffect(() => {
     try {
       setIsLoading(true);
       
-      // CORRECCIÓN: Usar adminApi en lugar de fetch directo
       const data = await adminApi.getUsers({
         page: currentPage,
         limit: 10,
@@ -197,7 +196,7 @@ useEffect(() => {
 };
 
   const clearFilters = () => {
-  setSearchInput(''); // Limpiar también el input
+  setSearchInput('');
   setFilters({
     search: '',
     role: '',
@@ -244,10 +243,8 @@ useEffect(() => {
   };
 
   const handleSubmitUser = async () => {
-  // Limpiar errores previos
   setFormErrors({});
   
-  // Validar localmente primero
   if (!validateUserForm()) {
     error('Por favor corrige los errores marcados');
     return;
@@ -268,16 +265,13 @@ useEffect(() => {
       success('Usuario actualizado exitosamente');
     }
 
-    // Solo cerrar modal si es exitoso
     setShowUserModal(false);
     loadUsers();
     
   } catch (err: any) {
     console.error('Error submitting user:', err);
     
-    // Manejar errores específicos del backend
     if (err.response?.status === 400 && err.response?.data?.details) {
-      // Errores de validación de Zod
       const backendErrors: Record<string, string> = {};
       err.response.data.details.forEach((issue: any) => {
         if (issue.path && issue.path[0]) {
@@ -287,10 +281,8 @@ useEffect(() => {
       setFormErrors(backendErrors);
       error('Por favor corrige los errores marcados');
     } else if (err.response?.data?.error) {
-      // Error específico del backend
       error(err.response.data.error);
     } else {
-      // Error genérico
       error('Error al procesar la solicitud');
     }
   } finally {
@@ -340,8 +332,8 @@ useEffect(() => {
 
   const getRoleBadge = (role: string) => {
     const config = {
-      ADMIN: { label: 'Admin', className: 'bg-red-100 text-red-800' },
-      CLIENT: { label: 'Cliente', className: 'bg-blue-100 text-blue-800' }
+      ADMIN: { label: 'Admin', className: 'bg-red-500/10 text-red-400 border-red-500/30' },
+      CLIENT: { label: 'Cliente', className: 'bg-cyan/10 text-cyan border-cyan/30' }
     };
     
     const { label, className } = config[role as keyof typeof config] || config.CLIENT;
@@ -350,9 +342,9 @@ useEffect(() => {
 
   const getLevelBadge = (level: string) => {
     const config = {
-      REGULAR: { label: 'Regular', className: 'bg-gray-100 text-gray-800' },
-      VIP: { label: 'VIP', className: 'bg-yellow-100 text-yellow-800' },
-      WHOLESALE: { label: 'Mayorista', className: 'bg-purple-100 text-purple-800' }
+      REGULAR: { label: 'Regular', className: 'bg-gray-600/10 text-gray-400 border-gray-600/30' },
+      VIP: { label: 'VIP', className: 'bg-gold/10 text-gold border-gold/30' },
+      WHOLESALE: { label: 'Mayorista', className: 'bg-cyan/10 text-cyan border-cyan/30' }
     };
     
     const { label, className } = config[level as keyof typeof config] || config.REGULAR;
@@ -360,42 +352,43 @@ useEffect(() => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 p-6">
+    <div className="min-h-screen bg-darkbg p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Button 
             variant="ghost" 
             onClick={() => router.push('/admin/dashboard')}
-            className="p-2"
+            className="p-2 text-white hover:text-gold hover:bg-darkbg-light"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-              <Users className="h-8 w-8 text-primary-600" />
+            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+              <Users className="h-8 w-8 text-gold" />
               Gestión de Usuarios
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-400 mt-2">
               {pagination.total} usuario{pagination.total !== 1 ? 's' : ''} registrado{pagination.total !== 1 ? 's' : ''}
             </p>
           </div>
-          <Button onClick={openCreateModal} className="bg-primary-600 hover:bg-primary-700">
+          <Button onClick={openCreateModal} className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-semibold">
             <UserPlus className="h-4 w-4 mr-2" />
             Nuevo Usuario
           </Button>
         </div>
 
         {/* Filtros */}
-        <Card>
-          <CardHeader>
+        <Card className="bg-darkbg-light border-gold/20">
+          <CardHeader className="border-b border-gold/10">
             <div className="flex justify-between items-center">
-              <CardTitle className="text-lg">Filtros de Búsqueda</CardTitle>
+              <CardTitle className="text-lg text-white">Filtros de Búsqueda</CardTitle>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setShowFilters(!showFilters)}
+                  className="bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold"
                 >
                   <Filter className="h-4 w-4 mr-2" />
                   {showFilters ? 'Ocultar' : 'Mostrar'} Filtros
@@ -405,6 +398,7 @@ useEffect(() => {
   size="sm"
   onClick={clearFilters}
   type="button"
+  className="bg-darkbg border-cyan/30 text-white hover:bg-cyan hover:text-darkbg hover:border-cyan"
 >
   <RefreshCw className="h-4 w-4 mr-2" />
   Limpiar
@@ -414,6 +408,7 @@ useEffect(() => {
   size="sm" 
   onClick={loadUsers}
   type="button"
+  className="bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold"
 >
   <RefreshCw className="h-4 w-4 mr-2" />
   Actualizar
@@ -423,23 +418,23 @@ useEffect(() => {
           </CardHeader>
           
           {showFilters && (
-            <CardContent className="pt-0">
+            <CardContent className="pt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                 {/* Búsqueda */}
                 <div>
-                  <Label htmlFor="search">Buscar</Label>
+                  <Label htmlFor="search" className="text-gray-300">Buscar</Label>
                   <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
                     <Input
   id="search"
   placeholder="Email, nombre..."
   value={searchInput}
   onChange={(e) => setSearchInput(e.target.value)}
-  className="pl-10"
+  className="pl-10 bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50"
 />
 {searchInput !== filters.search && searchInput.length > 0 && (
     <div className="absolute right-3 top-3">
-      <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+      <Loader2 className="h-4 w-4 animate-spin text-gold" />
     </div>
   )}
                   </div>
@@ -447,87 +442,87 @@ useEffect(() => {
 
                 {/* Rol */}
                 <div>
-                  <Label>Rol</Label>
+                  <Label className="text-gray-300">Rol</Label>
                   <Select 
                     value={filters.role || 'ALL'}  
                     onValueChange={(value) => handleFilterChange('role', value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                       <SelectValue placeholder="Todos los roles" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="ALL">Todos los roles</SelectItem>
-                      <SelectItem value="CLIENT">Cliente</SelectItem>
-                      <SelectItem value="ADMIN">Admin</SelectItem>
+                    <SelectContent className="bg-darkbg-light border-gold/20">
+                      <SelectItem value="ALL" className="text-white hover:bg-darkbg hover:text-gold">Todos los roles</SelectItem>
+                      <SelectItem value="CLIENT" className="text-white hover:bg-darkbg hover:text-gold">Cliente</SelectItem>
+                      <SelectItem value="ADMIN" className="text-white hover:bg-darkbg hover:text-gold">Admin</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {/* Nivel */}
                 <div>
-                  <Label>Nivel</Label>
+                  <Label className="text-gray-300">Nivel</Label>
                   <Select 
                     value={filters.userLevel || 'ALL'}  
                     onValueChange={(value) => handleFilterChange('userLevel', value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                       <SelectValue placeholder="Todos los niveles" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="ALL">Todos los niveles</SelectItem>
-                      <SelectItem value="REGULAR">Regular</SelectItem>
-                      <SelectItem value="VIP">VIP</SelectItem>
-                      <SelectItem value="WHOLESALE">Mayorista</SelectItem>
+                    <SelectContent className="bg-darkbg-light border-gold/20">
+                      <SelectItem value="ALL" className="text-white hover:bg-darkbg hover:text-gold">Todos los niveles</SelectItem>
+                      <SelectItem value="REGULAR" className="text-white hover:bg-darkbg hover:text-gold">Regular</SelectItem>
+                      <SelectItem value="VIP" className="text-white hover:bg-darkbg hover:text-gold">VIP</SelectItem>
+                      <SelectItem value="WHOLESALE" className="text-white hover:bg-darkbg hover:text-gold">Mayorista</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {/* Estado */}
                 <div>
-                  <Label>Estado</Label>
+                  <Label className="text-gray-300">Estado</Label>
                   <Select 
                     value={filters.isActive || 'all'} 
                     onValueChange={(value) => handleFilterChange('isActive', value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                       <SelectValue placeholder="Todos los estados" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos</SelectItem>
-                      <SelectItem value="true">Activos</SelectItem>
-                      <SelectItem value="false">Inactivos</SelectItem>
+                    <SelectContent className="bg-darkbg-light border-gold/20">
+                      <SelectItem value="all" className="text-white hover:bg-darkbg hover:text-gold">Todos</SelectItem>
+                      <SelectItem value="true" className="text-white hover:bg-darkbg hover:text-gold">Activos</SelectItem>
+                      <SelectItem value="false" className="text-white hover:bg-darkbg hover:text-gold">Inactivos</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {/* Ordenar */}
                 <div>
-                  <Label>Ordenar por</Label>
+                  <Label className="text-gray-300">Ordenar por</Label>
                   <div className="flex gap-2">
                     <Select 
                       value={filters.sortBy} 
                       onValueChange={(value) => handleFilterChange('sortBy', value)}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="createdAt">Fecha de registro</SelectItem>
-                        <SelectItem value="lastLogin">Último acceso</SelectItem>
-                        <SelectItem value="firstName">Nombre</SelectItem>
-                        <SelectItem value="email">Email</SelectItem>
+                      <SelectContent className="bg-darkbg-light border-gold/20">
+                        <SelectItem value="createdAt" className="text-white hover:bg-darkbg hover:text-gold">Fecha de registro</SelectItem>
+                        <SelectItem value="lastLogin" className="text-white hover:bg-darkbg hover:text-gold">Último acceso</SelectItem>
+                        <SelectItem value="firstName" className="text-white hover:bg-darkbg hover:text-gold">Nombre</SelectItem>
+                        <SelectItem value="email" className="text-white hover:bg-darkbg hover:text-gold">Email</SelectItem>
                       </SelectContent>
                     </Select>
                     <Select 
                       value={filters.sortOrder} 
                       onValueChange={(value) => handleFilterChange('sortOrder', value)}
                     >
-                      <SelectTrigger className="w-20">
+                      <SelectTrigger className="w-20 bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="desc">↓</SelectItem>
-                        <SelectItem value="asc">↑</SelectItem>
+                      <SelectContent className="bg-darkbg-light border-gold/20">
+                        <SelectItem value="desc" className="text-white hover:bg-darkbg hover:text-gold">↓</SelectItem>
+                        <SelectItem value="asc" className="text-white hover:bg-darkbg hover:text-gold">↑</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -538,52 +533,52 @@ useEffect(() => {
         </Card>
 
         {/* Tabla de usuarios */}
-        <Card>
+        <Card className="bg-darkbg-light border-gold/20">
           <CardContent className="p-0">
             {isLoading ? (
               <div className="text-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-                <div className="text-lg">Cargando usuarios...</div>
+                <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-gold" />
+                <div className="text-lg text-white">Cargando usuarios...</div>
               </div>
             ) : users.length === 0 ? (
               <div className="text-center py-12">
-                <Users className="h-16 w-16 text-gray-300 mx-auto mb-6" />
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                <Users className="h-16 w-16 text-gray-600 mx-auto mb-6" />
+                <h2 className="text-xl font-semibold text-white mb-4">
                   No se encontraron usuarios
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-gray-400">
                   Ajusta los filtros o crea el primer usuario
                 </p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b">
+                  <thead className="bg-darkbg border-b border-gold/10">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nivel</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Último acceso</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pedidos</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registro</th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Usuario</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Rol</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Nivel</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Estado</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Último acceso</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Pedidos</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Registro</th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Acciones</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-darkbg-light divide-y divide-gold/10">
                     {users.map((user) => (
-                      <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                      <tr key={user.id} className="hover:bg-darkbg transition-colors">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div>
-                            <div className="font-medium text-gray-900">
+                            <div className="font-medium text-white">
                               {user.firstName} {user.lastName}
                             </div>
-                            <div className="text-sm text-gray-500 flex items-center gap-1">
+                            <div className="text-sm text-gray-400 flex items-center gap-1">
                               <Mail className="h-3 w-3" />
                               {user.email}
                             </div>
                             {user.phone && (
-                              <div className="text-sm text-gray-500 flex items-center gap-1">
+                              <div className="text-sm text-gray-400 flex items-center gap-1">
                                 <Phone className="h-3 w-3" />
                                 {user.phone}
                               </div>
@@ -595,7 +590,7 @@ useEffect(() => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <Badge 
                             variant={user.isActive ? "default" : "secondary"}
-                            className={user.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}
+                            className={user.isActive ? "bg-gold/10 text-gold border-gold/30" : "bg-red-500/10 text-red-400 border-red-500/30"}
                           >
                             {user.isActive ? (
                               <>
@@ -612,7 +607,7 @@ useEffect(() => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {user.lastLogin ? (
-                            <span className="text-sm text-gray-900">
+                            <span className="text-sm text-white">
                               {formatDate(user.lastLogin)}
                             </span>
                           ) : (
@@ -620,12 +615,12 @@ useEffect(() => {
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="font-medium text-gray-900">
+                          <span className="font-medium text-white">
                             {user._count?.orders || 0}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-500 flex items-center gap-1">
+                          <div className="text-sm text-gray-400 flex items-center gap-1">
                             <Calendar className="h-3 w-3" />
                             {formatDate(user.createdAt)}
                           </div>
@@ -636,7 +631,7 @@ useEffect(() => {
                               variant="ghost"
                               size="sm"
                               onClick={() => openEditModal(user)}
-                              className="text-blue-600 hover:text-blue-700"
+                              className="text-cyan hover:text-gold hover:bg-darkbg"
                             >
                               <Edit className="h-4 w-4" />
                             </Button>
@@ -644,7 +639,7 @@ useEffect(() => {
                               variant="ghost"
                               size="sm"
                               onClick={() => toggleUserStatus(user)}
-                              className={user.isActive ? "text-red-600 hover:text-red-700" : "text-green-600 hover:text-green-700"}
+                              className={user.isActive ? "text-red-400 hover:text-red-300 hover:bg-darkbg" : "text-gold hover:text-cyan hover:bg-darkbg"}
                             >
                               {user.isActive ? <Ban className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
                             </Button>
@@ -655,7 +650,7 @@ useEffect(() => {
                                 setUserToDelete(user);
                                 setShowDeleteDialog(true);
                               }}
-                              className="text-red-600 hover:text-red-700"
+                              className="text-red-400 hover:text-red-300 hover:bg-darkbg"
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -677,12 +672,13 @@ useEffect(() => {
               variant="outline"
               disabled={!pagination.hasPrev}
               onClick={() => setCurrentPage(currentPage - 1)}
+              className="bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold disabled:opacity-50"
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
               Anterior
             </Button>
             
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-400">
               Página {currentPage} de {pagination.pages}
             </span>
             
@@ -690,6 +686,7 @@ useEffect(() => {
               variant="outline"
               disabled={!pagination.hasNext}
               onClick={() => setCurrentPage(currentPage + 1)}
+              className="bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold disabled:opacity-50"
             >
               Siguiente
               <ChevronRight className="h-4 w-4 ml-2" />
@@ -699,12 +696,12 @@ useEffect(() => {
 
         {/* Modal de crear/editar usuario */}
         <Dialog open={showUserModal} onOpenChange={setShowUserModal}>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>
+          <DialogContent className="max-w-md bg-darkbg-light border-gold/20">
+            <DialogHeader className="border-b border-gold/10 pb-4">
+              <DialogTitle className="text-white">
                 {isCreating ? 'Crear Nuevo Usuario' : 'Editar Usuario'}
               </DialogTitle>
-              <DialogDescription>
+              <DialogDescription className="text-gray-400">
                 {isCreating 
                   ? 'Completa la información para crear un nuevo usuario'
                   : 'Modifica la información del usuario'
@@ -715,7 +712,7 @@ useEffect(() => {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-  <Label htmlFor="firstName">Nombre</Label>
+  <Label htmlFor="firstName" className="text-gray-300">Nombre</Label>
   <Input
     id="firstName"
     value={userForm.firstName}
@@ -725,14 +722,14 @@ useEffect(() => {
         setFormErrors({...formErrors, firstName: ''});
       }
     }}
-    className={formErrors.firstName ? 'border-red-500' : ''}
+    className={`bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50 ${formErrors.firstName ? 'border-red-500' : ''}`}
   />
   {formErrors.firstName && (
-    <p className="text-sm text-red-500 mt-1">{formErrors.firstName}</p>
+    <p className="text-sm text-red-400 mt-1">{formErrors.firstName}</p>
   )}
 </div>
                 <div>
-  <Label htmlFor="lastName">Apellido</Label>
+  <Label htmlFor="lastName" className="text-gray-300">Apellido</Label>
   <Input
     id="lastName"
     value={userForm.lastName}
@@ -742,16 +739,16 @@ useEffect(() => {
         setFormErrors({...formErrors, lastName: ''});
       }
     }}
-    className={formErrors.lastName ? 'border-red-500' : ''}
+    className={`bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50 ${formErrors.lastName ? 'border-red-500' : ''}`}
   />
   {formErrors.lastName && (
-    <p className="text-sm text-red-500 mt-1">{formErrors.lastName}</p>
+    <p className="text-sm text-red-400 mt-1">{formErrors.lastName}</p>
   )}
 </div>
               </div>
 
               <div>
-  <Label htmlFor="email">Email</Label>
+  <Label htmlFor="email" className="text-gray-300">Email</Label>
   <Input
     id="email"
     type="email"
@@ -762,25 +759,26 @@ useEffect(() => {
         setFormErrors({...formErrors, email: ''});
       }
     }}
-    className={formErrors.email ? 'border-red-500' : ''}
+    className={`bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50 ${formErrors.email ? 'border-red-500' : ''}`}
   />
   {formErrors.email && (
-    <p className="text-sm text-red-500 mt-1">{formErrors.email}</p>
+    <p className="text-sm text-red-400 mt-1">{formErrors.email}</p>
   )}
 </div>
 
               <div>
-                <Label htmlFor="phone">Teléfono</Label>
+                <Label htmlFor="phone" className="text-gray-300">Teléfono</Label>
                 <Input
                   id="phone"
                   value={userForm.phone}
                   onChange={(e) => setUserForm({...userForm, phone: e.target.value})}
+                  className="bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50"
                 />
               </div>
 
               {isCreating && (
   <div>
-    <Label htmlFor="password">Contraseña</Label>
+    <Label htmlFor="password" className="text-gray-300">Contraseña</Label>
     <Input
       id="password"
       type="password"
@@ -791,57 +789,58 @@ useEffect(() => {
           setFormErrors({...formErrors, password: ''});
         }
       }}
-      className={formErrors.password ? 'border-red-500' : ''}
+      className={`bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50 ${formErrors.password ? 'border-red-500' : ''}`}
     />
     {formErrors.password && (
-      <p className="text-sm text-red-500 mt-1">{formErrors.password}</p>
+      <p className="text-sm text-red-400 mt-1">{formErrors.password}</p>
     )}
   </div>
 )}
 
               {!isCreating && (
                 <div>
-                  <Label htmlFor="password">Nueva Contraseña (opcional)</Label>
+                  <Label htmlFor="password" className="text-gray-300">Nueva Contraseña (opcional)</Label>
                   <Input
                     id="password"
                     type="password"
                     value={userForm.password}
                     onChange={(e) => setUserForm({...userForm, password: e.target.value})}
                     placeholder="Dejar en blanco para mantener actual"
+                    className="bg-darkbg border-gold/20 text-white placeholder-gray-500 focus:border-gold focus:ring-gold/50"
                   />
                 </div>
               )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>Rol</Label>
+                  <Label className="text-gray-300">Rol</Label>
                   <Select 
                     value={userForm.role} 
                     onValueChange={(value: 'ADMIN' | 'CLIENT') => setUserForm({...userForm, role: value})}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="CLIENT">Cliente</SelectItem>
-                      <SelectItem value="ADMIN">Admin</SelectItem>
+                    <SelectContent className="bg-darkbg-light border-gold/20">
+                      <SelectItem value="CLIENT" className="text-white hover:bg-darkbg hover:text-gold">Cliente</SelectItem>
+                      <SelectItem value="ADMIN" className="text-white hover:bg-darkbg hover:text-gold">Admin</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <Label>Nivel</Label>
+                  <Label className="text-gray-300">Nivel</Label>
                   <Select 
                     value={userForm.userLevel} 
                     onValueChange={(value: 'REGULAR' | 'VIP' | 'WHOLESALE') => setUserForm({...userForm, userLevel: value})}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-darkbg border-gold/20 text-white focus:border-gold focus:ring-gold/50">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="REGULAR">Regular</SelectItem>
-                      <SelectItem value="VIP">VIP</SelectItem>
-                      <SelectItem value="WHOLESALE">Mayorista</SelectItem>
+                    <SelectContent className="bg-darkbg-light border-gold/20">
+                      <SelectItem value="REGULAR" className="text-white hover:bg-darkbg hover:text-gold">Regular</SelectItem>
+                      <SelectItem value="VIP" className="text-white hover:bg-darkbg hover:text-gold">VIP</SelectItem>
+                      <SelectItem value="WHOLESALE" className="text-white hover:bg-darkbg hover:text-gold">Mayorista</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -853,19 +852,20 @@ useEffect(() => {
                   id="isActive"
                   checked={userForm.isActive}
                   onChange={(e) => setUserForm({...userForm, isActive: e.target.checked})}
-                  className="rounded border-gray-300"
+                  className="rounded border-gray-600 bg-darkbg"
                 />
-                <Label htmlFor="isActive">Usuario activo</Label>
+                <Label htmlFor="isActive" className="text-gray-300">Usuario activo</Label>
               </div>
             </div>
 
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setShowUserModal(false)}>
+            <DialogFooter className="border-t border-gold/10 pt-4">
+              <Button variant="outline" onClick={() => setShowUserModal(false)} className="bg-darkbg border-gray-600 text-white hover:bg-darkbg-light">
                 Cancelar
               </Button>
               <Button 
   onClick={handleSubmitUser}
   disabled={isSubmitting}
+  className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-semibold"
 >
   {isSubmitting ? (
     <>
@@ -882,19 +882,19 @@ useEffect(() => {
 
         {/* Dialog de confirmación de eliminación */}
         <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-          <AlertDialogContent>
+          <AlertDialogContent className="bg-darkbg-light border-gold/20">
             <AlertDialogHeader>
-              <AlertDialogTitle>¿Confirmar eliminación?</AlertDialogTitle>
-              <AlertDialogDescription>
+              <AlertDialogTitle className="text-white">¿Confirmar eliminación?</AlertDialogTitle>
+              <AlertDialogDescription className="text-gray-400">
                 ¿Estás seguro de que quieres eliminar al usuario "{userToDelete?.firstName} {userToDelete?.lastName}"? 
                 Esta acción no se puede deshacer y se perderán todos los datos asociados.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogCancel className="bg-darkbg border-gray-600 text-white hover:bg-darkbg-light">Cancelar</AlertDialogCancel>
               <AlertDialogAction 
                 onClick={handleDeleteUser}
-                className="bg-red-600 hover:bg-red-700"
+                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white"
               >
                 Eliminar Usuario
               </AlertDialogAction>

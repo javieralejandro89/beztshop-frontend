@@ -244,7 +244,7 @@ export default function PrivacyPolicyPage() {
               <div className="mb-4">
                 <h3 className="text-lg font-medium text-white mb-2">7.3 Cómo Ejercer sus Derechos</h3>
                 <p className="mb-4 text-gray-300">
-                  Para ejercer cualquiera de estos derechos, contáctenos en contacto@serviprogarcia.com. 
+                  Para ejercer cualquiera de estos derechos, contáctenos en atencionalcliente@beztshop.com. 
                   Verificaremos su identidad antes de procesar su solicitud.
                 </p>
               </div>

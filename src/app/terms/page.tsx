@@ -33,7 +33,7 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-white mb-4">1. Aceptación de los Términos</h2>
               <p className="mb-4 text-gray-300">
-                Al acceder y utilizar el sitio web de ServiPro Garcia LLC ("nosotros", "nuestro", "la empresa"), 
+                Al acceder y utilizar el sitio web de BeztShop ("nosotros", "nuestro", "la empresa"), 
                 usted acepta estar sujeto a estos Términos de Servicio y a todas las leyes y regulaciones aplicables. 
                 Si no está de acuerdo con alguno de estos términos, no debe utilizar este sitio web.
               </p>
@@ -42,7 +42,7 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-white mb-4">2. Descripción del Servicio</h2>
               <p className="mb-4 text-gray-300">
-                ServiPro Garcia LLC opera una tienda en línea que vende productos electrónicos en todo el territorio 
+                BeztShop opera una tienda en línea que vende productos electrónicos en todo el territorio 
                 de Estados Unidos. Nuestros servicios incluyen:
               </p>
               <ul className="list-disc pl-6 mb-4 text-gray-300">
@@ -152,7 +152,7 @@ export default function TermsOfServicePage() {
               <div className="mb-4">
                 <h3 className="text-lg font-medium text-white mb-2">7.2 Limitación de Responsabilidad</h3>
                 <p className="mb-4 text-gray-300">
-                  En la medida máxima permitida por la ley, ServiPro Garcia LLC no será responsable por 
+                  En la medida máxima permitida por la ley, BeztShop no será responsable por 
                   daños indirectos, incidentales, especiales o consecuentes que resulten del uso de nuestros 
                   productos o servicios.
                 </p>
@@ -175,7 +175,7 @@ export default function TermsOfServicePage() {
               <h2 className="text-2xl font-semibold text-white mb-4">9. Propiedad Intelectual</h2>
               <p className="mb-4 text-gray-300">
                 Todo el contenido del sitio web, incluyendo pero no limitado a texto, gráficos, logotipos, 
-                imágenes y software, es propiedad de ServiPro Garcia LLC o sus licenciantes y está protegido 
+                imágenes y software, es propiedad de BeztShop o sus licenciantes y está protegido 
                 por las leyes de derechos de autor y otras leyes de propiedad intelectual.
               </p>
             </section>
@@ -192,7 +192,7 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-white mb-4">11. Ley Aplicable y Jurisdicción</h2>
               <p className="mb-4 text-gray-300">
-                Estos términos se regirán e interpretarán de acuerdo con las leyes del estado donde ServiPro Garcia LLC 
+                Estos términos se regirán e interpretarán de acuerdo con las leyes del estado donde BeztShop 
                 esté incorporada, sin considerar sus disposiciones de conflicto de leyes. Cualquier disputa 
                 que surja de estos términos estará sujeta a la jurisdicción exclusiva de los tribunales de dicho estado.
               </p>
@@ -204,9 +204,9 @@ export default function TermsOfServicePage() {
                 Si tiene preguntas sobre estos Términos de Servicio, puede contactarnos en:
               </p>
               <div className="bg-gradient-to-r from-cyan/10 to-gold/10 border border-cyan/20 p-4 rounded-lg">
-                <p className="text-white"><strong>ServiPro Garcia LLC</strong></p>
-                <p className="text-gray-300">Email: contacto@serviprogarcia.com</p>
-                <p className="text-gray-300">Sitio web: www.serviprogarcia.com</p>
+                <p className="text-white"><strong>BeztShop</strong></p>
+                <p className="text-gray-300">Email: atencionalcliente@beztshop.com</p>
+                <p className="text-gray-300">Sitio web: www.beztshop.com</p>
               </div>
             </section>
 
@@ -221,7 +221,7 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-white mb-4">14. Acuerdo Completo</h2>
               <p className="mb-4 text-gray-300">
-                Estos Términos de Servicio constituyen el acuerdo completo entre usted y ServiPro Garcia LLC 
+                Estos Términos de Servicio constituyen el acuerdo completo entre usted y BeztShop 
                 con respecto al uso de nuestro sitio web y servicios, y reemplazan todos los acuerdos anteriores 
                 y contemporáneos, ya sean escritos u orales.
               </p>

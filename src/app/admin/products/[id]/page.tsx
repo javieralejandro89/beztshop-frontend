@@ -1,4 +1,4 @@
-// src/app/admin/products/[id]/page.tsx - Ver producto individual
+// src/app/admin/products/[id]/page.tsx - Ver producto individual - Dark Tech Theme
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -31,7 +31,6 @@ export default function ViewProductPage() {
       setIsLoading(true);
       setError(null);
       
-      // Obtener producto por ID (necesitarás agregar esta función al API)
       const response = await productsApi.getProductById(productId);
       setProduct(response);
     } catch (err: any) {
@@ -65,9 +64,9 @@ export default function ViewProductPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#0D0D0D]">
         <div className="text-center">
-          <div className="text-lg">Cargando producto...</div>
+          <div className="text-lg text-white">Cargando producto...</div>
         </div>
       </div>
     );
@@ -75,21 +74,25 @@ export default function ViewProductPage() {
 
   if (error) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 bg-[#0D0D0D] min-h-screen p-6">
         <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={() => router.back()}>
+          <Button 
+            variant="outline" 
+            onClick={() => router.back()}
+            className="bg-[#1F1F1F] border-[#FFD700]/30 text-white hover:bg-[#FFD700] hover:text-[#0D0D0D]"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Volver
           </Button>
         </div>
         
-        <Card>
+        <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
           <CardContent className="p-6">
             <div className="text-center">
-              <div className="text-red-600 text-lg font-medium">{error}</div>
+              <div className="text-red-400 text-lg font-medium">{error}</div>
               <Button 
                 onClick={() => router.push('/admin/products')} 
-                className="mt-4"
+                className="mt-4 bg-[#FFD700] hover:bg-[#00C8FF] text-[#0D0D0D]"
               >
                 Volver a Productos
               </Button>
@@ -105,22 +108,30 @@ export default function ViewProductPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-[#0D0D0D] min-h-screen p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={() => router.back()}>
+          <Button 
+            variant="outline" 
+            onClick={() => router.back()}
+            className="bg-[#1F1F1F] border-[#FFD700]/30 text-white hover:bg-[#FFD700] hover:text-[#0D0D0D]"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Volver
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
-            <p className="text-gray-600 mt-1">Detalles del producto</p>
+            <h1 className="text-3xl font-bold text-white">{product.name}</h1>
+            <p className="text-gray-400 mt-1">Detalles del producto</p>
           </div>
         </div>
         
         <div className="flex gap-2">
-          <Button variant="outline" asChild>
+          <Button 
+            variant="outline" 
+            asChild
+            className="bg-[#1F1F1F] border-[#FFD700]/30 text-white hover:bg-[#FFD700] hover:text-[#0D0D0D]"
+          >
             <Link href={`/admin/products/${product.id}/edit`}>
               <Edit className="h-4 w-4 mr-2" />
               Editar
@@ -129,7 +140,7 @@ export default function ViewProductPage() {
           <Button 
             variant="outline" 
             onClick={handleDeleteProduct}
-            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+            className="bg-[#1F1F1F] border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white"
           >
             <Trash2 className="h-4 w-4 mr-2" />
             Eliminar
@@ -141,69 +152,69 @@ export default function ViewProductPage() {
         {/* Información Principal */}
         <div className="lg:col-span-2 space-y-6">
           {/* Información Básica */}
-          <Card>
+          <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
             <CardHeader>
-              <CardTitle>Información Básica</CardTitle>
+              <CardTitle className="text-white">Información Básica</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-gray-500">Nombre</label>
-                <p className="text-lg font-medium">{product.name}</p>
+                <label className="text-sm font-medium text-gray-400">Nombre</label>
+                <p className="text-lg font-medium text-white">{product.name}</p>
               </div>
               
               <div>
-                <label className="text-sm font-medium text-gray-500">Descripción</label>
-                <p className="text-gray-700">{product.description}</p>
+                <label className="text-sm font-medium text-gray-400">Descripción</label>
+                <p className="text-gray-300">{product.description}</p>
               </div>
               
               {product.shortDesc && (
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Descripción Corta</label>
-                  <p className="text-gray-700">{product.shortDesc}</p>
+                  <label className="text-sm font-medium text-gray-400">Descripción Corta</label>
+                  <p className="text-gray-300">{product.shortDesc}</p>
                 </div>
               )}
 
               <div className="grid grid-cols-2 gap-4">
                 {product.brand && (
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Marca</label>
-                    <p>{product.brand}</p>
+                    <label className="text-sm font-medium text-gray-400">Marca</label>
+                    <p className="text-white">{product.brand}</p>
                   </div>
                 )}
                 {product.model && (
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Modelo</label>
-                    <p>{product.model}</p>
+                    <label className="text-sm font-medium text-gray-400">Modelo</label>
+                    <p className="text-white">{product.model}</p>
                   </div>
                 )}
               </div>
 
               {product.sku && (
                 <div>
-                  <label className="text-sm font-medium text-gray-500">SKU</label>
-                  <p className="font-mono">{product.sku}</p>
+                  <label className="text-sm font-medium text-gray-400">SKU</label>
+                  <p className="font-mono text-white">{product.sku}</p>
                 </div>
               )}
             </CardContent>
           </Card>
 
           {/* Precios */}
-          <Card>
+          <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
             <CardHeader>
-              <CardTitle>Precios</CardTitle>
+              <CardTitle className="text-white">Precios</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Precio</label>
-                  <p className="text-2xl font-bold text-green-600">
+                  <label className="text-sm font-medium text-gray-400">Precio</label>
+                  <p className="text-2xl font-bold text-green-400">
                     {formatPrice(product.price)}
                   </p>
                 </div>
                 {product.comparePrice && (
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Precio de Comparación</label>
-                    <p className="text-xl text-gray-500 line-through">
+                    <label className="text-sm font-medium text-gray-400">Precio de Comparación</label>
+                    <p className="text-xl text-gray-400 line-through">
                       {formatPrice(product.comparePrice)}
                     </p>
                   </div>
@@ -216,28 +227,34 @@ export default function ViewProductPage() {
         {/* Panel Lateral */}
         <div className="space-y-6">
           {/* Estado */}
-          <Card>
+          <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
             <CardHeader>
-              <CardTitle>Estado</CardTitle>
+              <CardTitle className="text-white">Estado</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Estado</span>
-                <Badge variant={product.isActive ? "default" : "secondary"}>
+                <span className="text-sm text-gray-400">Estado</span>
+                <Badge 
+                  variant={product.isActive ? "default" : "secondary"}
+                  className={product.isActive ? "bg-green-500/20 text-green-400 border-green-500/30" : "bg-gray-500/20 text-gray-400 border-gray-500/30"}
+                >
                   {product.isActive ? 'Activo' : 'Inactivo'}
                 </Badge>
               </div>
               
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Destacado</span>
-                <Badge variant={product.isFeatured ? "default" : "outline"}>
+                <span className="text-sm text-gray-400">Destacado</span>
+                <Badge 
+                  variant={product.isFeatured ? "default" : "outline"}
+                  className={product.isFeatured ? "bg-[#FFD700]/20 text-[#FFD700] border-[#FFD700]/30" : "bg-[#0D0D0D] border-[#FFD700]/30 text-gray-400"}
+                >
                   {product.isFeatured ? 'Destacado' : 'Normal'}
                 </Badge>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Categoría</span>
-                <Badge variant="outline">
+                <span className="text-sm text-gray-400">Categoría</span>
+                <Badge variant="outline" className="bg-[#0D0D0D] border-[#FFD700]/30 text-gray-300">
                   {product.category?.name || 'Sin categoría'}
                 </Badge>
               </div>
@@ -245,49 +262,51 @@ export default function ViewProductPage() {
           </Card>
 
           {/* Inventario */}
-          <Card>
+          <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
             <CardHeader>
-              <CardTitle>Inventario</CardTitle>
+              <CardTitle className="text-white">Inventario</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Stock Actual</span>
-                <span className="font-medium">{product.stockCount}</span>
+                <span className="text-sm text-gray-400">Stock Actual</span>
+                <span className="font-medium text-white">{product.stockCount}</span>
               </div>
               
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Tipo de Stock</span>
-                <Badge variant="outline">{product.stockType}</Badge>
+                <span className="text-sm text-gray-400">Tipo de Stock</span>
+                <Badge variant="outline" className="bg-[#0D0D0D] border-[#FFD700]/30 text-gray-300">
+                  {product.stockType}
+                </Badge>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Umbral Bajo</span>
-                <span className="text-sm">{product.lowStockThreshold || 5}</span>
+                <span className="text-sm text-gray-400">Umbral Bajo</span>
+                <span className="text-sm text-white">{product.lowStockThreshold || 5}</span>
               </div>
             </CardContent>
           </Card>
 
           {/* Información del Sistema */}
-          <Card>
+          <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
             <CardHeader>
-              <CardTitle>Información del Sistema</CardTitle>
+              <CardTitle className="text-white">Información del Sistema</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <label className="text-sm font-medium text-gray-500">Creado</label>
-                <p className="text-sm">{formatDate(product.createdAt)}</p>
+                <label className="text-sm font-medium text-gray-400">Creado</label>
+                <p className="text-sm text-white">{formatDate(product.createdAt)}</p>
               </div>
               
               {product.updatedAt && (
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Actualizado</label>
-                  <p className="text-sm">{formatDate(product.updatedAt)}</p>
+                  <label className="text-sm font-medium text-gray-400">Actualizado</label>
+                  <p className="text-sm text-white">{formatDate(product.updatedAt)}</p>
                 </div>
               )}
 
               <div>
-                <label className="text-sm font-medium text-gray-500">ID</label>
-                <p className="text-xs font-mono text-gray-500">{product.id}</p>
+                <label className="text-sm font-medium text-gray-400">ID</label>
+                <p className="text-xs font-mono text-gray-400">{product.id}</p>
               </div>
             </CardContent>
           </Card>

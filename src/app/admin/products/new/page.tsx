@@ -1,4 +1,4 @@
-// src/app/admin/products/new/page.tsx - Crear nuevo producto CON IMÁGENES
+// src/app/admin/products/new/page.tsx - Crear nuevo producto CON IMÁGENES - Dark Tech Theme
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -22,7 +22,7 @@ import {
 import { ArrowLeft, Save, Plus } from 'lucide-react';
 import { productsApi } from '@/lib/api';
 import { useAdminStore } from '@/lib/adminStore';
-import ImageUpload from '@/components/ImageUpload'; // ← AGREGADO
+import ImageUpload from '@/components/ImageUpload';
 import type { Category } from '@/types';
 import {
   Dialog,
@@ -59,7 +59,7 @@ type ProductForm = z.infer<typeof productSchema>;
 export default function NewProductPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [productImages, setProductImages] = useState<any[]>([]); // ← AGREGADO
+  const [productImages, setProductImages] = useState<any[]>([]);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [isCreatingCategory, setIsCreatingCategory] = useState(false);
@@ -97,36 +97,31 @@ export default function NewProductPage() {
   };
 
   const createNewCategory = async () => {
-  if (!newCategoryName.trim()) {
-    alert('Nombre de categoría es requerido');
-    return;
-  }
+    if (!newCategoryName.trim()) {
+      alert('Nombre de categoría es requerido');
+      return;
+    }
 
-  try {
-    setIsCreatingCategory(true);
-    
-    const newCategory = await productsApi.createCategory({
-      name: newCategoryName.trim()
-    });
+    try {
+      setIsCreatingCategory(true);
+      
+      const newCategory = await productsApi.createCategory({
+        name: newCategoryName.trim()
+      });
 
-    // Actualizar lista de categorías
-    setCategories(prev => [...prev, newCategory.category]);
-    
-    // Seleccionar la nueva categoría automáticamente
-    setValue('categoryId', newCategory.category.id);
-    
-    // Cerrar modal y limpiar
-    setShowCategoryModal(false);
-    setNewCategoryName('');
-    
-    alert('Categoría creada exitosamente');
-  } catch (error: any) {
-    console.error('Error creating category:', error);
-    alert(error.response?.data?.error || 'Error al crear categoría');
-  } finally {
-    setIsCreatingCategory(false);
-  }
-};
+      setCategories(prev => [...prev, newCategory.category]);
+      setValue('categoryId', newCategory.category.id);
+      setShowCategoryModal(false);
+      setNewCategoryName('');
+      
+      alert('Categoría creada exitosamente');
+    } catch (error: any) {
+      console.error('Error creating category:', error);
+      alert(error.response?.data?.error || 'Error al crear categoría');
+    } finally {
+      setIsCreatingCategory(false);
+    }
+  };
 
   const onSubmit = async (data: ProductForm) => {
     try {
@@ -134,7 +129,7 @@ export default function NewProductPage() {
 
       const productData = {
         ...data,
-        images: productImages, // ← AGREGADO
+        images: productImages,
         comparePrice: data.comparePrice || undefined,
         shortDesc: data.shortDesc || undefined,
         brand: data.brand || undefined,
@@ -161,19 +156,20 @@ export default function NewProductPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-[#0D0D0D] min-h-screen p-6">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button
           variant="outline"
           onClick={() => router.back()}
+          className="bg-[#1F1F1F] border-[#FFD700]/30 text-white hover:bg-[#FFD700] hover:text-[#0D0D0D]"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Volver
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Nuevo Producto</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-white">Nuevo Producto</h1>
+          <p className="text-gray-400 mt-1">
             Agrega un nuevo producto a tu catálogo
           </p>
         </div>
@@ -183,63 +179,68 @@ export default function NewProductPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Información Básica */}
           <div className="lg:col-span-2">
-            <Card>
+            <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
               <CardHeader>
-                <CardTitle>Información Básica</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-white">Información Básica</CardTitle>
+                <CardDescription className="text-gray-400">
                   Detalles principales del producto
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="name">Nombre del Producto *</Label>
+                  <Label htmlFor="name" className="text-white">Nombre del Producto *</Label>
                   <Input
                     id="name"
                     {...register('name')}
                     placeholder="Ej: iPhone 15 Pro Max"
+                    className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                   />
                   {errors.name && (
-                    <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
+                    <p className="text-sm text-red-400 mt-1">{errors.name.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <Label htmlFor="description">Descripción *</Label>
+                  <Label htmlFor="description" className="text-white">Descripción *</Label>
                   <Textarea
                     id="description"
                     {...register('description')}
                     placeholder="Descripción detallada del producto..."
                     rows={4}
+                    className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                   />
                   {errors.description && (
-                    <p className="text-sm text-red-500 mt-1">{errors.description.message}</p>
+                    <p className="text-sm text-red-400 mt-1">{errors.description.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <Label htmlFor="shortDesc">Descripción Corta</Label>
+                  <Label htmlFor="shortDesc" className="text-white">Descripción Corta</Label>
                   <Input
                     id="shortDesc"
                     {...register('shortDesc')}
                     placeholder="Resumen breve para listados"
+                    className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="brand">Marca</Label>
+                    <Label htmlFor="brand" className="text-white">Marca</Label>
                     <Input
                       id="brand"
                       {...register('brand')}
                       placeholder="Ej: Apple, Samsung"
+                      className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="model">Modelo</Label>
+                    <Label htmlFor="model" className="text-white">Modelo</Label>
                     <Input
                       id="model"
                       {...register('model')}
                       placeholder="Ej: iPhone 15 Pro"
+                      className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                     />
                   </div>
                 </div>
@@ -249,52 +250,52 @@ export default function NewProductPage() {
 
           {/* Configuración */}
           <div>
-            <Card>
+            <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
               <CardHeader>
-                <CardTitle>Configuración</CardTitle>
+                <CardTitle className="text-white">Configuración</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-  <div className="flex items-center justify-between">
-    <Label htmlFor="categoryId">Categoría *</Label>
-    <Button
-      type="button"
-      variant="outline"
-      size="sm"
-      onClick={() => setShowCategoryModal(true)}
-      className="text-xs"
-    >
-      <Plus className="h-3 w-3 mr-1" />
-      Nueva
-    </Button>
-  </div>
-  <Select onValueChange={(value) => setValue('categoryId', value)}>
-    <SelectTrigger>
-      <SelectValue placeholder="Seleccionar categoría" />
-    </SelectTrigger>
-    <SelectContent>
-      {categories.map((category) => (
-        <SelectItem key={category.id} value={category.id}>
-          {category.name}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-  {errors.categoryId && (
-    <p className="text-sm text-red-500 mt-1">{errors.categoryId.message}</p>
-  )}
-</div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="categoryId" className="text-white">Categoría *</Label>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowCategoryModal(true)}
+                      className="text-xs bg-[#0D0D0D] border-[#FFD700]/30 text-white hover:bg-[#FFD700] hover:text-[#0D0D0D]"
+                    >
+                      <Plus className="h-3 w-3 mr-1" />
+                      Nueva
+                    </Button>
+                  </div>
+                  <Select onValueChange={(value) => setValue('categoryId', value)}>
+                    <SelectTrigger className="bg-[#0D0D0D] border-[#FFD700]/30 text-white">
+                      <SelectValue placeholder="Seleccionar categoría" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#1F1F1F] border-[#FFD700]/30">
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id} className="text-white hover:bg-[#FFD700]/20">
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.categoryId && (
+                    <p className="text-sm text-red-400 mt-1">{errors.categoryId.message}</p>
+                  )}
+                </div>
 
                 <div>
-                  <Label htmlFor="stockType">Tipo de Stock</Label>
+                  <Label htmlFor="stockType" className="text-white">Tipo de Stock</Label>
                   <Select onValueChange={(value) => setValue('stockType', value as 'PHYSICAL' | 'DROPSHIPPING' | 'BOTH')}>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-[#0D0D0D] border-[#FFD700]/30 text-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="PHYSICAL">Físico</SelectItem>
-                      <SelectItem value="DROPSHIPPING">Dropshipping</SelectItem>
-                      <SelectItem value="BOTH">Ambos</SelectItem>
+                    <SelectContent className="bg-[#1F1F1F] border-[#FFD700]/30">
+                      <SelectItem value="PHYSICAL" className="text-white hover:bg-[#FFD700]/20">Físico</SelectItem>
+                      <SelectItem value="DROPSHIPPING" className="text-white hover:bg-[#FFD700]/20">Dropshipping</SelectItem>
+                      <SelectItem value="BOTH" className="text-white hover:bg-[#FFD700]/20">Ambos</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -305,24 +306,27 @@ export default function NewProductPage() {
                       id="isActive"
                       defaultChecked={true}
                       onCheckedChange={(checked) => setValue('isActive', !!checked)}
+                      className="border-[#FFD700]/30 data-[state=checked]:bg-[#FFD700] data-[state=checked]:text-[#0D0D0D]"
                     />
-                    <Label htmlFor="isActive">Producto Activo</Label>
+                    <Label htmlFor="isActive" className="text-white">Producto Activo</Label>
                   </div>
 
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="isFeatured"
                       onCheckedChange={(checked) => setValue('isFeatured', !!checked)}
+                      className="border-[#FFD700]/30 data-[state=checked]:bg-[#FFD700] data-[state=checked]:text-[#0D0D0D]"
                     />
-                    <Label htmlFor="isFeatured">Producto Destacado</Label>
+                    <Label htmlFor="isFeatured" className="text-white">Producto Destacado</Label>
                   </div>
 
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="isDigital"
                       onCheckedChange={(checked) => setValue('isDigital', !!checked)}
+                      className="border-[#FFD700]/30 data-[state=checked]:bg-[#FFD700] data-[state=checked]:text-[#0D0D0D]"
                     />
-                    <Label htmlFor="isDigital">Producto Digital</Label>
+                    <Label htmlFor="isDigital" className="text-white">Producto Digital</Label>
                   </div>
                 </div>
               </CardContent>
@@ -330,11 +334,11 @@ export default function NewProductPage() {
           </div>
         </div>
 
-        {/* ← NUEVA SECCIÓN: Imágenes del Producto */}
-        <Card>
+        {/* Imágenes del Producto */}
+        <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
           <CardHeader>
-            <CardTitle>Imágenes del Producto</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-white">Imágenes del Producto</CardTitle>
+            <CardDescription className="text-gray-400">
               Sube hasta 5 imágenes del producto. La primera será la imagen principal.
             </CardDescription>
           </CardHeader>
@@ -349,54 +353,58 @@ export default function NewProductPage() {
         </Card>
 
         {/* Precios e Inventario */}
-        <Card>
+        <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
           <CardHeader>
-            <CardTitle>Precios e Inventario</CardTitle>
+            <CardTitle className="text-white">Precios e Inventario</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
-                <Label htmlFor="price">Precio *</Label>
+                <Label htmlFor="price" className="text-white">Precio *</Label>
                 <Input
                   id="price"
                   type="number"
                   step="0.01"
                   {...register('price', { valueAsNumber: true })}
                   placeholder="0.00"
+                  className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                 />
                 {errors.price && (
-                  <p className="text-sm text-red-500 mt-1">{errors.price.message}</p>
+                  <p className="text-sm text-red-400 mt-1">{errors.price.message}</p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="comparePrice">Precio de Comparación</Label>
+                <Label htmlFor="comparePrice" className="text-white">Precio de Comparación</Label>
                 <Input
                   id="comparePrice"
                   type="number"
                   step="0.01"
                   {...register('comparePrice', { valueAsNumber: true })}
                   placeholder="0.00"
+                  className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                 />
               </div>
 
               <div>
-                <Label htmlFor="stockCount">Stock</Label>
+                <Label htmlFor="stockCount" className="text-white">Stock</Label>
                 <Input
                   id="stockCount"
                   type="number"
                   {...register('stockCount', { valueAsNumber: true })}
                   placeholder="0"
+                  className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                 />
               </div>
 
               <div>
-                <Label htmlFor="lowStockThreshold">Alerta Stock Bajo</Label>
+                <Label htmlFor="lowStockThreshold" className="text-white">Alerta Stock Bajo</Label>
                 <Input
                   id="lowStockThreshold"
                   type="number"
                   {...register('lowStockThreshold', { valueAsNumber: true })}
                   placeholder="5"
+                  className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                 />
               </div>
             </div>
@@ -404,37 +412,40 @@ export default function NewProductPage() {
         </Card>
 
         {/* Información Adicional */}
-        <Card>
+        <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
           <CardHeader>
-            <CardTitle>Información Adicional</CardTitle>
+            <CardTitle className="text-white">Información Adicional</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="sku">SKU</Label>
+                <Label htmlFor="sku" className="text-white">SKU</Label>
                 <Input
                   id="sku"
                   {...register('sku')}
                   placeholder="Código único del producto"
+                  className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                 />
               </div>
 
               <div>
-                <Label htmlFor="metaTitle">Meta Título (SEO)</Label>
+                <Label htmlFor="metaTitle" className="text-white">Meta Título (SEO)</Label>
                 <Input
                   id="metaTitle"
                   {...register('metaTitle')}
                   placeholder="Título para motores de búsqueda"
+                  className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                 />
               </div>
 
               <div className="md:col-span-2">
-                <Label htmlFor="metaDesc">Meta Descripción (SEO)</Label>
+                <Label htmlFor="metaDesc" className="text-white">Meta Descripción (SEO)</Label>
                 <Textarea
                   id="metaDesc"
                   {...register('metaDesc')}
                   placeholder="Descripción para motores de búsqueda (máx. 160 caracteres)"
                   rows={2}
+                  className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                 />
               </div>
             </div>
@@ -446,7 +457,7 @@ export default function NewProductPage() {
           <Button
             type="submit"
             disabled={isLoading}
-            className="bg-primary-600 hover:bg-primary-700"
+            className="bg-[#FFD700] hover:bg-[#00C8FF] text-[#0D0D0D] font-semibold transition-all duration-300"
           >
             <Save className="h-4 w-4 mr-2" />
             {isLoading ? 'Guardando...' : 'Crear Producto'}
@@ -455,30 +466,33 @@ export default function NewProductPage() {
             type="button"
             variant="outline"
             onClick={() => router.back()}
+            className="bg-[#1F1F1F] border-[#FFD700]/30 text-white hover:bg-[#FFD700] hover:text-[#0D0D0D]"
           >
             Cancelar
           </Button>
         </div>
       </form>
+
       {/* Modal para nueva categoría */}
       <Dialog open={showCategoryModal} onOpenChange={setShowCategoryModal}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md bg-[#1F1F1F] border-[#FFD700]/30">
           <DialogHeader>
-            <DialogTitle>Nueva Categoría</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-white">Nueva Categoría</DialogTitle>
+            <DialogDescription className="text-gray-400">
               Agrega una nueva categoría para tus productos
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4">
             <div>
-              <Label htmlFor="categoryName">Nombre de la Categoría</Label>
+              <Label htmlFor="categoryName" className="text-white">Nombre de la Categoría</Label>
               <Input
                 id="categoryName"
                 value={newCategoryName}
                 onChange={(e) => setNewCategoryName(e.target.value)}
                 placeholder="Ej: Electrónicos, Ropa, Accesorios..."
                 disabled={isCreatingCategory}
+                className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
               />
             </div>
           </div>
@@ -491,12 +505,14 @@ export default function NewProductPage() {
                 setNewCategoryName('');
               }}
               disabled={isCreatingCategory}
+              className="bg-[#0D0D0D] border-[#FFD700]/30 text-white hover:bg-[#1F1F1F]"
             >
               Cancelar
             </Button>
             <Button
               onClick={createNewCategory}
               disabled={isCreatingCategory || !newCategoryName.trim()}
+              className="bg-[#FFD700] hover:bg-[#00C8FF] text-[#0D0D0D] font-semibold"
             >
               {isCreatingCategory ? (
                 <>

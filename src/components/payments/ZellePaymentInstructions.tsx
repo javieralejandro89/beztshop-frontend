@@ -35,9 +35,9 @@ const ZellePaymentInstructions: React.FC<ZellePaymentInstructionsProps> = ({
 
   // TUS DATOS DE ZELLE - MODIFICA AQUÍ
   const ZELLE_INFO = {
-    email: "contacto@serviprogarcia.com", // CAMBIAR POR TU EMAIL DE ZELLE
-    phone: "+1-832-523-0060",     // CAMBIAR POR TU TELÉFONO DE ZELLE  
-    name: "ServiPro Garcia LLC"    // CAMBIAR POR TU NOMBRE COMPLETO
+    email: "atencionalcliente@beztshop.com", // CAMBIAR POR TU EMAIL DE ZELLE
+    phone: "+52 998 578 0385",     // CAMBIAR POR TU TELÉFONO DE ZELLE  
+    name: "BeztShop"    // CAMBIAR POR TU NOMBRE COMPLETO
   };
 
   const copyToClipboard = (text: string, label: string) => {

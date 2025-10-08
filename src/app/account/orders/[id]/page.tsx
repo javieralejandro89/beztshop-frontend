@@ -1,4 +1,4 @@
-// src/app/account/orders/[id]/page.tsx - Detalles de pedido individual
+// src/app/account/orders/[id]/page.tsx - Detalles de pedido individual Dark Tech
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -117,14 +117,14 @@ export default function OrderDetailPage() {
   const getStatusIcon = (status: Order['status']) => {
     switch (status) {
       case 'pending':
-        return <Clock className="h-5 w-5 text-yellow-500" />;
+        return <Clock className="h-5 w-5 text-gold" />;
       case 'processing':
       case 'confirmed':
-        return <Package className="h-5 w-5 text-blue-500" />;
+        return <Package className="h-5 w-5 text-cyan" />;
       case 'shipped':
-        return <Truck className="h-5 w-5 text-purple-500" />;
+        return <Truck className="h-5 w-5 text-cyan" />;
       case 'delivered':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <CheckCircle className="h-5 w-5 text-gold" />;
       case 'cancelled':
       case 'refunded':
         return <XCircle className="h-5 w-5 text-red-500" />;
@@ -167,12 +167,12 @@ export default function OrderDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+      <div className="min-h-screen bg-darkbg">
         <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-            <div className="text-lg">Cargando detalles del pedido...</div>
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-gold" />
+            <div className="text-lg text-white">Cargando detalles del pedido...</div>
           </div>
         </div>
       </div>
@@ -181,15 +181,15 @@ export default function OrderDetailPage() {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+      <div className="min-h-screen bg-darkbg">
         <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-12">
-            <Package className="h-16 w-16 text-gray-300 mx-auto mb-6" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            <Package className="h-16 w-16 text-gray-600 mx-auto mb-6" />
+            <h2 className="text-xl font-semibold text-white mb-4">
               Pedido no encontrado
             </h2>
-            <Button asChild>
+            <Button asChild className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-semibold">
               <Link href="/account/orders">Volver a pedidos</Link>
             </Button>
           </div>
@@ -199,7 +199,7 @@ export default function OrderDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+    <div className="min-h-screen bg-darkbg">
       <Header />
       
       <main className="container mx-auto px-4 py-8">
@@ -210,12 +210,12 @@ export default function OrderDetailPage() {
     <Button 
       variant="ghost" 
       onClick={() => router.push('/account/orders')}
-      className="p-2"
+      className="p-2 text-white hover:text-gold hover:bg-darkbg-light"
     >
       <ArrowLeft className="h-5 w-5" />
     </Button>
-    <h1 className="text-lg font-bold text-gray-900 flex items-center gap-2 min-w-0 flex-1">
-      <Package className="h-5 w-5 text-primary-600 flex-shrink-0" />
+    <h1 className="text-lg font-bold text-white flex items-center gap-2 min-w-0 flex-1">
+      <Package className="h-5 w-5 text-gold flex-shrink-0" />
       <span className="truncate">Pedido #{order.orderNumber}</span>
     </h1>
   </div>
@@ -223,12 +223,12 @@ export default function OrderDetailPage() {
   <div className="space-y-3 ml-11">
     <div className="flex items-center gap-2">
       {getStatusIcon(order.status)}
-      <Badge variant="outline" className="flex items-center gap-1 text-xs">
+      <Badge variant="outline" className="flex items-center gap-1 text-xs border-cyan/30 text-cyan">
         {getStatusText(order.status)}
       </Badge>
     </div>
     
-    <div className="flex items-center gap-2 text-gray-600 text-sm">
+    <div className="flex items-center gap-2 text-gray-400 text-sm">
       <Calendar className="h-3 w-3" />
       <span>Pedido realizado el {formatDate(order.date)}</span>
     </div>
@@ -238,7 +238,7 @@ export default function OrderDetailPage() {
         onClick={downloadInvoice}
         disabled={isDownloading}
         variant="outline"
-        className="w-full text-sm"
+        className="w-full text-sm bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold"
         size="sm"
       >
         {isDownloading ? (
@@ -257,23 +257,23 @@ export default function OrderDetailPage() {
   <Button 
     variant="ghost" 
     onClick={() => router.push('/account/orders')}
-    className="p-2"
+    className="p-2 text-white hover:text-gold hover:bg-darkbg-light"
   >
     <ArrowLeft className="h-5 w-5" />
   </Button>
   <div className="flex-1">
-    <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-      <Package className="h-8 w-8 text-primary-600" />
+    <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+      <Package className="h-8 w-8 text-gold" />
       Pedido #{order.orderNumber}
     </h1>
     <div className="flex items-center gap-4 mt-2">
       <div className="flex items-center gap-2">
         {getStatusIcon(order.status)}
-        <Badge variant="outline" className="flex items-center gap-1">
+        <Badge variant="outline" className="flex items-center gap-1 border-cyan/30 text-cyan">
           {getStatusText(order.status)}
         </Badge>
       </div>
-      <div className="flex items-center gap-2 text-gray-600">
+      <div className="flex items-center gap-2 text-gray-400">
         <Calendar className="h-4 w-4" />
         <span>Pedido realizado el {formatDate(order.date)}</span>
       </div>
@@ -287,6 +287,7 @@ export default function OrderDetailPage() {
         onClick={downloadInvoice}
         disabled={isDownloading}
         variant="outline"
+        className="bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold"
       >
         {isDownloading ? (
           <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -303,20 +304,20 @@ export default function OrderDetailPage() {
           {/* Columna principal */}
           <div className="lg:col-span-2 space-y-6">
             {/* Productos del pedido */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Package className="h-5 w-5" />
+            <Card className="bg-darkbg-light border-gold/20">
+              <CardHeader className="border-b border-gold/10">
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Package className="h-5 w-5 text-gold" />
                   Productos ({order.items.length})
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <div className="space-y-6">
                   {order.items.map((item) => (
-                    <div key={item.id} className="flex items-start gap-4 pb-6 border-b last:border-b-0 last:pb-0">
+                    <div key={item.id} className="flex items-start gap-4 pb-6 border-b border-gold/10 last:border-b-0 last:pb-0">
                       {/* Imagen del producto */}
                       <div className="flex-shrink-0">
-                        <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden">
+                        <div className="w-20 h-20 bg-darkbg rounded-lg overflow-hidden border border-gold/20">
                           {item.product ? (
                             <Image
                               src={item.product.image || '/placeholder-product.jpg'}
@@ -330,7 +331,7 @@ export default function OrderDetailPage() {
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center">
-                              <Package className="h-8 w-8 text-gray-400" />
+                              <Package className="h-8 w-8 text-gray-600" />
                             </div>
                           )}
                         </div>
@@ -340,31 +341,31 @@ export default function OrderDetailPage() {
                       <div className="flex-1">
                         <div className="flex justify-between items-start mb-2">
                           <div>
-                            <h3 className="font-semibold text-lg line-clamp-2">
+                            <h3 className="font-semibold text-lg line-clamp-2 text-white">
                               {item.productName}
                             </h3>
                             {item.variants && (
-                              <p className="text-sm text-gray-600 mt-1">
+                              <p className="text-sm text-gray-400 mt-1">
                                 Variante: {JSON.stringify(item.variants)}
                               </p>
                             )}
                           </div>
                           <div className="text-right ml-4">
-                            <p className="font-bold text-lg">
+                            <p className="font-bold text-lg text-gold">
                               {formatPrice(item.totalPrice)}
                             </p>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-gray-400">
                               {formatPrice(item.price)} × {item.quantity}
                             </p>
                           </div>
                         </div>
 
-                        <div className="flex items-center justify-between text-sm text-gray-600">
+                        <div className="flex items-center justify-between text-sm text-gray-400">
                           <span>Cantidad: {item.quantity}</span>
                           {item.product && (
                             <Link 
                               href={`/products/${item.product.slug}`}
-                              className="text-primary-600 hover:text-primary-700 transition-colors"
+                              className="text-cyan hover:text-gold transition-colors"
                             >
                               Ver producto →
                             </Link>
@@ -378,22 +379,22 @@ export default function OrderDetailPage() {
             </Card>
 
             {/* Dirección de envío */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5" />
+            <Card className="bg-darkbg-light border-gold/20">
+              <CardHeader className="border-b border-gold/10">
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <MapPin className="h-5 w-5 text-cyan" />
                   Dirección de Envío
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 {order.shippingAddress && (
                   <div className="space-y-2">
-                    <p className="font-semibold">{order.shippingAddress.name}</p>
-                    <p className="text-gray-600">{order.shippingAddress.street}</p>
-                    <p className="text-gray-600">
+                    <p className="font-semibold text-white">{order.shippingAddress.name}</p>
+                    <p className="text-gray-400">{order.shippingAddress.street}</p>
+                    <p className="text-gray-400">
                       {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}
                     </p>
-                    <p className="text-gray-600">{order.shippingAddress.country}</p>
+                    <p className="text-gray-400">{order.shippingAddress.country}</p>
                   </div>
                 )}
               </CardContent>
@@ -401,27 +402,27 @@ export default function OrderDetailPage() {
 
             {/* Seguimiento del envío */}
             {order.trackingNumber && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Truck className="h-5 w-5" />
+              <Card className="bg-darkbg-light border-gold/20">
+                <CardHeader className="border-b border-gold/10">
+                  <CardTitle className="flex items-center gap-2 text-white">
+                    <Truck className="h-5 w-5 text-cyan" />
                     Seguimiento del Envío
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pt-6">
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium">Número de seguimiento:</span>
-                      <Badge variant="outline">{order.trackingNumber}</Badge>
+                      <span className="font-medium text-white">Número de seguimiento:</span>
+                      <Badge variant="outline" className="border-gold/30 text-gold">{order.trackingNumber}</Badge>
                     </div>
                     {order.shippedAt && (
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <div className="flex items-center gap-2 text-sm text-gray-400">
                         <Clock className="h-4 w-4" />
                         <span>Enviado el {formatDate(order.shippedAt)}</span>
                       </div>
                     )}
                     {order.deliveredAt && (
-                      <div className="flex items-center gap-2 text-sm text-green-600">
+                      <div className="flex items-center gap-2 text-sm text-gold">
                         <CheckCircle className="h-4 w-4" />
                         <span>Entregado el {formatDate(order.deliveredAt)}</span>
                       </div>
@@ -433,12 +434,12 @@ export default function OrderDetailPage() {
 
             {/* Notas del pedido */}
             {order.notes && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Notas del Pedido</CardTitle>
+              <Card className="bg-darkbg-light border-gold/20">
+                <CardHeader className="border-b border-gold/10">
+                  <CardTitle className="text-white">Notas del Pedido</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700">{order.notes}</p>
+                <CardContent className="pt-6">
+                  <p className="text-gray-300">{order.notes}</p>
                 </CardContent>
               </Card>
             )}
@@ -447,65 +448,66 @@ export default function OrderDetailPage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Resumen del pedido */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Resumen del Pedido</CardTitle>
+            <Card className="bg-darkbg-light border-gold/20">
+              <CardHeader className="border-b border-gold/10">
+                <CardTitle className="text-white">Resumen del Pedido</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 pt-6">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Subtotal</span>
-                  <span>{formatPrice(order.subtotal)}</span>
+                  <span className="text-gray-400">Subtotal</span>
+                  <span className="text-white">{formatPrice(order.subtotal)}</span>
                 </div>
 
                 {order.discount > 0 && (
-                  <div className="flex justify-between text-green-600">
+                  <div className="flex justify-between text-gold">
                     <span>Descuento</span>
                     <span>-{formatPrice(order.discount)}</span>
                   </div>
                 )}
 
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Envío</span>
+                  <span className="text-gray-400">Envío</span>
                   {order.shipping === 0 ? (
-                    <span className="text-green-600 font-medium">GRATIS</span>
+                    <span className="text-gold font-medium">GRATIS</span>
                   ) : (
-                    <span>{formatPrice(order.shipping)}</span>
+                    <span className="text-white">{formatPrice(order.shipping)}</span>
                   )}
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Impuestos</span>
-                  <span>{formatPrice(order.tax)}</span>
+                  <span className="text-gray-400">Impuestos</span>
+                  <span className="text-white">{formatPrice(order.tax)}</span>
                 </div>
 
-                <Separator />
+                <Separator className="bg-gold/20" />
 
                 <div className="flex justify-between text-lg font-bold">
-                  <span>Total</span>
-                  <span className="text-primary-700">{formatPrice(order.total)}</span>
+                  <span className="text-white">Total</span>
+                  <span className="text-gold">{formatPrice(order.total)}</span>
                 </div>
               </CardContent>
             </Card>
 
             {/* Estado del pago */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CreditCard className="h-5 w-5" />
+            <Card className="bg-darkbg-light border-gold/20">
+              <CardHeader className="border-b border-gold/10">
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <CreditCard className="h-5 w-5 text-cyan" />
                   Estado del Pago
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span>Estado:</span>
+                    <span className="text-gray-400">Estado:</span>
                     <Badge 
                       variant={order.paymentStatus === 'paid' ? 'default' : 'secondary'}
+                      className={order.paymentStatus === 'paid' ? 'bg-gradient-to-r from-gold to-cyan text-darkbg border-0' : 'bg-darkbg-light border-gray-600 text-gray-300'}
                     >
                       {getPaymentStatusText(order.paymentStatus)}
                     </Badge>
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-400">
                     <p>Método de pago: {order.paymentMethod || 'No especificado'}</p>
                   </div>
                 </div>
@@ -513,46 +515,46 @@ export default function OrderDetailPage() {
             </Card>
 
             {/* Historial de estado */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Historial del Pedido</CardTitle>
+            <Card className="bg-darkbg-light border-gold/20">
+              <CardHeader className="border-b border-gold/10">
+                <CardTitle className="text-white">Historial del Pedido</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 text-sm">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <div className="w-2 h-2 bg-gold rounded-full"></div>
                     <div>
-                      <p className="font-medium">Pedido realizado</p>
-                      <p className="text-gray-500">{formatDate(order.date)}</p>
+                      <p className="font-medium text-white">Pedido realizado</p>
+                      <p className="text-gray-400">{formatDate(order.date)}</p>
                     </div>
                   </div>
 
                   {order.status !== 'pending' && (
                     <div className="flex items-center gap-3 text-sm">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <div className="w-2 h-2 bg-gold rounded-full"></div>
                       <div>
-                        <p className="font-medium">Pedido confirmado</p>
-                        <p className="text-gray-500">Estado actual: {getStatusText(order.status)}</p>
+                        <p className="font-medium text-white">Pedido confirmado</p>
+                        <p className="text-gray-400">Estado actual: {getStatusText(order.status)}</p>
                       </div>
                     </div>
                   )}
 
                   {order.shippedAt && (
                     <div className="flex items-center gap-3 text-sm">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <div className="w-2 h-2 bg-cyan rounded-full"></div>
                       <div>
-                        <p className="font-medium">Pedido enviado</p>
-                        <p className="text-gray-500">{formatDate(order.shippedAt)}</p>
+                        <p className="font-medium text-white">Pedido enviado</p>
+                        <p className="text-gray-400">{formatDate(order.shippedAt)}</p>
                       </div>
                     </div>
                   )}
 
                   {order.deliveredAt && (
                     <div className="flex items-center gap-3 text-sm">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <div className="w-2 h-2 bg-gold rounded-full"></div>
                       <div>
-                        <p className="font-medium">Pedido entregado</p>
-                        <p className="text-gray-500">{formatDate(order.deliveredAt)}</p>
+                        <p className="font-medium text-white">Pedido entregado</p>
+                        <p className="text-gray-400">{formatDate(order.deliveredAt)}</p>
                       </div>
                     </div>
                   )}
@@ -561,19 +563,19 @@ export default function OrderDetailPage() {
             </Card>
 
             {/* Acciones rápidas */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Acciones</CardTitle>
+            <Card className="bg-darkbg-light border-gold/20">
+              <CardHeader className="border-b border-gold/10">
+                <CardTitle className="text-white">Acciones</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <Button asChild variant="outline" className="w-full">
+              <CardContent className="space-y-3 pt-6">
+                <Button asChild variant="outline" className="w-full bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold">
                   <Link href="/account/orders">
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Volver a pedidos
                   </Link>
                 </Button>
                 
-                <Button asChild variant="outline" className="w-full">
+                <Button asChild variant="outline" className="w-full bg-darkbg border-cyan/30 text-white hover:bg-cyan hover:text-darkbg hover:border-cyan">
                   <Link href="/products">
                     <Package className="h-4 w-4 mr-2" />
                     Seguir comprando
@@ -581,7 +583,7 @@ export default function OrderDetailPage() {
                 </Button>
 
                 {order.paymentStatus === 'paid' && (
-                  <Button asChild variant="outline" className="w-full">
+                  <Button asChild variant="outline" className="w-full bg-darkbg border-gold/30 text-white hover:bg-gold hover:text-darkbg hover:border-gold">
                     <Link href="/account/orders">
                       <Download className="h-4 w-4 mr-2" />
                       Historial completo

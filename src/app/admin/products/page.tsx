@@ -1,4 +1,4 @@
-// src/app/admin/products/page.tsx - Gestión de productos
+// src/app/admin/products/page.tsx - Gestión de productos con Dark Tech Theme
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -110,28 +110,28 @@ export default function ProductsAdminPage() {
     
     switch (status) {
       case 'inactive':
-        return <Badge variant="secondary">Inactivo</Badge>;
+        return <Badge variant="secondary" className="bg-gray-500/20 text-gray-400 border-gray-500/30">Inactivo</Badge>;
       case 'out-of-stock':
-        return <Badge variant="destructive">Sin Stock</Badge>;
+        return <Badge variant="destructive" className="bg-red-500/20 text-red-400 border-red-500/30">Sin Stock</Badge>;
       case 'low-stock':
-        return <Badge className="bg-yellow-500 hover:bg-yellow-600">Stock Bajo</Badge>;
+        return <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">Stock Bajo</Badge>;
       default:
-        return <Badge className="bg-green-500 hover:bg-green-600">En Stock</Badge>;
+        return <Badge className="bg-green-500/20 text-green-400 border-green-500/30">En Stock</Badge>;
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-[#0D0D0D] min-h-screen p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Productos</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-white">Productos</h1>
+          <p className="text-gray-400 mt-1">
             Gestiona tu catálogo de productos
           </p>
         </div>
         <Link href="/admin/products/new">
-          <Button className="bg-primary-600 hover:bg-primary-700">
+          <Button className="bg-[#FFD700] hover:bg-[#00C8FF] text-[#0D0D0D] font-semibold transition-all duration-300">
             <Plus className="h-4 w-4 mr-2" />
             Nuevo Producto
           </Button>
@@ -140,25 +140,25 @@ export default function ProductsAdminPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="bg-[#1F1F1F] border-blue-500/30">
           <CardContent className="p-4">
             <div className="flex items-center">
               <Package className="h-8 w-8 text-blue-500" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Total</p>
-                <p className="text-2xl font-bold">{products.length}</p>
+                <p className="text-sm font-medium text-gray-400">Total</p>
+                <p className="text-2xl font-bold text-white">{products.length}</p>
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="bg-[#1F1F1F] border-green-500/30">
           <CardContent className="p-4">
             <div className="flex items-center">
               <Star className="h-8 w-8 text-green-500" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Activos</p>
-                <p className="text-2xl font-bold">
+                <p className="text-sm font-medium text-gray-400">Activos</p>
+                <p className="text-2xl font-bold text-white">
                   {products.filter(p => p.isActive).length}
                 </p>
               </div>
@@ -166,13 +166,13 @@ export default function ProductsAdminPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-[#1F1F1F] border-[#FFD700]/30">
           <CardContent className="p-4">
             <div className="flex items-center">
-              <Star className="h-8 w-8 text-primary-500" />
+              <Star className="h-8 w-8 text-[#FFD700]" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Destacados</p>
-                <p className="text-2xl font-bold">
+                <p className="text-sm font-medium text-gray-400">Destacados</p>
+                <p className="text-2xl font-bold text-white">
                   {products.filter(p => p.isFeatured).length}
                 </p>
               </div>
@@ -180,13 +180,13 @@ export default function ProductsAdminPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-[#1F1F1F] border-red-500/30">
           <CardContent className="p-4">
             <div className="flex items-center">
               <AlertTriangle className="h-8 w-8 text-red-500" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Stock Bajo</p>
-                <p className="text-2xl font-bold">
+                <p className="text-sm font-medium text-gray-400">Stock Bajo</p>
+                <p className="text-2xl font-bold text-white">
                   {products.filter(p => p.stockCount <= 5 && p.isActive).length}
                 </p>
               </div>
@@ -196,9 +196,9 @@ export default function ProductsAdminPage() {
       </div>
 
       {/* Search and Filters */}
-      <Card>
+      <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
         <CardHeader>
-          <CardTitle>Buscar Productos</CardTitle>
+          <CardTitle className="text-white">Buscar Productos</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex gap-4">
@@ -208,9 +208,14 @@ export default function ProductsAdminPage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
               />
             </div>
-            <Button onClick={handleSearch} variant="outline">
+            <Button 
+              onClick={handleSearch} 
+              variant="outline"
+              className="bg-[#0D0D0D] border-[#FFD700]/30 text-white hover:bg-[#FFD700] hover:text-[#0D0D0D]"
+            >
               <Search className="h-4 w-4 mr-2" />
               Buscar
             </Button>
@@ -219,59 +224,59 @@ export default function ProductsAdminPage() {
       </Card>
 
       {/* Products Table */}
-      <Card>
+      <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
         <CardHeader>
-          <CardTitle>Lista de Productos</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-white">Lista de Productos</CardTitle>
+          <CardDescription className="text-gray-400">
             {products.length} productos en total
           </CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="text-center py-8">Cargando productos...</div>
+            <div className="text-center py-8 text-gray-400">Cargando productos...</div>
           ) : error ? (
-            <div className="text-center py-8 text-red-600">{error}</div>
+            <div className="text-center py-8 text-red-400">{error}</div>
           ) : products.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-gray-400">
               No hay productos para mostrar
             </div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Producto</TableHead>
-                    <TableHead>Categoría</TableHead>
-                    <TableHead>Precio</TableHead>
-                    <TableHead>Stock</TableHead>
-                    <TableHead>Estado</TableHead>
-                    <TableHead>Creado</TableHead>
-                    <TableHead>Acciones</TableHead>
+                  <TableRow className="border-b border-[#FFD700]/20 hover:bg-[#0D0D0D]">
+                    <TableHead className="text-white">Producto</TableHead>
+                    <TableHead className="text-white">Categoría</TableHead>
+                    <TableHead className="text-white">Precio</TableHead>
+                    <TableHead className="text-white">Stock</TableHead>
+                    <TableHead className="text-white">Estado</TableHead>
+                    <TableHead className="text-white">Creado</TableHead>
+                    <TableHead className="text-white">Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {products.map((product) => (
-                    <TableRow key={product.id}>
+                    <TableRow key={product.id} className="border-b border-[#FFD700]/10 hover:bg-[#0D0D0D] transition-colors">
                       <TableCell>
                         <div>
-                          <div className="font-medium">{product.name}</div>
-                          <div className="text-sm text-gray-500">
+                          <div className="font-medium text-white">{product.name}</div>
+                          <div className="text-sm text-gray-400">
                             {product.brand} • SKU: {product.sku || 'N/A'}
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline">
+                        <Badge variant="outline" className="bg-[#0D0D0D] border-[#FFD700]/30 text-gray-300">
                           {product.category?.name || 'Sin categoría'}
                         </Badge>
                       </TableCell>
                       <TableCell>
                         <div>
-                          <div className="font-medium">
+                          <div className="font-medium text-white">
                             {formatPrice(product.price)}
                           </div>
                           {product.comparePrice && (
-                            <div className="text-sm text-gray-500 line-through">
+                            <div className="text-sm text-gray-400 line-through">
                               {formatPrice(product.comparePrice)}
                             </div>
                           )}
@@ -279,29 +284,29 @@ export default function ProductsAdminPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <span>{product.stockCount}</span>
+                          <span className="text-white">{product.stockCount}</span>
                           {getStockBadge(product)}
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
                           {product.isActive && (
-                            <Badge className="bg-green-100 text-green-800">
+                            <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
                               Activo
                             </Badge>
                           )}
                           {product.isFeatured && (
-                            <Badge className="bg-primary-100 text-primary-800">
+                            <Badge className="bg-[#FFD700]/20 text-[#FFD700] border-[#FFD700]/30">
                               Destacado
                             </Badge>
                           )}
                           {!product.isActive && (
-                            <Badge variant="secondary">Inactivo</Badge>
+                            <Badge variant="secondary" className="bg-gray-500/20 text-gray-400 border-gray-500/30">Inactivo</Badge>
                           )}
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-400">
                           {product.createdAt ? formatDate(product.createdAt) : 'Recién creado'}
                         </div>
                       </TableCell>
@@ -311,6 +316,7 @@ export default function ProductsAdminPage() {
                             variant="outline"
                             size="sm"
                             asChild
+                            className="bg-[#0D0D0D] border-[#FFD700]/30 text-gray-300 hover:bg-[#FFD700] hover:text-[#0D0D0D]"
                           >
                             <Link href={`/admin/products/${product.id}`}>
                               <Eye className="h-4 w-4" />
@@ -320,6 +326,7 @@ export default function ProductsAdminPage() {
                             variant="outline"
                             size="sm"
                             asChild
+                            className="bg-[#0D0D0D] border-[#FFD700]/30 text-gray-300 hover:bg-[#FFD700] hover:text-[#0D0D0D]"
                           >
                             <Link href={`/admin/products/${product.id}/edit`}>
                               <Edit className="h-4 w-4" />
@@ -329,7 +336,7 @@ export default function ProductsAdminPage() {
                             variant="outline"
                             size="sm"
                             onClick={() => handleDeleteProduct(product.id)}
-                            className="text-red-600 hover:text-red-700"
+                            className="bg-[#0D0D0D] border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
