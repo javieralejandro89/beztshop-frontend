@@ -66,18 +66,18 @@ export default function HomePage() {
   useEffect(() => {
     if (featuredProducts.length > 0) {      
       const timer = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % Math.min(featuredProducts.length, 3));
+        setCurrentSlide((prev) => (prev + 1) % Math.min(featuredProducts.length, 5));
       }, 5000);
       return () => clearInterval(timer);
     }
   }, [featuredProducts.length]);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % Math.min(featuredProducts.length, 3));
+    setCurrentSlide((prev) => (prev + 1) % Math.min(featuredProducts.length, 5));
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + Math.min(featuredProducts.length, 3)) % Math.min(featuredProducts.length, 3));
+    setCurrentSlide((prev) => (prev - 1 + Math.min(featuredProducts.length, 5)) % Math.min(featuredProducts.length, 5));
   };
 
   const getProductImage = (product: Product): string => {
@@ -111,7 +111,7 @@ export default function HomePage() {
             </div>
 
             <div className="relative h-full">
-              {featuredProducts.slice(0, 3).map((product, index) => (
+              {featuredProducts.slice(0, 5).map((product, index) => (
                 <div
                   key={product.id}
                   className={`absolute inset-0 transition-all duration-700 ${
@@ -134,7 +134,7 @@ export default function HomePage() {
                       {/* Content */}
                       <div className="text-white max-w-lg w-full px-4 md:px-0">
                         <div className="inline-block px-6 py-3 rounded-full text-sm font-bold mb-6 shadow-lg bg-gradient-to-r from-gold to-cyan text-darkbg">
-                          ⭐ FEATURED PRODUCT
+                          ⭐ PRODUCTO DESTACADO
                         </div>
                         <h1 className="text-2xl sm:text-3xl md:text-6xl font-black mb-3 md:mb-4 leading-tight text-white animate-neon-glow">
                           {product.name}
@@ -144,7 +144,7 @@ export default function HomePage() {
                             ? product.shortDesc
                             : product.description && product.description.trim()
                               ? product.description.substring(0, 100) + (product.description.length > 100 ? '...' : '')
-                              : 'Discover this amazing product'
+                              : 'Descubra este increíble producto'
                           }
                         </p>
                         <div className="flex items-center justify-center md:justify-start space-x-2 md:space-x-4 mb-4 md:mb-8">
@@ -165,7 +165,7 @@ export default function HomePage() {
                           >
                             <Link href={`/products/${product.slug}`}>
                               <ShoppingBag className="mr-3 h-5 w-5" />
-                              View Product
+                              Ver producto
                               <ArrowRight className="ml-3 h-5 w-5" />
                             </Link>
                           </Button>
@@ -175,7 +175,7 @@ export default function HomePage() {
                             className="border-2 border-cyan/40 bg-darkbg-light/50 backdrop-blur-md text-white hover:bg-cyan/20 hover:border-cyan font-bold py-4 px-8 rounded-xl transform hover:scale-105 transition-all duration-300 text-lg"
                           >
                             <Heart className="mr-3 h-4 w-4"/>
-                            Add to Wishlist
+                            Añadir a favoritos
                           </Button>
                         </div>
                       </div>
@@ -191,7 +191,7 @@ export default function HomePage() {
                           />
                           {product.isFeatured && (
                             <div className="absolute -top-4 -right-4 px-4 py-2 rounded-full font-bold text-sm shadow-lg animate-bounce bg-gradient-to-r from-gold to-cyan text-darkbg">
-                              Featured!
+                              ¡Destacado!
                             </div>
                           )}
                         </div>
@@ -203,7 +203,7 @@ export default function HomePage() {
               
               {/* Indicators */}
               <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex space-x-3 z-20">
-                {featuredProducts.slice(0, 3).map((_, index) => (
+                {featuredProducts.slice(0, 5).map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentSlide(index)}
@@ -228,14 +228,14 @@ export default function HomePage() {
               <div className="text-left mb-8 lg:mb-0">
                 <Badge className="bg-gold/20 backdrop-blur-sm text-gold border border-gold/30 text-sm font-medium px-4 py-2 rounded-full mb-4 inline-flex items-center">
                   <TrendingUp className="mr-2 h-4 w-4" />
-                  Most Popular
+                  Más populares
                 </Badge>
-                <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                  Featured
-                  <span className="text-gold"> Products</span>
+                <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+                  Productos
+                  <span className="text-gold"> Destacados</span>
                 </h2>
-                <p className="text-xl text-gray-400 max-w-2xl">
-                  Handpicked premium tech for tech enthusiasts
+                <p className="text-lg text-gray-400 max-w-2xl">
+                  Los favoritos de nuestros clientes, seleccionados especialmente para ti
                 </p>
               </div>
               
@@ -245,7 +245,7 @@ export default function HomePage() {
                 className="border-2 border-gold/30 bg-darkbg-light text-gold hover:bg-gold hover:text-darkbg font-bold py-4 px-8 rounded-xl transform hover:scale-105 transition-all duration-300"
               >
                 <Link href="/products?featured=true">
-                  View All
+                  Ver Todos
                   <ArrowRight className="ml-3 h-4 w-4" />
                 </Link>
               </Button>
@@ -278,7 +278,7 @@ export default function HomePage() {
                 <div className="bg-darkbg-light w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-6">
                   <ShoppingBag className="h-16 w-16 text-gray-600" />
                 </div>
-                <p className="text-xl text-gray-500">No featured products available</p>
+                <p className="text-xl text-gray-500">No hay productos destacados disponibles</p>
               </div>
             )}
           </div>
@@ -291,14 +291,14 @@ export default function HomePage() {
           <div className="container mx-auto px-4 relative z-10">
             <div className="text-center mb-16">
               <Badge className="bg-cyan/20 backdrop-blur-sm text-cyan border border-cyan/30 text-sm font-medium px-4 py-2 rounded-full mb-4">
-                Explore Our Categories
+                Explora nuestras categorías
               </Badge>
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                Everything You Need
-                <span className="text-cyan"> In One Place</span>
+                Todo lo que necesitas
+                <span className="text-cyan"> En un solo lugar</span>
               </h2>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                Discover our wide selection of premium tech products
+                Descubra nuestra amplia selección de productos tecnológicos premium
               </p>
             </div>
 
@@ -335,7 +335,7 @@ export default function HomePage() {
                             {category.name}
                           </h3>
                           <p className="text-sm text-gray-400 mt-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                            Explore products
+                            Explorar productos
                           </p>
                         </div>
                       </CardContent>
@@ -352,7 +352,7 @@ export default function HomePage() {
                 className="bg-gradient-to-r from-cyan to-gold hover:from-gold hover:to-cyan backdrop-blur-sm text-darkbg font-bold py-4 px-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 border border-gold/30"
               >
                 <Link href="/categories">
-                  View All Categories
+                  Ver todas las categorías
                   <ArrowRight className="ml-3 h-5 w-5" />
                 </Link>
               </Button>
@@ -364,40 +364,40 @@ export default function HomePage() {
         <section className="py-16 bg-darkbg relative">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-white mb-4">Why Choose BeztShop?</h2>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto">Premium experience that exceeds expectations</p>
+              <h2 className="text-4xl font-bold text-white mb-4">¿Por qué elegir BeztShop?</h2>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">Experiencia premium que supera las expectativas</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 {
                   icon: Truck,
-                  title: "Express Shipping",
-                  desc: "Fast and secure delivery",
+                  title: "Envío exprés",
+                  desc: "Entrega rápida y segura",
                   color: "from-gold to-cyan",
                   bgColor: "bg-gold/10",
                   delay: "0s"
                 },
                 {
                   icon: Shield,
-                  title: "100% Secure",
-                  desc: "Protected purchase",
+                  title: "100% segura",
+                  desc: "Compra protegida",
                   color: "from-cyan to-gold", 
                   bgColor: "bg-cyan/10",
                   delay: "0.1s"
                 },
                 {
                   icon: RefreshCw,
-                  title: "Total Warranty",
-                  desc: "30-day guarantee",
+                  title: "Garantía total",
+                  desc: "garantía de 30 días",
                   color: "from-gold to-cyan",
                   bgColor: "bg-gold/10", 
                   delay: "0.2s"
                 },
                 {
                   icon: Headphones,
-                  title: "24/7 Support",
-                  desc: "Always here for you",
+                  title: "Soporte 24/7",
+                  desc: "Siempre aquí para ti",
                   color: "from-cyan to-gold",
                   bgColor: "bg-cyan/10",
                   delay: "0.3s"
@@ -431,7 +431,7 @@ export default function HomePage() {
             <div className="text-center max-w-6xl mx-auto">
               <div className="inline-flex items-center bg-darkbg-light/50 backdrop-blur-sm border border-gold/20 rounded-full px-6 py-2 mb-8 animate-fade-in">
                 <Sparkles className="h-4 w-4 mr-2 text-gold" />
-                <span className="text-sm font-medium">Welcome to the future of tech shopping</span>
+                <span className="text-sm font-medium">Bienvenido al futuro de las compras tecnológicas</span>
               </div>
 
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 tracking-tight animate-fade-in" style={{ animationDelay: '0.2s' }}>
@@ -443,11 +443,11 @@ export default function HomePage() {
               </h1>
               
               <p className="text-xl md:text-2xl lg:text-3xl mb-4 text-gray-300 max-w-4xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.4s' }}>
-                Your premium destination for cutting-edge technology
+                Su destino premium para tecnología de vanguardia
               </p>
               
               <p className="text-lg md:text-xl mb-12 text-gray-400 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.6s' }}>
-                Premium quality, exceptional service, unbeatable prices
+                Calidad premium, servicio excepcional, precios inmejorables.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in" style={{ animationDelay: '0.8s' }}>
@@ -458,7 +458,7 @@ export default function HomePage() {
                 >
                   <Link href="/products">
                     <ShoppingBag className="mr-3 h-5 w-5" />
-                    Shop Now
+                    Compra ahora
                     <ArrowRight className="ml-3 h-5 w-5" />
                   </Link>
                 </Button>
@@ -471,7 +471,7 @@ export default function HomePage() {
                 >
                   <Link href="/categories">
                     <Cpu className="mr-3 h-4 w-4"/>
-                    Browse Categories
+                    Explorar categorías
                   </Link>
                 </Button>
               </div>
@@ -479,15 +479,15 @@ export default function HomePage() {
               <div className="grid grid-cols-3 gap-8 mt-16 animate-fade-in" style={{ animationDelay: '1s' }}>
                 <div className="text-center">
                   <div className="text-3xl md:text-4xl font-bold text-gold mb-2">1000+</div>
-                  <div className="text-sm text-gray-400">Products</div>
+                  <div className="text-sm text-gray-400">Productos</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl md:text-4xl font-bold text-cyan mb-2">5000+</div>
-                  <div className="text-sm text-gray-400">Happy Customers</div>
+                  <div className="text-sm text-gray-400">Clientes satisfechos</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl md:text-4xl font-bold text-gold mb-2">99%</div>
-                  <div className="text-sm text-gray-400">Satisfaction</div>
+                  <div className="text-sm text-gray-400">Satisfacción</div>
                 </div>
               </div>
             </div>
@@ -504,38 +504,38 @@ export default function HomePage() {
             <div className="text-center mb-16">
               <Badge className="bg-darkbg-light/50 backdrop-blur-sm text-gold border border-gold/30 text-sm font-medium px-4 py-2 rounded-full mb-4 inline-flex items-center">
                 <Users className="mr-2 h-4 w-4" />
-                Real Testimonials
+                Testimonios reales
               </Badge>
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                What Our Customers
-                <span className="text-gold"> Say</span>
+                Lo que dicen nuestros
+                <span className="text-gold"> clientes</span>
               </h2>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                Thousands of satisfied customers trust our excellence
+                Miles de clientes satisfechos confían en nuestra excelencia
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 {
-                  name: "Alex Johnson",
-                  role: "Tech Enthusiast",
+                  name: "María González",
+                  role: "Entusiasta de la tecnología",
                   rating: 5,
-                  comment: "BeztShop has the best selection of premium tech products. Fast shipping and excellent customer service!",
+                  comment: "BeztShop tiene la mejor selección de productos tecnológicos premium. ¡Envíos rápidos y excelente servicio al cliente!",
                   delay: "0s"
                 },
                 {
-                  name: "Sarah Williams", 
-                  role: "Digital Creator",
+                  name: "Carlos Rodríguez", 
+                  role: "Creador digital",
                   rating: 5,
-                  comment: "Amazing quality and unbeatable prices. This is now my go-to store for all my tech needs.",
+                  comment: "Calidad increíble y precios inmejorables. Ahora es mi tienda de referencia para todas mis necesidades tecnológicas.",
                   delay: "0.2s"
                 },
                 {
-                  name: "Mike Chen",
-                  role: "Software Engineer",
+                  name: "Ana Martínez",
+                  role: "Ingeniera de software",
                   rating: 5,
-                  comment: "Top-notch products and customer support. The dark theme website is gorgeous! Highly recommend.",
+                  comment: "Productos y atención al cliente de primera. ¡El sitio web con tema oscuro es precioso! Lo recomiendo muchísimo.",
                   delay: "0.4s"
                 }
               ].map((testimonial, index) => (
@@ -572,9 +572,9 @@ export default function HomePage() {
             <div className="text-center mt-16">
               <div className="inline-flex items-center bg-darkbg-light/50 backdrop-blur-sm border border-gold/20 rounded-full px-8 py-4">
                 <ThumbsUp className="h-6 w-6 mr-3 text-gold" />
-                <span className="text-lg font-medium mr-3">Over</span>
+                <span className="text-lg font-medium mr-3">Más de</span>
                 <span className="text-3xl font-bold text-gold mr-3">10,000</span>
-                <span className="text-lg">positive reviews</span>
+                <span className="text-lg">reseñas positivas</span>
               </div>
             </div>
           </div>
@@ -591,24 +591,24 @@ export default function HomePage() {
             <div className="text-center max-w-4xl mx-auto">
               <div className="inline-flex items-center bg-darkbg-light/50 backdrop-blur-sm border border-gold/20 rounded-full px-6 py-2 mb-8">
                 <Zap className="h-5 w-5 mr-2 text-gold" />
-                <span className="text-sm font-medium">Exclusive Offers</span>
+                <span className="text-sm font-medium">Ofertas exclusivas</span>
               </div>
               
               <h2 className="text-4xl md:text-6xl font-black mb-6">
-                Don't Miss Out!
+                ¡No te lo pierdas!
               </h2>
               <p className="text-xl md:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto">
-                Subscribe and get <span className="text-gold font-bold">15% off</span> your first purchase
+                Suscríbete y recibe <span className="text-gold font-bold">15% off</span> tu primera compra
               </p>
               <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto">
-                Exclusive deals, new arrivals and premium content delivered to your inbox
+                Ofertas exclusivas, novedades y contenido premium entregados directamente en tu bandeja de entrada.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto mb-8">
                 <input
                   id="newsletter-email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="Introduce tu correo electrónico"
                   className="flex-1 px-6 py-4 text-lg rounded-xl text-white bg-darkbg-light border-2 border-gold/20 focus:ring-4 focus:ring-gold/50 shadow-lg placeholder-gray-500"
                 />
                 <Button 
@@ -618,7 +618,7 @@ export default function HomePage() {
                     const email = emailInput.value;
                     
                     if (!email || !email.includes('@')) {
-                      error('Please enter a valid email');
+                      error('Por favor, introduzca un correo electrónico válido');
                       return;
                     }
                     
@@ -626,9 +626,9 @@ export default function HomePage() {
                       await promise(
                         api.post('/newsletter/subscribe', { email }),
                         {
-                          loading: 'Subscribing...',
-                          success: 'Successfully subscribed! Check your email for your welcome coupon',
-                          error: 'Subscription failed'
+                          loading: 'Suscribirse...',
+                          success: '¡Suscripción exitosa! Revisa tu correo electrónico para encontrar tu cupón de bienvenida.',
+                          error: 'Suscripción fallida'
                         }
                       );
                       emailInput.value = '';
@@ -639,22 +639,22 @@ export default function HomePage() {
                   className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-bold py-4 px-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 text-lg"
                 >
                   <Zap className="mr-2 h-5 w-5" />
-                  Subscribe Now!
+                  ¡Suscríbete ahora!
                 </Button>
               </div>
               
               <div className="flex items-center justify-center space-x-6 text-sm text-gray-400">
                 <div className="flex items-center">
                   <Shield className="h-4 w-4 mr-2 text-gold" />
-                  No spam
+                  Sin spam
                 </div>
                 <div className="flex items-center">
                   <RefreshCw className="h-4 w-4 mr-2 text-cyan" />
-                  Cancel anytime
+                  Cancelar en cualquier momento
                 </div>
                 <div className="flex items-center">
                   <Award className="h-4 w-4 mr-2 text-gold" />
-                  Exclusive content
+                  Contenido exclusivo
                 </div>
               </div>
             </div>
@@ -668,7 +668,7 @@ export default function HomePage() {
           <div className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-4">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-gold to-cyan rounded-full blur-lg opacity-50"></div>
+                <div className="absolute inset-0  rounded-full blur-lg opacity-50"></div>
                 <Image
                   src="/logo.png"
                   alt="BeztShop Logo"
@@ -678,18 +678,15 @@ export default function HomePage() {
                   priority
                 />
               </div>
-              <span className="font-bold text-2xl bg-gradient-to-r from-gold to-cyan bg-clip-text text-transparent">BeztShop</span>
+              <span className="font-bold text-2xl bg-gradient-to-r from-gold to-cyan bg-clip-text text-transparent">Tech Store</span>
             </div>
             <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
-              Your premium destination for cutting-edge technology and electronics. 
-              Quality guaranteed and exceptional service from Houston, TX.
+              Su destino premium para tecnología y electrónica de vanguardia. 
+              Calidad garantizada y servicio excepcional desde CDMX, México.
             </p>
             <p className="text-gray-500">
-              © 2024 BeztShop. All rights reserved.
-            </p>
-            <p className="text-sm text-gray-600 mt-2">
-              Designed with 🖤 in Houston, Texas
-            </p>
+              © 2024 BeztShop. Todos los derechos reservados.
+            </p>            
           </div>
         </div>
       </footer>

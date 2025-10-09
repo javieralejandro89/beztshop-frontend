@@ -65,16 +65,16 @@ export default function Header() {
               <div className="flex items-center space-x-4 md:space-x-6">
                 <div className="flex items-center space-x-2">
                   <Zap className="h-4 w-4 text-gold animate-pulse" />
-                  <span className="font-medium">Fast Worldwide Shipping</span>
+                  <span className="font-medium">Envío rápido a todo el mundo</span>
                 </div>
                 <div className="hidden lg:flex items-center space-x-1">
                   <Bell className="h-4 w-4 text-cyan" />
-                  <span>24/7 Premium Support</span>
+                  <span>Soporte Premium 24/7</span>
                 </div>
               </div>
               <div className="flex items-center text-xs md:text-sm">
                 <span className="bg-gradient-to-r from-gold to-cyan text-darkbg px-2 py-1 md:px-3 md:py-1 rounded-full font-bold animate-pulse">
-                  Free Shipping $100+
+                  Envío gratis $200+
                 </span>
               </div>
             </div>
@@ -114,7 +114,7 @@ export default function Header() {
                 <div className="relative group">
                   <Input
                     type="text"
-                    placeholder="Search premium products..."
+                    placeholder="Buscar productos, marcas, categorías..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pl-3 pr-12 py-2.5 md:pl-4 md:pr-14 md:py-3 text-base md:text-lg bg-darkbg-light/80 backdrop-blur-sm border-2 border-gold/20 text-white placeholder-gray-400 rounded-xl focus:ring-4 focus:ring-gold/50 focus:border-gold group-hover:border-gold/30 transition-all duration-300 shadow-lg"
@@ -140,7 +140,7 @@ export default function Header() {
                       className="hidden sm:flex items-center space-x-2 hover:bg-darkbg-light hover:text-cyan text-white transition-all duration-300 rounded-xl px-3 py-2 border border-transparent hover:border-cyan/20"
                     >
                       <Heart className="h-5 w-5" />
-                      <span className="hidden lg:inline font-medium text-base">Wishlist</span>
+                      <span className="hidden lg:inline font-medium text-base">Favoritos</span>
                     </Button>
                   </Link>
                 )}
@@ -160,7 +160,7 @@ export default function Header() {
                           </span>
                         </div>
                         <span className="hidden lg:inline font-medium text-base">
-                          {user?.firstName ? `Hi, ${user.firstName}` : isInitialized ? 'Hi' : 'Loading...'}
+                          {user?.firstName ? `Hola, ${user.firstName}` : isInitialized ? 'Hola' : 'Loading...'}
                         </span>
                       </Button>
                     </Link>
@@ -172,7 +172,7 @@ export default function Header() {
                         className="flex items-center space-x-2 hover:bg-darkbg-light hover:text-gold text-white transition-all duration-300 rounded-xl px-3 py-2 border border-transparent hover:border-gold/20"
                       >
                         <User className="h-5 w-5" />
-                        <span className="hidden lg:inline font-medium text-base">Sign In</span>
+                        <span className="hidden lg:inline font-medium text-base">Inicia sesión</span>
                       </Button>
                     </Link>
                   )}
@@ -195,7 +195,7 @@ export default function Header() {
                       </Badge>
                     )}
                   </div>
-                  <span className="hidden lg:inline font-medium text-base">Cart</span>
+                  <span className="hidden lg:inline font-medium text-base">Carrito</span>
                 </Button>
 
                 {/* Mobile menu button */}
@@ -220,7 +220,7 @@ export default function Header() {
                 href="/products" 
                 className="text-white hover:text-gold whitespace-nowrap py-2 font-semibold text-sm transition-all duration-300 hover:scale-105 border-b-2 border-transparent hover:border-gold"
               >
-                <span className="hidden lg:inline font-medium text-base">All Products</span>
+                <span className="hidden lg:inline font-medium text-base">Todos los productos</span>
               </Link>
               {categories.slice(0, 8).map((category) => (
                 <Link
@@ -236,7 +236,7 @@ export default function Header() {
                   href="/categories"
                   className="text-white hover:text-gold whitespace-nowrap py-2 text-sm font-medium transition-all duration-300 hover:scale-105"
                 >
-                  View More...
+                  Ver más...
                 </Link>
               )}
             </div>
@@ -264,7 +264,7 @@ export default function Header() {
                       <div className="font-semibold">
                         {user?.firstName ? `Hi, ${user.firstName}` : isInitialized ? 'Hi' : 'Loading...'}
                       </div>
-                      <div className="text-sm text-gray-400">View my account</div>
+                      <div className="text-sm text-gray-400">Ver mi cuenta</div>
                     </div>
                   </Link>
                 ) : (
@@ -274,7 +274,7 @@ export default function Header() {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <User className="h-6 w-6" />
-                    <span className="font-semibold">Sign In</span>
+                    <span className="font-semibold">Iniciar sesión</span>
                   </Link>
                 )}
               </div>
@@ -288,14 +288,14 @@ export default function Header() {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <Heart className="h-6 w-6" />
-                    <span className="font-semibold">Wishlist</span>
+                    <span className="font-semibold">Favoritos</span>
                   </Link>
                 </div>
               )}
 
               {/* Mobile categories */}
               <div className="space-y-2">
-                <h3 className="font-bold text-white text-lg mb-4">Categories</h3>
+                <h3 className="font-bold text-white text-lg mb-4">Categorías</h3>
                 
                 <Link
                   href="/products"
@@ -305,7 +305,7 @@ export default function Header() {
                   <span className="w-8 h-8 bg-gradient-to-r from-gold to-cyan rounded-lg flex items-center justify-center mr-3">
                     <span className="text-darkbg font-bold">A</span>
                   </span>
-                  All Products
+                  Todos los productos
                 </Link>
 
                 {categories.map((category) => (

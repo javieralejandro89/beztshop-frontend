@@ -102,7 +102,7 @@ export default function Layout({
             <Badge className="absolute -top-2 -right-2 bg-darkbg text-gold rounded-full min-w-[20px] h-5 flex items-center justify-center text-xs animate-pulse">
               {totalItems}
             </Badge>
-            <span className="sr-only">View cart</span>
+            <span className="sr-only">Ver carrito</span>
           </button>
         </div>
       )}
@@ -123,23 +123,23 @@ function Footer() {
           <div className="text-center max-w-2xl mx-auto">
             <h3 className="text-2xl font-bold mb-4 flex items-center justify-center text-gold">
               <Zap className="h-6 w-6 mr-2" />
-              Subscribe & Save!
+              Suscríbete y ahorra!
             </h3>
             <p className="text-gray-400 mb-6">
-              Receive exclusive offers, news and 10% off your first purchase
+              Recibe ofertas exclusivas, novedades y un 10% de descuento en tu primera compra
             </p>
             <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <input
                 type="email"
-                placeholder="Your email"
+                placeholder="Tu email"
                 className="flex-1 px-4 py-3 rounded-lg text-white bg-darkbg-light border border-gold/20 focus:ring-2 focus:ring-gold/50"
               />
               <Button className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg px-6 py-3 font-medium">
-                Subscribe
+                Suscríbete
               </Button>
             </div>
             <p className="text-xs text-gray-500 mt-3">
-              No spam. Cancel anytime.
+              Sin spam. Cancela cuando quieras.
             </p>
           </div>
         </div>
@@ -157,28 +157,28 @@ function Footer() {
               <span className="font-bold text-lg bg-gradient-to-r from-gold to-cyan bg-clip-text text-transparent">BeztShop</span>
             </div>
             <p className="text-gray-400 leading-relaxed">
-              Your premium destination for cutting-edge technology and electronics. 
-              Quality guaranteed and exceptional service from Houston, TX.
+              Su destino premium para tecnología y electrónica de vanguardia. 
+              Calidad garantizada y servicio excepcional desde CDMX, México.
             </p>
             <div className="space-y-2 text-gray-400">
               <div className="flex items-center">
                 <MapPin className="h-4 w-4 mr-2 flex-shrink-0 text-gold" />
-                <span className="text-sm">Houston, TX - United States</span>
+                <span className="text-sm">Ciudad de México - México</span>
               </div>
               <div className="flex items-center">
                 <Phone className="h-4 w-4 mr-2 flex-shrink-0 text-cyan" />
-                <span className="text-sm">(832) 523-0060</span>
+                <span className="text-sm">(998) 578-0385</span>
               </div>
               <div className="flex items-center">
                 <Mail className="h-4 w-4 mr-2 flex-shrink-0 text-gold" />
-                <span className="text-sm">info@beztshop.com</span>
+                <span className="text-sm">atencionalcliente@beztshop.com</span>
               </div>
             </div>
           </div>
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h4 className="font-semibold text-lg text-white">Quick Links</h4>
+            <h4 className="font-semibold text-lg text-white">Enlaces rápidos</h4>
             <div className="space-y-2">
               {[
                 { name: 'All Products', href: '/products' },
@@ -201,7 +201,7 @@ function Footer() {
 
           {/* Customer Service */}
           <div className="space-y-4">
-            <h4 className="font-semibold text-lg text-white">Customer Service</h4>
+            <h4 className="font-semibold text-lg text-white">Servicio al cliente</h4>
             <div className="space-y-2">
               {[
                 { name: 'Help Center', href: '/help' },
@@ -224,19 +224,19 @@ function Footer() {
             <div className="space-y-2 pt-4">
               <div className="flex items-center text-gray-400">
                 <Clock className="h-4 w-4 mr-2 text-gold" />
-                <span className="text-sm font-medium">Business Hours</span>
+                <span className="text-sm font-medium">Horario comercial</span>
               </div>
               <div className="text-sm text-gray-500 space-y-1 ml-6">
-                <div>Mon - Fri: 9:00 AM - 6:00 PM</div>
-                <div>Saturday: 10:00 AM - 4:00 PM</div>
-                <div>Sunday: Closed</div>
+                <div>Lunes - Viernes: 9:00 AM - 6:00 PM</div>
+                <div>Sábado: 10:00 AM - 4:00 PM</div>
+                <div>Domingo: Cerrado</div>
               </div>
             </div>
           </div>
 
           {/* Social & Trust */}
           <div className="space-y-4">
-            <h4 className="font-semibold text-lg text-white">Follow Us</h4>
+            <h4 className="font-semibold text-lg text-white">Síganos</h4>
             <div className="flex space-x-3">
               {[
                 { icon: Facebook, href: '#', label: 'Facebook' },
@@ -256,29 +256,29 @@ function Footer() {
             </div>
 
             <div className="space-y-3 pt-4">
-              <h5 className="font-medium text-white text-sm">Guarantees & Security</h5>
+              <h5 className="font-medium text-white text-sm">Garantías y seguridad</h5>
               <div className="space-y-2">
                 <div className="flex items-center text-gray-400 text-sm">
                   <Shield className="h-4 w-4 mr-2 text-gold" />
-                  100% Secure Purchase
+                  Compra 100% segura
                 </div>
                 <div className="flex items-center text-gray-400 text-sm">
                   <Truck className="h-4 w-4 mr-2 text-cyan" />
-                  Tracked Shipping
+                  Envío con seguimiento
                 </div>
                 <div className="flex items-center text-gray-400 text-sm">
                   <RotateCcw className="h-4 w-4 mr-2 text-gold" />
-                  30-Day Guarantee
+                  Garantía de 30 días
                 </div>
                 <div className="flex items-center text-gray-400 text-sm">
                   <Award className="h-4 w-4 mr-2 text-cyan" />
-                  Satisfaction Guaranteed
+                  Satisfacción garantizada
                 </div>
               </div>
             </div>
 
             <div className="space-y-3 pt-4">
-              <h5 className="font-medium text-white text-sm">Payment Methods</h5>
+              <h5 className="font-medium text-white text-sm">Métodos de pago</h5>
               <div className="flex space-x-2">
                 <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs px-2 py-1 rounded font-bold">
                   VISA
@@ -304,11 +304,8 @@ function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-center md:text-left">
               <p className="text-gray-400 text-sm">
-                © {currentYear} BeztShop. All rights reserved.
-              </p>
-              <p className="text-gray-500 text-xs mt-1">
-                Designed with 🖤 in Houston, Texas
-              </p>
+                © {currentYear} BeztShop. Reservados todos los derechos.
+              </p>              
             </div>
             
             <div className="flex items-center space-x-6 text-sm">
@@ -316,13 +313,13 @@ function Footer() {
                 href="/terms" 
                 className="text-gray-400 hover:text-gold transition-colors"
               >
-                Terms
+                Términos
               </Link>
               <Link 
                 href="/privacy" 
                 className="text-gray-400 hover:text-cyan transition-colors"
               >
-                Privacy
+                Privacidad
               </Link>
               <Link 
                 href="/sitemap" 

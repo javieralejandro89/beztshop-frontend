@@ -705,7 +705,7 @@ const generateOrderNumber = (): string => {
                               ...prev,
                               newAddress: { ...prev.newAddress, phone: e.target.value }
                             }))}
-                            placeholder="+1 555 234 5678"
+                            placeholder="+52 555 234 5678"
                             className="bg-darkbg border-gold/30 text-white placeholder-gray-500"
                           />
                         </div>
