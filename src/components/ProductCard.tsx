@@ -182,31 +182,31 @@ export default function ProductCard({
         </div>
 
         {/* Price */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="font-bold text-lg bg-gradient-to-r from-gold to-cyan bg-clip-text text-transparent">
-              {formatPrice(product.price)}
-            </span>
-            {product.comparePrice && (
-              <span className="text-sm text-gray-500 line-through">
-                {formatPrice(product.comparePrice)}
-              </span>
-            )}
-          </div>
-          
-          {/* Stock indicator */}
-          <div className="text-xs">
-            {isOutOfStock ? (
-              <span className="text-red-400 font-medium">Agotado</span>
-            ) : isLowStock ? (
-              <span className="text-orange-400 font-medium">
-                Solo {product.stockCount} left
-              </span>
-            ) : (
-              <span className="text-green-400 font-medium">Disponible</span>
-            )}
-          </div>
-        </div>
+<div className="flex items-center justify-between md:flex-col md:items-start md:gap-2">
+  <div className="flex items-center space-x-2">
+    <span className="font-bold text-lg bg-gradient-to-r from-gold to-cyan bg-clip-text text-transparent">
+      {formatPrice(product.price)}
+    </span>
+    {product.comparePrice && (
+      <span className="text-sm text-gray-500 line-through">
+        {formatPrice(product.comparePrice)}
+      </span>
+    )}
+  </div>
+  
+  {/* Stock indicator */}
+  <div className="text-xs">
+    {isOutOfStock ? (
+      <span className="text-red-400 font-medium">Agotado</span>
+    ) : isLowStock ? (
+      <span className="text-orange-400 font-medium">
+        Solo {product.stockCount} left
+      </span>
+    ) : (
+      <span className="text-green-400 font-medium">Disponible</span>
+    )}
+  </div>
+</div>
 
         {/* Additional actions for out of stock */}
         {isOutOfStock && (

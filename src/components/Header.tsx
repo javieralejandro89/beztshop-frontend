@@ -95,7 +95,7 @@ export default function Header() {
                     alt="BeztShop Logo"
                     width={150}
                     height={150}
-                    className="relative h-32 w-auto transition-transform duration-300 group-hover:scale-110 drop-shadow-2xl"
+                    className="relative h-20 md:h-32 w-auto transition-transform duration-300 group-hover:scale-110 drop-shadow-2xl"
                     priority
                   />
                 </div>
@@ -110,24 +110,23 @@ export default function Header() {
               </Link>
 
               {/* Search bar Dark Tech */}
-              <form onSubmit={handleSearch} className="flex-1 max-w-2xl mx-2 md:mx-4">
-                <div className="relative group">
-                  <Input
-                    type="text"
-                    placeholder="Buscar productos, marcas, categorías..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-3 pr-12 py-2.5 md:pl-4 md:pr-14 md:py-3 text-base md:text-lg bg-darkbg-light/80 backdrop-blur-sm border-2 border-gold/20 text-white placeholder-gray-400 rounded-xl focus:ring-4 focus:ring-gold/50 focus:border-gold group-hover:border-gold/30 transition-all duration-300 shadow-lg"
-                  />
-                  <Button
-                    type="submit"
-                    size="sm"
-                    className="absolute right-1.5 md:right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg px-3 py-1.5 md:px-4 md:py-2 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-glow-gold transform hover:scale-105"
-                  >
-                    <Search className="h-4 w-4" />
-                  </Button>
-                </div>
-              </form>
+<form onSubmit={handleSearch} className="flex-1 max-w-2xl mx-2 md:mx-4">
+  <div className="relative group">
+    <Input
+      type="text"
+      placeholder="Buscar productos, marcas, categorías..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="w-full pl-4 pr-32 py-4 md:pl-4 md:pr-14 md:py-3 text-base md:text-lg bg-darkbg-light/80 backdrop-blur-sm border-2 border-gold/20 text-white placeholder-gray-400 rounded-xl focus:ring-4 focus:ring-gold/50 focus:border-gold group-hover:border-gold/30 transition-all duration-300 shadow-lg"
+    />
+    <Button
+      type="submit"
+      className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg px-4 py-0 md:px-4 md:py-2 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-glow-gold transform hover:scale-105"
+    >
+      <Search className="h-4 w-4 md:h-4 md:w-4" />
+    </Button>
+  </div>
+</form>
 
               {/* Right section */}
               <div className="flex items-center space-x-3">
