@@ -12,7 +12,7 @@ import wishlistApi from '@/lib/wishlistApi';
 interface WishlistButtonProps {
   productId: string;
   productName?: string;
-  variant?: 'default' | 'icon' | 'ghost';
+  variant?: 'default' | 'icon' | 'ghost' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
   showText?: boolean;

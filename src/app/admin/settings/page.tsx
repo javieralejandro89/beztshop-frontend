@@ -44,6 +44,7 @@ import {
   CheckCircle,
   XCircle,
   Eye,
+  MessageSquare,
   Loader2,
   Tag,
   Send,
@@ -51,12 +52,13 @@ import {
   User,
   Mail,
   TrendingUp,
+  Star,
   FileText,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { formatPrice, formatDate } from '@/lib/utils';
 import { useToast } from '@/hooks/useToast';
-import { adminApi } from '@/lib/api';
+import { adminApi, reviewsApi } from '@/lib/api';
 
 interface Coupon {
   id: string;
@@ -98,6 +100,15 @@ export default function AdminSettingsPage() {
     expiresAt: ''
   });
 
+  // Estados para Reseñas
+const [reviews, setReviews] = useState<any[]>([]);
+const [reviewsPage, setReviewsPage] = useState(1);
+const [reviewsTotal, setReviewsTotal] = useState(0);
+const [reviewFilter, setReviewFilter] = useState<'all' | 'approved' | 'pending'>('all');
+const [isLoadingReviews, setIsLoadingReviews] = useState(false);
+const [showDeleteReviewDialog, setShowDeleteReviewDialog] = useState(false);
+const [reviewToDelete, setReviewToDelete] = useState<any>(null);
+
   // Estados para Newsletter
   const [newsletterStats, setNewsletterStats] = useState<any>(null);
   const [subscribers, setSubscribers] = useState<any[]>([]);
@@ -118,12 +129,19 @@ export default function AdminSettingsPage() {
     loadData();
   }, []);
 
+  useEffect(() => {
+  if (activeTab === 'reviews') {
+    loadReviews();
+  }
+}, [reviewsPage, reviewFilter]);
+
   const loadData = async () => {
     try {
       setIsLoading(true);
       await Promise.all([
         loadCoupons(),
-        loadNewsletterData()
+        loadNewsletterData(),
+        loadReviews()
       ]);
     } catch (err: any) {
       console.error('Error loading data:', err);
@@ -339,6 +357,63 @@ export default function AdminSettingsPage() {
     }
   };
 
+  // ==================== FUNCIONES DE RESEÑAS ====================
+const loadReviews = async () => {
+  try {
+    setIsLoadingReviews(true);
+    const data = await reviewsApi.getAllReviewsAdmin({
+      page: reviewsPage,
+      limit: 20,
+      status: reviewFilter === 'all' ? undefined : reviewFilter
+    });
+    setReviews(data.reviews);
+    setReviewsTotal(data.pagination.total);
+  } catch (err: any) {
+    console.error('Error loading reviews:', err);
+    error('Error al cargar las reseñas');
+  } finally {
+    setIsLoadingReviews(false);
+  }
+};
+
+const handleDeleteReview = async () => {
+  if (!reviewToDelete) return;
+
+  try {
+    await promise(
+      reviewsApi.deleteReviewAdmin(reviewToDelete.id),
+      {
+        loading: 'Eliminando reseña...',
+        success: 'Reseña eliminada exitosamente',
+        error: 'Error al eliminar reseña'
+      }
+    );
+
+    setShowDeleteReviewDialog(false);
+    setReviewToDelete(null);
+    loadReviews();
+  } catch (err: any) {
+    console.error('Error deleting review:', err);
+  }
+};
+
+const handleToggleReviewStatus = async (review: any) => {
+  try {
+    await promise(
+      reviewsApi.updateReviewStatus(review.id, !review.isApproved),
+      {
+        loading: 'Actualizando estado...',
+        success: review.isApproved ? 'Reseña ocultada' : 'Reseña mostrada',
+        error: 'Error al cambiar estado'
+      }
+    );
+
+    loadReviews();
+  } catch (err: any) {
+    console.error('Error toggling review status:', err);
+  }
+};
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
@@ -375,7 +450,7 @@ export default function AdminSettingsPage() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 bg-[#1F1F1F] border border-[#FFD700]/20">
+          <TabsList className="grid w-full grid-cols-3 bg-[#1F1F1F] border border-[#FFD700]/20">
             <TabsTrigger 
               value="coupons" 
               className="flex items-center gap-2 data-[state=active]:bg-[#FFD700] data-[state=active]:text-[#0D0D0D] text-gray-400"
@@ -390,6 +465,13 @@ export default function AdminSettingsPage() {
               <Send className="h-4 w-4" />
               Newsletter
             </TabsTrigger>
+            <TabsTrigger 
+    value="reviews" 
+    className="flex items-center gap-2 data-[state=active]:bg-[#FFD700] data-[state=active]:text-[#0D0D0D] text-gray-400"
+  >
+    <MessageSquare className="h-4 w-4" />
+    Reseñas
+  </TabsTrigger>
           </TabsList>
 
           {/* TAB DE CUPONES */}
@@ -728,6 +810,265 @@ export default function AdminSettingsPage() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* TAB DE RESEÑAS - Agregar después del tab de Newsletter */}
+<TabsContent value="reviews" className="space-y-6">
+  {/* Estadísticas */}
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <Card className="bg-[#1F1F1F] border-[#FFD700]/30">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-400">Total Reseñas</p>
+            <p className="text-2xl font-bold text-white">{reviewsTotal}</p>
+          </div>
+          <MessageSquare className="h-8 w-8 text-[#FFD700]" />
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card className="bg-[#1F1F1F] border-green-500/30">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-400">Aprobadas</p>
+            <p className="text-2xl font-bold text-white">
+              {reviews.filter(r => r.isApproved).length}
+            </p>
+          </div>
+          <CheckCircle className="h-8 w-8 text-green-500" />
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card className="bg-[#1F1F1F] border-orange-500/30">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-400">Ocultas</p>
+            <p className="text-2xl font-bold text-white">
+              {reviews.filter(r => !r.isApproved).length}
+            </p>
+          </div>
+          <XCircle className="h-8 w-8 text-orange-500" />
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card className="bg-[#1F1F1F] border-cyan/30">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-400">Rating Promedio</p>
+            <p className="text-2xl font-bold text-white">
+              {reviews.length > 0 
+                ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
+                : '0.0'
+              }
+            </p>
+          </div>
+          <Star className="h-8 w-8 text-cyan fill-cyan" />
+        </div>
+      </CardContent>
+    </Card>
+  </div>
+
+  {/* Filtros */}
+  <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
+    <CardContent className="p-4">
+      <div className="flex items-center gap-4">
+        <Label className="text-white">Filtrar:</Label>
+        <div className="flex gap-2">
+          <Button
+            variant={reviewFilter === 'all' ? 'default' : 'outline'}
+            onClick={() => {
+              setReviewFilter('all');
+              setReviewsPage(1);
+            }}
+            className={reviewFilter === 'all' 
+              ? 'bg-[#FFD700] text-[#0D0D0D]' 
+              : 'bg-[#0D0D0D] border-[#FFD700]/30 text-white hover:bg-[#1F1F1F]'
+            }
+          >
+            Todas ({reviewsTotal})
+          </Button>
+          <Button
+            variant={reviewFilter === 'approved' ? 'default' : 'outline'}
+            onClick={() => {
+              setReviewFilter('approved');
+              setReviewsPage(1);
+            }}
+            className={reviewFilter === 'approved' 
+              ? 'bg-green-600 text-white' 
+              : 'bg-[#0D0D0D] border-green-500/30 text-white hover:bg-[#1F1F1F]'
+            }
+          >
+            Aprobadas
+          </Button>
+          <Button
+            variant={reviewFilter === 'pending' ? 'default' : 'outline'}
+            onClick={() => {
+              setReviewFilter('pending');
+              setReviewsPage(1);
+            }}
+            className={reviewFilter === 'pending' 
+              ? 'bg-orange-600 text-white' 
+              : 'bg-[#0D0D0D] border-orange-500/30 text-white hover:bg-[#1F1F1F]'
+            }
+          >
+            Ocultas
+          </Button>
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+
+  {/* Lista de Reseñas */}
+  <Card className="bg-[#1F1F1F] border-[#FFD700]/20">
+    <CardHeader>
+      <CardTitle className="text-white">Gestión de Reseñas</CardTitle>
+      <CardDescription className="text-gray-400">
+        Modera las opiniones de tus clientes
+      </CardDescription>
+    </CardHeader>
+    <CardContent>
+      {isLoadingReviews ? (
+        <div className="text-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-[#FFD700]" />
+          <p className="text-gray-400">Cargando reseñas...</p>
+        </div>
+      ) : reviews.length === 0 ? (
+        <div className="text-center py-12">
+          <MessageSquare className="h-16 w-16 text-gray-600 mx-auto mb-6" />
+          <h2 className="text-xl font-semibold text-white mb-4">
+            No hay reseñas
+          </h2>
+          <p className="text-gray-400">
+            Las reseñas de tus clientes aparecerán aquí
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {reviews.map((review) => (
+            <div 
+              key={review.id} 
+              className="border border-[#FFD700]/20 rounded-lg p-4 hover:bg-[#0D0D0D] transition-colors"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  {/* Header */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-gold to-cyan flex items-center justify-center flex-shrink-0">
+                      <User className="h-5 w-5 text-darkbg" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="font-medium text-white">
+                          {review.user.firstName} {review.user.lastName}
+                        </p>
+                        <Badge 
+                          className={review.isApproved 
+                            ? 'bg-green-500/20 text-green-400 border-green-500/30' 
+                            : 'bg-orange-500/20 text-orange-400 border-orange-500/30'
+                          }
+                        >
+                          {review.isApproved ? 'Visible' : 'Oculta'}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-400">
+                        <span>{review.user.email}</span>
+                        <span>•</span>
+                        <span>{formatDate(review.createdAt)}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Producto */}
+                  <div className="mb-3">
+                    <a 
+                      href={`/products/${review.product.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-cyan hover:text-gold transition-colors font-medium"
+                    >
+                      📦 {review.product.name}
+                    </a>
+                  </div>
+
+                  {/* Rating */}
+                  <div className="flex items-center gap-2 mb-3">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`h-4 w-4 ${
+                          star <= review.rating
+                            ? 'fill-gold text-gold'
+                            : 'text-gray-500'
+                        }`}
+                      />
+                    ))}
+                    <span className="text-sm text-gray-400">({review.rating}/5)</span>
+                  </div>
+
+                  {/* Título */}
+                  {review.title && (
+                    <h4 className="font-semibold text-white mb-2">{review.title}</h4>
+                  )}
+
+                  {/* Comentario */}
+                  {review.comment && (
+                    <p className="text-gray-300 leading-relaxed">{review.comment}</p>
+                  )}
+                </div>
+
+                {/* Acciones */}
+                <div className="flex flex-col gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleToggleReviewStatus(review)}
+                    className={review.isApproved 
+                      ? "text-orange-400 hover:text-orange-300 hover:bg-orange-500/10" 
+                      : "text-green-400 hover:text-green-300 hover:bg-green-500/10"
+                    }
+                    title={review.isApproved ? 'Ocultar reseña' : 'Mostrar reseña'}
+                  >
+                    {review.isApproved ? (
+                      <XCircle className="h-4 w-4" />
+                    ) : (
+                      <CheckCircle className="h-4 w-4" />
+                    )}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setReviewToDelete(review);
+                      setShowDeleteReviewDialog(true);
+                    }}
+                    className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                    title="Eliminar reseña"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => window.open(`/products/${review.product.slug}`, '_blank')}
+                    className="text-gray-400 hover:text-[#FFD700] hover:bg-[#FFD700]/10"
+                    title="Ver producto"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </CardContent>
+  </Card>
+</TabsContent>
         </Tabs>
 
         {/* MODALES */}
@@ -909,8 +1250,33 @@ export default function AdminSettingsPage() {
                 Eliminar Cupón
               </AlertDialogAction>
             </AlertDialogFooter>
-          </AlertDialogContent>
+          </AlertDialogContent>          
         </AlertDialog>
+
+        {/* Dialog de eliminación de reseña - Agregar antes del cierre de </Tabs> */}
+<AlertDialog open={showDeleteReviewDialog} onOpenChange={setShowDeleteReviewDialog}>
+  <AlertDialogContent className="bg-[#1F1F1F] border-[#FFD700]/30">
+    <AlertDialogHeader>
+      <AlertDialogTitle className="text-white">¿Eliminar reseña?</AlertDialogTitle>
+      <AlertDialogDescription className="text-gray-400">
+        ¿Estás seguro de que quieres eliminar esta reseña de{' '}
+        <strong>{reviewToDelete?.user?.firstName} {reviewToDelete?.user?.lastName}</strong>?
+        Esta acción no se puede deshacer.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel className="bg-[#0D0D0D] border-[#FFD700]/30 text-white hover:bg-[#1F1F1F]">
+        Cancelar
+      </AlertDialogCancel>
+      <AlertDialogAction 
+        onClick={handleDeleteReview}
+        className="bg-red-600 hover:bg-red-700 text-white"
+      >
+        Eliminar Reseña
+      </AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
 
         {/* Modal de Nueva Campaña */}
         <Dialog open={showCampaignModal} onOpenChange={setShowCampaignModal}>

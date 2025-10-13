@@ -34,6 +34,9 @@ import { useCartStore } from '@/lib/cartStore';
 import { productsApi } from '@/lib/api';
 import { formatPrice, formatDate } from '@/lib/utils';
 import type { Product } from '@/types';
+import ProductReviews from '@/components/ProductReviews';
+import WishlistButton from '@/components/WishlistButton'; 
+import { useToast } from '@/hooks/useToast';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -49,7 +52,8 @@ export default function ProductDetailPage() {
   const [showImageModal, setShowImageModal] = useState(false);
   
   const { addItem } = useCartStore();
-
+  const { success } = useToast();
+  
   useEffect(() => {
     if (slug) {
       loadProduct();
@@ -100,6 +104,63 @@ export default function ProductDetailPage() {
       setQuantity(newQuantity);
     }
   };
+
+  const handleShare = async () => {
+  if (!product) return;
+  
+  const productUrl = `${window.location.origin}/products/${product.slug}`;
+  
+  // Si el navegador soporta Web Share API (móviles)
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: product.name,
+        text: `Mira este producto: ${product.name}`,
+        url: productUrl
+      });
+      return; // Salir si compartió exitosamente
+    } catch (err) {
+      // Usuario canceló o error - intentar fallback
+      console.log('Share cancelled or failed, trying fallback');
+    }
+  }
+  
+  // Fallback 1: Clipboard API (requiere HTTPS)
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    try {
+      await navigator.clipboard.writeText(productUrl);
+      success('Link copiado al portapapeles');
+      return;
+    } catch (err) {
+      console.log('Clipboard API failed, trying manual fallback');
+    }
+  }
+  
+  // Fallback 2: Método manual (funciona sin HTTPS)
+  try {
+    const textArea = document.createElement('textarea');
+    textArea.value = productUrl;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    const successful = document.execCommand('copy');
+    document.body.removeChild(textArea);
+    
+    if (successful) {
+      success('Link copiado al portapapeles');
+    } else {
+      // Fallback 3: Mostrar alert con el link
+      alert(`Copia este link:\n\n${productUrl}`);
+    }
+  } catch (err) {
+    // Último recurso: mostrar el link
+    alert(`Copia este link:\n\n${productUrl}`);
+  }
+};
 
   const handleImageChange = (direction: 'next' | 'prev') => {
     if (!product?.images) return;
@@ -284,7 +345,7 @@ export default function ProductDetailPage() {
                 </Link>
               </div>
             )}
-
+ 
             {/* Título */}
             <div>
               <h1 className="text-3xl font-bold text-white mb-2 leading-tight">
@@ -295,16 +356,45 @@ export default function ProductDetailPage() {
               )}
             </div>
 
-            {/* Rating y reseñas */}
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star key={star} className="h-5 w-5 fill-gold text-gold" />
-                ))}
-                <span className="ml-2 text-sm text-gray-400">(4.8)</span>
-              </div>
-              <span className="text-sm text-gray-500">125 reseñas</span>
-            </div>
+           {/* Rating y reseñas */}
+<div className="flex items-center space-x-4">
+  {(() => {
+    console.log('🌟 Product data:', {
+      rating: product.rating,
+      ratingType: typeof product.rating,
+      reviewCount: product.reviewCount,
+      reviewCountType: typeof product.reviewCount
+    });
+    return null;
+  })()}
+  
+  <div className="flex items-center">
+    {[1, 2, 3, 4, 5].map((star) => {
+      const rating = Number(product.rating) || 0;
+      console.log(`Star ${star} - Rating: ${rating} - Active: ${star <= Math.round(rating)}`);
+      return (
+        <Star 
+          key={star} 
+          className={`h-5 w-5 ${
+            star <= Math.round(rating)
+              ? 'fill-gold text-gold'
+              : 'text-gray-500'
+          }`}
+        />
+      );
+    })}
+    {product.rating && (
+      <span className="ml-2 text-sm text-gray-400">
+        ({Number(product.rating).toFixed(1)})
+      </span>
+    )}
+  </div>
+  {(product.reviewCount || 0) > 0 && (
+    <span className="text-sm text-gray-400">
+      {product.reviewCount} {product.reviewCount === 1 ? 'reseña' : 'reseñas'}
+    </span>
+  )}
+</div>
 
             {/* Precio */}
             <div className="space-y-2">
@@ -404,15 +494,23 @@ export default function ProductDetailPage() {
                   </Button>
 
                   <div className="flex space-x-3">
-                    <Button variant="outline" className="flex-1 bg-darkbg border-gold/30 text-white hover:bg-gold/10 hover:border-gold/50">
-                      <Heart className="h-4 w-4 mr-2" />
-                      Favoritos
-                    </Button>
-                    <Button variant="outline" className="flex-1 bg-darkbg border-gold/30 text-white hover:bg-gold/10 hover:border-gold/50">
-                      <Share2 className="h-4 w-4 mr-2" />
-                      Compartir
-                    </Button>
-                  </div>
+  <WishlistButton
+    productId={product.id}
+    productName={product.name}
+    variant="outline"
+    size="lg"
+    showText={true}
+    className="flex-1 bg-darkbg border-gold/30 text-white hover:bg-gold/10 hover:border-gold/50"
+  />
+  <Button 
+    variant="outline" 
+    onClick={handleShare}
+    className="flex-1 bg-darkbg border-gold/30 text-white hover:bg-gold/10 hover:border-gold/50"
+  >
+    <Share2 className="h-4 w-4 mr-2" />
+    Compartir
+  </Button>
+</div>
                 </div>
               </div>
             )}
@@ -427,7 +525,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="flex items-center text-gray-300">
                   <Truck className="h-5 w-5 mr-3 text-cyan" />
-                  <span>Envío gratuito +$100</span>
+                  <span>Envío gratuito +$200</span>
                 </div>
                 <div className="flex items-center text-gray-300">
                   <RotateCcw className="h-5 w-5 mr-3 text-gold" />
@@ -453,8 +551,8 @@ export default function ProductDetailPage() {
                 Especificaciones
               </TabsTrigger>
               <TabsTrigger value="reviews" className="data-[state=active]:bg-darkbg data-[state=active]:text-gold">
-                Reseñas (125)
-              </TabsTrigger>
+  Reseñas ({Number(product.reviewCount) || 0})
+</TabsTrigger>
             </TabsList>
             
             <TabsContent value="description" className="p-6">
@@ -485,10 +583,12 @@ export default function ProductDetailPage() {
             </TabsContent>
             
             <TabsContent value="reviews" className="p-6">
-              <div className="text-center py-8">
-                <p className="text-gray-400">Sistema de reseñas próximamente</p>
-              </div>
-            </TabsContent>
+  <ProductReviews 
+    productId={product.id} 
+    productName={product.name}
+    onReviewUpdate={loadProduct} 
+  />
+</TabsContent>
           </Tabs>
         </Card>
 

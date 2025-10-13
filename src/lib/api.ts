@@ -691,5 +691,54 @@ unsubscribeNewsletter: async (email: string) => {
 }
 };
 
+// Reviews API
+export const reviewsApi = {
+  // Obtener reseñas de un producto (público)
+  getProductReviews: async (productId: string, params?: {
+    page?: number;
+    limit?: number;
+  }) => {
+    const { data } = await api.get(`/reviews/products/${productId}`, { params });
+    return data;
+  },
+
+  // Crear reseña (requiere autenticación)
+  createReview: async (reviewData: {
+    productId: string;
+    rating: number;
+    title?: string;
+    comment?: string;
+  }) => {
+    const { data } = await api.post('/reviews', reviewData);
+    return data;
+  },
+
+  // Verificar si el usuario ya dejó reseña
+  checkUserReview: async (productId: string) => {
+    const { data } = await api.get(`/reviews/products/${productId}/check`);
+    return data;
+  },
+
+  // === ADMIN ===
+  getAllReviewsAdmin: async (params?: {
+    page?: number;
+    limit?: number;
+    status?: 'pending' | 'approved' | 'all';
+  }) => {
+    const { data } = await api.get('/reviews/admin/all', { params });
+    return data;
+  },
+
+  updateReviewStatus: async (reviewId: string, isApproved: boolean) => {
+    const { data } = await api.patch(`/reviews/admin/${reviewId}/status`, { isApproved });
+    return data;
+  },
+
+  deleteReviewAdmin: async (reviewId: string) => {
+    const { data } = await api.delete(`/reviews/admin/${reviewId}`);
+    return data;
+  }
+};
+
 export default api;
 export { accountApi };
