@@ -13,7 +13,9 @@ import {
   Users, 
   Settings, 
   LogOut,
-  Menu
+  Menu,
+  MessageCircleDashedIcon,
+  LucideShoppingCart
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -86,6 +88,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       href: '/admin/settings',
       icon: Settings,
       current: pathname.startsWith('/admin/settings')
+    },
+    {
+      name: 'Mercadolibre',
+      href: '/admin/mercadolibre',
+      icon: LucideShoppingCart,
+      current: pathname.startsWith('/admin/mercadolibre')
     },
   ];
 

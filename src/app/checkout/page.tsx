@@ -1,4 +1,4 @@
-// src/app/checkout/page.tsx - Página de checkout - Dark Tech Theme
+// src/app/checkout/page.tsx - VERSIÓN SIMPLIFICADA SIN ZELLE
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -12,22 +12,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
-import { X } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import SquarePaymentForm, { SquarePaymentData } from '@/components/payments/SquarePaymentForm';
+import StripePaymentForm from '@/components/payments/StripePaymentForm';
 import { CountrySelect } from '@/components/ui/CountrySelect';
-import { getCountryName } from '@/lib/countries';
 import api from '@/lib/api';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import StockWarning from '@/components/ui/StockWarning';
-import ZellePaymentInstructions from '@/components/payments/ZellePaymentInstructions';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,43 +32,32 @@ import {
   MapPin,
   CreditCard,
   Truck,
-  Plus,
-  Edit,
-  Gift,
-  Shield,
-  ArrowLeft,
-  ArrowRight,
   CheckCircle,
   Loader2,
-  AlertTriangle,
-  Clock,
+  ArrowLeft,
+  ArrowRight,
+  Shield,
   Package,
   Trash2,
   Tag,
-  DollarSign    
 } from 'lucide-react';
 import Header from '@/components/Header';
 import { useCartStore } from '@/lib/cartStore';
 import { useAuthStore } from '@/lib/store';
-import { formatPrice, formatDate } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils';
 import { useToast } from '@/hooks/useToast';
 import checkoutApi, { 
   type CheckoutSession, 
-  type OrderTotals, 
-  type ShippingMethod,
-  type CreateOrderRequest,
+  type OrderTotals,
   type CheckoutCoupon 
 } from '@/lib/checkoutApi';
-import type { Address, PaymentMethod } from '@/lib/accountApi';
+import type { Address } from '@/lib/accountApi';
 
 interface CheckoutState {
   currentStep: 1 | 2 | 3 | 4;
   shippingAddress: Address | null;
-  billingAddress: Address | null;
   useShippingAsBilling: boolean;
   shippingMethod: string;
-  paymentMethod: PaymentMethod | null;
-  selectedPaymentType?: 'square' | 'zelle';
   newAddress: {
     name: string;
     street: string;
@@ -97,9 +76,8 @@ export default function CheckoutPage() {
   const { items, totalItems, totalPrice, clearCart, removeItem, updateQuantity } = useCartStore();
   const { isAuthenticated, user } = useAuthStore();
   const router = useRouter();
-  const { success, error, promise } = useToast();
+  const { success, error } = useToast();
 
-  // Estados principales
   const [checkoutSession, setCheckoutSession] = useState<CheckoutSession | null>(null);
   const [orderTotals, setOrderTotals] = useState<OrderTotals | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -108,24 +86,13 @@ export default function CheckoutPage() {
   const [orderResult, setOrderResult] = useState<any>(null);
   const [stockWarnings, setStockWarnings] = useState<any[]>([]);
   const [showStockWarning, setShowStockWarning] = useState(false);
-  
-  const [squarePaymentData, setSquarePaymentData] = useState<SquarePaymentData | null>(null);
-  const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
+  const [paymentData, setPaymentData] = useState<any>(null);
 
-  // Estado del checkout
   const [checkoutState, setCheckoutState] = useState<CheckoutState>({
     currentStep: 1,
     shippingAddress: null,
-    billingAddress: null,
     useShippingAsBilling: true,
     shippingMethod: 'standard',
-    paymentMethod: {
-    id: 'card',
-    type: 'card',
-    brand: 'Card',
-    isDefault: true,
-    createdAt: new Date().toISOString()
-  },
     newAddress: {
       name: '',
       street: '',
@@ -140,7 +107,6 @@ export default function CheckoutPage() {
     customerNotes: ''
   });
 
-  // Verificar autenticación
   useEffect(() => {
     if (!isAuthenticated) {
       router.push('/auth/login?redirect=/checkout');
@@ -156,7 +122,6 @@ export default function CheckoutPage() {
     verifyStockBeforeCheckout();
   }, [isAuthenticated, items.length]);
 
-  // Recalcular totales cuando cambie algo relevante
   useEffect(() => {
     if (checkoutSession && items.length > 0) {
       calculateTotals();
@@ -169,25 +134,13 @@ export default function CheckoutPage() {
       const session = await checkoutApi.getCheckoutSession();
       setCheckoutSession(session);
 
-      // Establecer dirección por defecto si existe
       const defaultAddress = session.addresses.find(addr => addr.isDefault);
       if (defaultAddress) {
         setCheckoutState(prev => ({
           ...prev,
-          shippingAddress: defaultAddress,
-          billingAddress: defaultAddress
+          shippingAddress: defaultAddress
         }));
       }
-
-      // Establecer método de pago por defecto si existe
-      const defaultPayment = session.paymentMethods.find(pm => pm.isDefault);
-      if (defaultPayment) {
-        setCheckoutState(prev => ({
-          ...prev,
-          paymentMethod: defaultPayment
-        }));
-      }
-
     } catch (err: any) {
       console.error('Error loading checkout session:', err);
       error('Error al cargar información del checkout');
@@ -196,119 +149,103 @@ export default function CheckoutPage() {
     }
   };
 
-  interface OutOfStockItem {
-  productId: string;
-  productName: string;
-  requested: number;
-  available: number;
-}
+  const verifyStockBeforeCheckout = async () => {
+    try {
+      const cartItems = items.map((item: any) => ({
+        productId: item.product.id,
+        quantity: item.quantity
+      }));
 
-const verifyStockBeforeCheckout = async () => {
-  try {
-    const cartItems = items.map((item: any) => ({
-      productId: item.product.id,
-      quantity: item.quantity
-    }));
-
-    const { data } = await api.post('/checkout/verify-stock', { items: cartItems });
-    
-    if (!data.valid && data.outOfStockItems?.length > 0) {
-      setStockWarnings(data.outOfStockItems);
-      setShowStockWarning(true);
-      return false;
+      const { data } = await api.post('/checkout/verify-stock', { items: cartItems });
+      
+      if (!data.valid && data.outOfStockItems?.length > 0) {
+        setStockWarnings(data.outOfStockItems);
+        setShowStockWarning(true);
+        return false;
+      }
+      
+      return true;
+    } catch (err) {
+      console.error('Error verificando stock:', err);
+      return true;
     }
-    
-    return true;
-  } catch (err) {
-    console.error('Error verificando stock:', err);
-    return true;
-  }
-};
+  };
 
   const calculateTotals = async () => {
-  try {
-    const cartItems = items.map(item => ({
-      productId: item.product.id,
-      quantity: item.quantity,
-      variants: item.variant
-    }));
+    try {
+      const cartItems = items.map(item => ({
+        productId: item.product.id,
+        quantity: item.quantity,
+        variants: item.variant
+      }));
 
-    const totals = await checkoutApi.calculateOrderTotals({
-      items: cartItems,
-      shippingMethod: checkoutState.shippingMethod,
-      couponCode: checkoutState.appliedCoupon?.code
+      const totals = await checkoutApi.calculateOrderTotals({
+        items: cartItems,
+        shippingMethod: checkoutState.shippingMethod,
+        couponCode: checkoutState.appliedCoupon?.code
+      });
+
+      setOrderTotals(totals);
+
+      const itemsWithStockIssues = totals.items?.filter((item: any) => item.hasStockIssue) || [];
+      if (itemsWithStockIssues.length > 0) {
+        const stockIssues = itemsWithStockIssues.map((item: any) => ({
+          productId: item.productId,
+          productName: item.productName,
+          requested: item.originalQuantity,
+          available: item.availableStock
+        }));
+        setStockWarnings(stockIssues);
+        setShowStockWarning(true);
+      }
+    } catch (err: any) {
+      console.error('Error calculating totals:', err);
+      if (!err.response?.data?.error?.includes('Stock insuficiente')) {
+        error('Error al calcular el total del pedido');
+      }
+    }
+  };
+
+  const removeOutOfStockItems = () => {
+    if (stockWarnings.length === 0) return;
+
+    let itemsRemoved = 0;
+    let itemsAdjusted = 0;
+    const { updateQuantity } = useCartStore.getState();
+
+    stockWarnings.forEach(warning => {
+      const cartItem = items.find(item => item.product.id === warning.productId);
+      
+      if (!cartItem) return;
+
+      if (warning.available === 0) {
+        removeItem(cartItem.id);
+        itemsRemoved++;
+      } else if (warning.available < warning.requested) {
+        updateQuantity(cartItem.id, warning.available);
+        itemsAdjusted++;
+      }
     });
 
-    setOrderTotals(totals);
-
-    // Verificar si hay problemas de stock en los totales
-    const itemsWithStockIssues = totals.items?.filter((item: any) => item.hasStockIssue) || [];
-    if (itemsWithStockIssues.length > 0) {
-      const stockIssues = itemsWithStockIssues.map((item: any) => ({
-        productId: item.productId,
-        productName: item.productName,
-        requested: item.originalQuantity,
-        available: item.availableStock
-      }));
-      setStockWarnings(stockIssues);
-      setShowStockWarning(true);
-    }
-
-  } catch (err: any) {
-    console.error('Error calculating totals:', err);
-    if (!err.response?.data?.error?.includes('Stock insuficiente')) {
-      error('Error al calcular el total del pedido');
-    }
-  }
-};
-
-const removeOutOfStockItems = () => {
-  console.log('Verificando stockWarnings:', stockWarnings);
-  
-  if (stockWarnings.length === 0) return;
-
-  let itemsRemoved = 0;
-  let itemsAdjusted = 0;
-  const { updateQuantity } = useCartStore.getState();
-
-  stockWarnings.forEach(warning => {
-    const cartItem = items.find(item => item.product.id === warning.productId);
+    setStockWarnings([]);
+    setShowStockWarning(false);
     
-    if (!cartItem) {
-      console.log(`Producto ${warning.productId} no encontrado en carrito`);
-      return;
+    setTimeout(() => {
+      calculateTotals();
+    }, 100);
+
+    const messages = [];
+    if (itemsRemoved > 0) {
+      messages.push(`${itemsRemoved} producto(s) agotado(s) eliminado(s)`);
     }
-
-    if (warning.available === 0) {
-      console.log(`Eliminando ${warning.productName} - agotado`);
-      removeItem(cartItem.id);
-      itemsRemoved++;
-    } else if (warning.available < warning.requested) {
-      console.log(`Ajustando ${warning.productName}: de ${warning.requested} a ${warning.available} unidades`);
-      updateQuantity(cartItem.id, warning.available);
-      itemsAdjusted++;
+    if (itemsAdjusted > 0) {
+      messages.push(`${itemsAdjusted} producto(s) ajustado(s) a cantidad disponible`);
     }
-  });
-
-  setStockWarnings([]);
-  setShowStockWarning(false);
-  
-  setTimeout(() => {
-    calculateTotals();
-  }, 100);
-
-  const messages = [];
-  if (itemsRemoved > 0) {
-    messages.push(`${itemsRemoved} producto(s) agotado(s) eliminado(s)`);
-  }
-  if (itemsAdjusted > 0) {
-    messages.push(`${itemsAdjusted} producto(s) ajustado(s) a cantidad disponible`);
-  }
-  
-  if (messages.length > 0) {
-    success(messages.join(' y ') + ' del carrito');
-  }
-};
+    
+    if (messages.length > 0) {
+      success(messages.join(' y ') + ' del carrito');
+    }
+  };
 
   const handleApplyCoupon = async () => {
     if (!checkoutState.couponCode.trim() || !orderTotals) return;
@@ -346,102 +283,54 @@ const removeOutOfStockItems = () => {
     return !!(name && street && city && state && zipCode);
   };
 
-const generateOrderNumber = (): string => {
-  const timestamp = Date.now();
-  const randomPart = Math.random().toString(36).substr(2, 9).toUpperCase();
-  return `ORD-${timestamp}-${randomPart}`;
-};
+  const handleProceedToPayment = async () => {
+    try {
+      setIsProcessing(true);
 
-  const handleCreateOrder = async () => {
-  try {
-    setIsProcessing(true);
+      if (!checkoutState.shippingAddress && !isValidNewAddress()) {
+        error('Dirección de envío requerida');
+        return;
+      }
 
-    if (!checkoutState.shippingAddress && !isValidNewAddress()) {
-      error('Dirección de envío requerida');
-      return;
-    }
+      if (!orderTotals) {
+        error('Error calculando totales');
+        return;
+      }
 
-    if (!checkoutState.paymentMethod) {
-      error('Método de pago requerido');
-      return;
-    }
+      // Preparar datos para el pago
+      const orderData = {
+        items: items.map(item => ({
+          productId: item.product.id,
+          quantity: item.quantity,
+          variants: item.variant ? {
+            [item.variant.type]: item.variant.value
+          } : undefined
+        })),
+        shippingMethod: checkoutState.shippingMethod,
+        shippingAddress: checkoutState.shippingAddress || checkoutState.newAddress,
+        couponCode: checkoutState.appliedCoupon?.code,
+        customerNotes: checkoutState.customerNotes || undefined
+      };
 
-    const orderData = {
-      items: items.map(item => ({
-        productId: item.product.id,
-        quantity: item.quantity,
-        variants: item.variant ? {
-          [item.variant.type]: item.variant.value
-        } : undefined
-      })),
-      shippingMethod: checkoutState.shippingMethod as any,
-      paymentMethod: checkoutState.selectedPaymentType === 'zelle' ? 'zelle' as any : checkoutState.paymentMethod.type.toLowerCase() as any,
-      customerNotes: checkoutState.customerNotes || undefined,
-      couponCode: checkoutState.appliedCoupon?.code,
-      shippingAddressId: checkoutState.shippingAddress?.id,
-      shippingAddress: checkoutState.shippingAddress || checkoutState.newAddress
-    };
-
-    if (checkoutState.selectedPaymentType === 'zelle') {
-      console.log('🔄 Preparando Zelle...');
-      const totals = await checkoutApi.calculateOrderTotals({
-        items: orderData.items,
-        shippingMethod: orderData.shippingMethod,
-        couponCode: orderData.couponCode
+      setPaymentData({
+        amount: orderTotals.total,
+        currency: 'USD',
+        orderData
       });
 
-      const realOrderNumber = generateOrderNumber();
-      console.log('📋 Número generado para Zelle:', realOrderNumber);       
-      
+      setCheckoutState(prev => ({ ...prev, currentStep: 4 }));
+    } catch (err: any) {
+      console.error('Error preparando pago:', err);
+      error(`Error preparando el pago: ${err.message || 'Error desconocido'}`);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
-      const zelleData = {
-        orderId: realOrderNumber,
-        amount: totals.total,
-        currency: 'USD',
-        orderData,
-        tempOrder: true
-      };
-      console.log('📋 ZelleData final:', zelleData); 
-      
-      setSquarePaymentData(zelleData);
-
-    } else {
-    const totals = await checkoutApi.calculateOrderTotals({
-      items: orderData.items,
-      shippingMethod: orderData.shippingMethod,
-      couponCode: orderData.couponCode
-    });
-
-    console.log('Datos preparados para pago, abriendo formulario...');
-
-    const paymentData = {
-      orderId: `temp-${Date.now()}`,
-      amount: totals.total,
-      currency: 'USD',
-      buyerEmail: user?.email,
-      orderData,
-      shippingAddress: checkoutState.shippingAddress ? 
-        checkoutState.shippingAddress : 
-        checkoutState.newAddress
-    };
-    
-    setSquarePaymentData(paymentData);  
-    } 
-
-  } catch (err: any) {
-    console.error('Error preparando pedido:', err);
-    error(`Error preparando el pedido: ${err.message || 'Error desconocido'}`);
-    setIsProcessing(false);
-  }
-  setCheckoutState(prev => ({ ...prev, currentStep: 4 }));
-  setIsProcessing(false);
-};
-
-  const handleSquarePaymentSuccess = (paymentResult: any) => {
-    console.log('✅ Pago con Square exitoso:', paymentResult);
+  const handleStripePaymentSuccess = (paymentResult: any) => {
+    console.log('✅ Pago exitoso:', paymentResult);
 
     setIsProcessing(false);
-    
     setOrderResult(paymentResult);
     setShowSuccessDialog(true);
     clearCart();
@@ -449,70 +338,17 @@ const generateOrderNumber = (): string => {
     success('¡Pago procesado exitosamente!');
   };
 
-  const handleSquarePaymentError = (errorMessage: string) => {
-    console.error('❌ Error en pago con Square:', errorMessage);
-    
+  const handleStripePaymentError = (errorMessage: string) => {
+    console.error('❌ Error en pago:', errorMessage);
     setIsProcessing(false);
-    
-    let contextualMessage = errorMessage;
-    
-    if (errorMessage.includes('fondos insuficientes')) {
-      contextualMessage += '\n\nPuedes intentar con otra tarjeta o método de pago.';
-    } else if (errorMessage.includes('declinada')) {
-      contextualMessage += '\n\nVerifica los datos de tu tarjeta o contacta a tu banco.';
-    } else if (errorMessage.includes('expirada')) {
-      contextualMessage += '\n\nPor favor usa una tarjeta vigente.';
-    } else if (errorMessage.includes('inválid')) {
-      contextualMessage += '\n\nRevisa que todos los datos sean correctos.';
-    }
-    
-    error(contextualMessage);
+    error(errorMessage);
   };
-
-  
 
   const getStepStatus = (step: number) => {
     if (step < checkoutState.currentStep) return 'completed';
     if (step === checkoutState.currentStep) return 'current';
     return 'pending';
   };
-
-  const handleZellePaymentConfirm = async () => {
-  try {
-    setIsProcessing(true);
-
-    const orderData = {
-      items: items.map(item => ({
-        productId: item.product.id,
-        quantity: item.quantity,
-        variants: item.variant ? { [item.variant.type]: item.variant.value } : undefined
-      })),
-      shippingMethod: checkoutState.shippingMethod as any,
-      paymentMethod: 'zelle' as any,
-      customerNotes: checkoutState.customerNotes || undefined,
-      couponCode: checkoutState.appliedCoupon?.code,
-      shippingAddressId: checkoutState.shippingAddress?.id,
-      shippingAddress: checkoutState.shippingAddress || checkoutState.newAddress
-    };
-
-    const response = await checkoutApi.createOrder(orderData);
-    
-    setOrderResult({
-      order: {
-        ...response.order,
-        paymentMethod: 'Zelle - Pendiente de confirmación'
-      }
-    });
-    setShowSuccessDialog(true);
-    clearCart();
-    success('Pedido creado. Te contactaremos cuando confirmemos tu pago.');
-
-  } catch (err: any) {
-    error(`Error creando pedido: ${err.message || 'Error desconocido'}`);
-  } finally {
-    setIsProcessing(false);
-  }
-};
 
   const canProceedToNextStep = (): boolean => {
     switch (checkoutState.currentStep) {
@@ -531,12 +367,12 @@ const generateOrderNumber = (): string => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-darkbg">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
         <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-gold" />
-            <div className="text-lg text-white">Cargando checkout...</div>
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <div className="text-lg">Cargando checkout...</div>
           </div>
         </div>
       </div>
@@ -544,27 +380,27 @@ const generateOrderNumber = (): string => {
   }
 
   return (
-    <div className="min-h-screen bg-darkbg">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
       <Header />
       
       <main className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-400 mb-6">
-          <Link href="/" className="hover:text-gold transition-colors">Inicio</Link>
+        <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-6">
+          <Link href="/" className="hover:text-primary-600 transition-colors">Inicio</Link>
           <span>/</span>
-          <Link href="/cart" className="hover:text-gold transition-colors">Carrito</Link>
+          <Link href="/cart" className="hover:text-primary-600 transition-colors">Carrito</Link>
           <span>/</span>
-          <span className="text-white font-medium">Checkout</span>
+          <span className="text-gray-900 font-medium">Checkout</span>
         </nav>
 
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white flex items-center">
-              <ShoppingCart className="h-8 w-8 mr-3 text-gold" />
+            <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+              <ShoppingCart className="h-8 w-8 mr-3 text-primary-600" />
               Finalizar Compra
             </h1>
-            <p className="text-gray-400 mt-2">
+            <p className="text-gray-600 mt-2">
               {totalItems} producto{totalItems !== 1 ? 's' : ''} en tu carrito
             </p>
           </div>
@@ -572,7 +408,7 @@ const generateOrderNumber = (): string => {
           <Button 
             asChild 
             variant="outline" 
-            className="hidden sm:flex border-gold/30 text-white hover:bg-darkbg-light"
+            className="hidden sm:flex"
           >
             <Link href="/cart">
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -594,32 +430,30 @@ const generateOrderNumber = (): string => {
               const Icon = step.icon;
               
               return (
-  <div key={step.number} className="flex items-center">
-    <div className={`
-      flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors
-      ${status === 'completed' 
-        ? 'bg-cyan border-cyan text-darkbg sm:text-darkbg [&>svg]:text-darkbg sm:[&>svg]:text-darkbg' 
-        : status === 'current' 
-        ? 'bg-gold border-gold text-darkbg sm:text-darkbg [&>svg]:text-darkbg sm:[&>svg]:text-darkbg' 
-        : 'bg-darkbg-light border-gold/30 text-gray-400 [&>svg]:text-gray-400'}
-    `}>
-      <Icon className="h-5 w-5" />
-    </div>
-    <div className="ml-3 hidden sm:block">
-      <div className={`text-sm font-medium ${
-        status === 'current' ? 'text-gold' : 
-        status === 'completed' ? 'text-cyan' : 'text-gray-400'
-      }`}>
-        {step.title}
-      </div>
-    </div>
-    {index < 3 && (
-      <div className={`flex-1 h-0.5 mx-4 ${
-        step.number < checkoutState.currentStep ? 'bg-cyan' : 'bg-gold/20'
-      }`} />
-    )}
-  </div>
-);
+                <div key={step.number} className="flex items-center">
+                  <div className={`
+                    flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors
+                    ${status === 'completed' ? 'bg-green-500 border-green-500 text-white' :
+                      status === 'current' ? 'bg-primary-500 border-primary-500 text-white' :
+                      'bg-gray-100 border-gray-300 text-gray-500'}
+                  `}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div className="ml-3 hidden sm:block">
+                    <div className={`text-sm font-medium ${
+                      status === 'current' ? 'text-primary-600' : 
+                      status === 'completed' ? 'text-green-600' : 'text-gray-500'
+                    }`}>
+                      {step.title}
+                    </div>
+                  </div>
+                  {index < 3 && (
+                    <div className={`flex-1 h-0.5 mx-4 ${
+                      step.number < checkoutState.currentStep ? 'bg-green-500' : 'bg-gray-300'
+                    }`} />
+                  )}
+                </div>
+              );
             })}
           </div>
         </div>
@@ -630,17 +464,17 @@ const generateOrderNumber = (): string => {
             
             {/* Paso 1: Dirección de Envío */}
             {checkoutState.currentStep === 1 && (
-              <Card className="bg-darkbg-light/80 backdrop-blur-sm border-gold/20">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-white">
-                    <MapPin className="h-5 w-5 mr-2 text-gold" />
+                  <CardTitle className="flex items-center">
+                    <MapPin className="h-5 w-5 mr-2" />
                     Dirección de Envío
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {checkoutSession?.addresses.length ? (
                     <div className="space-y-4">
-                      <h3 className="font-medium text-white">Direcciones Guardadas</h3>
+                      <h3 className="font-medium">Direcciones Guardadas</h3>
                       <RadioGroup
                         value={checkoutState.shippingAddress?.id || 'new'}
                         onValueChange={(value) => {
@@ -653,24 +487,24 @@ const generateOrderNumber = (): string => {
                         }}
                       >
                         {checkoutSession.addresses.map((address) => (
-                          <div key={address.id} className="flex items-start space-x-3 p-4 border border-gold/20 rounded-lg bg-darkbg/50 hover:border-gold/40">
+                          <div key={address.id} className="flex items-start space-x-3 p-4 border rounded-lg">
                             <RadioGroupItem value={address.id} className="mt-1" />
                             <div className="flex-1">
-                              <div className="font-medium text-white">{address.name}</div>
-                              <div className="text-sm text-gray-400 mt-1">
+                              <div className="font-medium">{address.name}</div>
+                              <div className="text-sm text-gray-600 mt-1">
                                 {checkoutApi.formatAddress(address)}
                               </div>
                               {address.isDefault && (
-                                <Badge variant="outline" className="mt-2 border-cyan/30 text-cyan">Predeterminada</Badge>
+                                <Badge variant="outline" className="mt-2">Predeterminada</Badge>
                               )}
                             </div>
                           </div>
                         ))}
-                        <div className="flex items-start space-x-3 p-4 border border-gold/20 rounded-lg bg-darkbg/50 hover:border-gold/40">
+                        <div className="flex items-start space-x-3 p-4 border rounded-lg">
                           <RadioGroupItem value="new" className="mt-1" />
                           <div className="flex-1">
-                            <div className="font-medium text-white">Nueva Dirección</div>
-                            <div className="text-sm text-gray-400">Agregar una nueva dirección de envío</div>
+                            <div className="font-medium">Nueva Dirección</div>
+                            <div className="text-sm text-gray-600">Agregar una nueva dirección de envío</div>
                           </div>
                         </div>
                       </RadioGroup>
@@ -679,12 +513,12 @@ const generateOrderNumber = (): string => {
 
                   {(!checkoutState.shippingAddress) && (
                     <div className="space-y-4">
-                      <h3 className="font-medium text-white">
+                      <h3 className="font-medium">
                         {checkoutSession?.addresses.length ? 'Nueva Dirección' : 'Dirección de Envío'}
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="name" className="text-gray-300">Nombre completo</Label>
+                          <Label htmlFor="name">Nombre completo</Label>
                           <Input
                             id="name"
                             value={checkoutState.newAddress.name}
@@ -693,11 +527,10 @@ const generateOrderNumber = (): string => {
                               newAddress: { ...prev.newAddress, name: e.target.value }
                             }))}
                             placeholder="Juan Pérez"
-                            className="bg-darkbg border-gold/30 text-white placeholder-gray-500"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="phone" className="text-gray-300">Teléfono</Label>
+                          <Label htmlFor="phone">Teléfono</Label>
                           <Input
                             id="phone"
                             value={checkoutState.newAddress.phone}
@@ -705,14 +538,13 @@ const generateOrderNumber = (): string => {
                               ...prev,
                               newAddress: { ...prev.newAddress, phone: e.target.value }
                             }))}
-                            placeholder="+52 555 234 5678"
-                            className="bg-darkbg border-gold/30 text-white placeholder-gray-500"
+                            placeholder="+1 555 234 5678"
                           />
                         </div>
                       </div>
                       
                       <div>
-                        <Label htmlFor="street" className="text-gray-300">Dirección</Label>
+                        <Label htmlFor="street">Dirección</Label>
                         <Input
                           id="street"
                           value={checkoutState.newAddress.street}
@@ -720,13 +552,12 @@ const generateOrderNumber = (): string => {
                             ...prev,
                             newAddress: { ...prev.newAddress, street: e.target.value }
                           }))}
-                          className="bg-darkbg border-gold/30 text-white placeholder-gray-500"
                         />
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
-                          <Label htmlFor="city" className="text-gray-300">Ciudad</Label>
+                          <Label htmlFor="city">Ciudad</Label>
                           <Input
                             id="city"
                             value={checkoutState.newAddress.city}
@@ -734,11 +565,10 @@ const generateOrderNumber = (): string => {
                               ...prev,
                               newAddress: { ...prev.newAddress, city: e.target.value }
                             }))}
-                            className="bg-darkbg border-gold/30 text-white placeholder-gray-500"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="state" className="text-gray-300">Estado</Label>
+                          <Label htmlFor="state">Estado</Label>
                           <Input
                             id="state"
                             value={checkoutState.newAddress.state}
@@ -746,11 +576,10 @@ const generateOrderNumber = (): string => {
                               ...prev,
                               newAddress: { ...prev.newAddress, state: e.target.value }
                             }))}
-                            className="bg-darkbg border-gold/30 text-white placeholder-gray-500"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="country" className="text-gray-300">País</Label>
+                          <Label htmlFor="country">País</Label>
                           <CountrySelect
                             value={checkoutState.newAddress.country}
                             onValueChange={(value) => setCheckoutState(prev => ({
@@ -761,7 +590,7 @@ const generateOrderNumber = (): string => {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="zipCode" className="text-gray-300">Código Postal</Label>
+                          <Label htmlFor="zipCode">Código Postal</Label>
                           <Input
                             id="zipCode"
                             value={checkoutState.newAddress.zipCode}
@@ -770,7 +599,6 @@ const generateOrderNumber = (): string => {
                               newAddress: { ...prev.newAddress, zipCode: e.target.value }
                             }))}
                             placeholder="01000"
-                            className="bg-darkbg border-gold/30 text-white placeholder-gray-500"
                           />
                         </div>
                       </div>
@@ -781,7 +609,6 @@ const generateOrderNumber = (): string => {
                     <Button
                       onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 2 }))}
                       disabled={!canProceedToNextStep()}
-                      className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg"
                     >
                       Continuar
                       <ArrowRight className="h-4 w-4 ml-2" />
@@ -793,10 +620,10 @@ const generateOrderNumber = (): string => {
 
             {/* Paso 2: Método de Envío */}
             {checkoutState.currentStep === 2 && (
-              <Card className="bg-darkbg-light/80 backdrop-blur-sm border-gold/20">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-white">
-                    <Truck className="h-5 w-5 mr-2 text-gold" />
+                  <CardTitle className="flex items-center">
+                    <Truck className="h-5 w-5 mr-2" />
                     Método de Envío
                   </CardTitle>
                 </CardHeader>
@@ -808,22 +635,22 @@ const generateOrderNumber = (): string => {
                     }
                   >
                     {checkoutSession?.shippingMethods.map((method) => (
-                      <div key={method.id} className="flex items-center space-x-3 p-4 border border-gold/20 rounded-lg bg-darkbg/50 hover:border-gold/40">
+                      <div key={method.id} className="flex items-center space-x-3 p-4 border rounded-lg">
                         <RadioGroupItem value={method.id} />
                         <div className="flex-1">
                           <div className="flex justify-between items-start">
                             <div>
-                              <div className="font-medium text-white">{method.name}</div>
-                              <div className="text-sm text-gray-400">{method.description}</div>
+                              <div className="font-medium">{method.name}</div>
+                              <div className="text-sm text-gray-600">{method.description}</div>
                               <div className="text-sm text-gray-500 mt-1">
                                 Entrega estimada: {checkoutApi.getEstimatedDelivery(method.id)}
                               </div>
                             </div>
                             <div className="text-right">
                               {method.isFree ? (
-                                <span className="font-bold text-cyan">GRATIS</span>
+                                <span className="font-bold text-green-600">GRATIS</span>
                               ) : (
-                                <span className="font-medium text-white">{formatPrice(method.price)}</span>
+                                <span className="font-medium">{formatPrice(method.price)}</span>
                               )}
                             </div>
                           </div>
@@ -836,7 +663,6 @@ const generateOrderNumber = (): string => {
                     <Button
                       variant="outline"
                       onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 1 }))}
-                      className="border-gold/30 text-white hover:bg-darkbg-light"
                     >
                       <ArrowLeft className="h-4 w-4 mr-2" />
                       Atrás
@@ -844,7 +670,6 @@ const generateOrderNumber = (): string => {
                     <Button
                       onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 3 }))}
                       disabled={!canProceedToNextStep()}
-                      className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg"
                     >
                       Revisar Pedido
                       <ArrowRight className="h-4 w-4 ml-2" />
@@ -856,30 +681,29 @@ const generateOrderNumber = (): string => {
 
             {/* Paso 3: Revisar y Confirmar */}
             {checkoutState.currentStep === 3 && (
-              <Card className="bg-darkbg-light/80 backdrop-blur-sm border-gold/20">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-white">
-                    <CheckCircle className="h-5 w-5 mr-2 text-gold" />
+                  <CardTitle className="flex items-center">
+                    <CheckCircle className="h-5 w-5 mr-2" />
                     Continuar al Pago
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {/* Resumen de direcciones */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <h3 className="font-medium mb-3 text-white">Dirección de Envío</h3>
-                      <div className="p-4 bg-darkbg/50 rounded-lg text-sm border border-gold/20">
+                      <h3 className="font-medium mb-3">Dirección de Envío</h3>
+                      <div className="p-4 bg-gray-50 rounded-lg text-sm">
                         {checkoutState.shippingAddress ? (
                           <>
-                            <div className="font-medium text-white">{checkoutState.shippingAddress.name}</div>
-                            <div className="text-gray-400 mt-1">
+                            <div className="font-medium">{checkoutState.shippingAddress.name}</div>
+                            <div className="text-gray-600 mt-1">
                               {checkoutApi.formatAddress(checkoutState.shippingAddress)}
                             </div>
                           </>
                         ) : (
                           <>
-                            <div className="font-medium text-white">{checkoutState.newAddress.name}</div>
-                            <div className="text-gray-400 mt-1">
+                            <div className="font-medium">{checkoutState.newAddress.name}</div>
+                            <div className="text-gray-600 mt-1">
                               {checkoutState.newAddress.street}<br />
                               {checkoutState.newAddress.city}, {checkoutState.newAddress.state} {checkoutState.newAddress.zipCode}<br />
                               {checkoutState.newAddress.country}
@@ -890,20 +714,15 @@ const generateOrderNumber = (): string => {
                     </div>
 
                     <div>
-                      <h3 className="font-medium mb-3 text-white">Método de Pago</h3>
-                      <div className="p-4 bg-darkbg/50 rounded-lg text-sm border border-gold/20">
-                        {checkoutState.paymentMethod && (
-                          <div className="font-medium text-white">
-                            {checkoutApi.getPaymentMethodDescription(checkoutState.paymentMethod)}
-                          </div>
-                        )}
+                      <h3 className="font-medium mb-3">Método de Pago</h3>
+                      <div className="p-4 bg-gray-50 rounded-lg text-sm">
+                        <div className="font-medium">Tarjeta de Crédito/Débito</div>                        
                       </div>
                     </div>
                   </div>                 
 
-                  {/* Notas del cliente */}
                   <div>
-                    <Label htmlFor="customerNotes" className="text-gray-300">Notas del Pedido (Opcional)</Label>
+                    <Label htmlFor="customerNotes">Notas del Pedido (Opcional)</Label>
                     <Textarea
                       id="customerNotes"
                       value={checkoutState.customerNotes}
@@ -912,7 +731,7 @@ const generateOrderNumber = (): string => {
                         customerNotes: e.target.value 
                       }))}
                       placeholder="Instrucciones especiales para la entrega..."
-                      className="mt-2 bg-darkbg border-gold/30 text-white placeholder-gray-500"
+                      className="mt-2"
                     />
                   </div>
 
@@ -921,15 +740,14 @@ const generateOrderNumber = (): string => {
                       variant="outline"
                       onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 2 }))}
                       disabled={isProcessing}
-                      className="border-gold/30 text-white hover:bg-darkbg-light"
                     >
                       <ArrowLeft className="h-4 w-4 mr-2" />
                       Atrás
                     </Button>
                     <Button
-                      onClick={handleCreateOrder}
+                      onClick={handleProceedToPayment}
                       disabled={isProcessing}
-                      className="bg-gradient-to-r from-cyan to-gold hover:from-gold hover:to-cyan text-darkbg"
+                      className="bg-green-600 hover:bg-green-700"
                     >
                       {isProcessing ? (
                         <>
@@ -939,7 +757,7 @@ const generateOrderNumber = (): string => {
                       ) : (
                         <>
                           <Shield className="h-4 w-4 mr-2" />
-                          Confirmar Pedido
+                          Proceder al Pago
                         </>
                       )}
                     </Button>
@@ -948,99 +766,50 @@ const generateOrderNumber = (): string => {
               </Card>
             )}
 
-           {/* Paso 4: Pago */}
-{checkoutState.currentStep === 4 && (
-  <Card className="bg-darkbg-light/80 backdrop-blur-sm border-gold/20">
-    <CardHeader>
-      <CardTitle className="flex items-center text-white">
-        <CreditCard className="h-5 w-5 mr-2 text-gold" />
-        Completar Pago
-      </CardTitle>
-    </CardHeader>
-    <CardContent className="space-y-6">
-      {/* SELECTOR DE MÉTODO DE PAGO */}
-      <div>
-        <Label className="text-base font-medium text-white">Método de Pago</Label>
-        <RadioGroup
-          value={checkoutState.selectedPaymentType || 'square'}
-          onValueChange={(value) => 
-             setCheckoutState(prev => ({ ...prev, selectedPaymentType: value as 'square' | 'zelle' }))
-       }
-          className="mt-3"
-        >
-          <div className="flex items-center space-x-2 p-3 border border-gold/20 rounded-lg hover:bg-darkbg/50 bg-darkbg/30">
-            <RadioGroupItem value="square" id="square" />
-            <Label htmlFor="square" className="flex items-center cursor-pointer flex-1 text-white">
-              <CreditCard className="h-4 w-4 mr-2 text-gold" />
-              <div>
-                <div className="font-medium">Tarjeta de Crédito/Débito</div>
-                <div className="text-sm text-gray-400">Procesado por Square - Seguro y rápido</div>
-              </div>
-            </Label>
-          </div>
-          
-          <div className="flex items-center space-x-2 p-3 border border-gold/20 rounded-lg hover:bg-darkbg/50 bg-darkbg/30">
-            <RadioGroupItem value="zelle" id="zelle" />
-            <Label htmlFor="zelle" className="flex items-center cursor-pointer flex-1 text-white">
-              <DollarSign className="h-4 w-4 mr-2 text-cyan" />
-              <div>
-                <div className="font-medium">Zelle</div>
-                <div className="text-sm text-gray-400">Transferencia bancaria instantánea</div>
-              </div>
-            </Label>
-          </div>
-        </RadioGroup>
-      </div>
-
-      {/* COMPONENTE SQUARE */}
-      {checkoutState.selectedPaymentType === 'square' && squarePaymentData && (
-        <SquarePaymentForm
-          paymentData={squarePaymentData}
-          onSuccess={handleSquarePaymentSuccess}
-          onError={handleSquarePaymentError}
-        />
-      )}
-
-      {/* COMPONENTE ZELLE */}
-      {checkoutState.selectedPaymentType === 'zelle' && squarePaymentData && (
-        <ZellePaymentInstructions
-          paymentData={{
-            orderId: squarePaymentData.orderId,
-            amount: squarePaymentData.amount, 
-            currency: 'USD'
-          }}
-          onConfirm={handleZellePaymentConfirm}
-        />
-      )}
-      
-      {/* BOTONES DE NAVEGACIÓN */}
-      <div className="flex justify-between pt-4">
-        <Button
-          variant="outline"
-          onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 3 }))}
-          disabled={isProcessing}
-          className="border-gold/30 text-white hover:bg-darkbg-light"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Volver
-        </Button>
-        
-        <div className="text-right text-xs text-gray-400">
-          <div className="flex items-center">
-            <Shield className="h-3 w-3 mr-1 text-cyan" />
-            Transacción 100% segura
-          </div>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-)}
+            {/* Paso 4: Pago con Stripe */}
+            {checkoutState.currentStep === 4 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <CreditCard className="h-5 w-5 mr-2" />
+                    Completar Pago
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {paymentData && (
+                    <StripePaymentForm
+                      paymentData={paymentData}
+                      onSuccess={handleStripePaymentSuccess}
+                      onError={handleStripePaymentError}
+                    />
+                  )}
+                  
+                  <div className="flex justify-between pt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 3 }))}
+                      disabled={isProcessing}
+                    >
+                      <ArrowLeft className="h-4 w-4 mr-2" />
+                      Volver
+                    </Button>
+                    
+                    <div className="text-right text-xs text-gray-500">
+                      <div className="flex items-center">
+                        <Shield className="h-3 w-3 mr-1" />
+                        Transacción 100% segura
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Productos en el pedido */}
-            <Card className="bg-darkbg-light/80 backdrop-blur-sm border-gold/20">
+            <Card>
               <CardHeader>
-                <CardTitle className="flex items-center text-white">
-                  <Package className="h-5 w-5 mr-2 text-gold" />
+                <CardTitle className="flex items-center">
+                  <Package className="h-5 w-5 mr-2" />
                   Productos ({totalItems})
                 </CardTitle>
               </CardHeader>
@@ -1054,27 +823,27 @@ const generateOrderNumber = (): string => {
                           alt={item.product.name}
                           width={60}
                           height={60}
-                          className="rounded-lg object-cover border border-gold/20"
+                          className="rounded-lg object-cover"
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-sm line-clamp-2 text-white">
+                        <h3 className="font-medium text-sm line-clamp-2">
                           {item.product.name}
                         </h3>
                         {item.variant && (
-                          <p className="text-xs text-gray-400 mt-1">
+                          <p className="text-xs text-gray-600 mt-1">
                             {item.variant.type}: {item.variant.value}
                           </p>
                         )}
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-gray-600">
                           Cantidad: {item.quantity}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium text-white">
+                        <p className="font-medium">
                           {formatPrice(item.product.price * item.quantity)}
                         </p>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-gray-600">
                           {formatPrice(item.product.price)} c/u
                         </p>
                       </div>
@@ -1085,70 +854,70 @@ const generateOrderNumber = (): string => {
             </Card>
           </div>
 
-          {/* Advertencia de Stock */}
-{showStockWarning && stockWarnings.length > 0 && (
-  <StockWarning
-    items={stockWarnings}
-    onClose={() => setShowStockWarning(false)}
-    onRemoveOutOfStockItems={removeOutOfStockItems}
-    className="mb-6"
-  />
-)}
+          {/* Stock Warning */}
+          {showStockWarning && stockWarnings.length > 0 && (
+            <StockWarning
+              items={stockWarnings}
+              onClose={() => setShowStockWarning(false)}
+              onRemoveOutOfStockItems={removeOutOfStockItems}
+              className="mb-6"
+            />
+          )}
 
           {/* Resumen del Pedido */}
           <div className="lg:col-span-1">
-            <Card className="sticky top-24 bg-darkbg-light/90 backdrop-blur-sm border-gold/20">
-              <CardHeader className="bg-gradient-to-r from-gold to-cyan text-darkbg rounded-t-lg">
+            <Card className="sticky top-24">
+              <CardHeader>
                 <CardTitle>Resumen del Pedido</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {orderTotals ? (
                   <>
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Subtotal</span>
-                      <span className="text-white">{formatPrice(orderTotals.subtotal)}</span>
+                      <span className="text-gray-600">Subtotal</span>
+                      <span>{formatPrice(orderTotals.subtotal)}</span>
                     </div>
 
                     {orderTotals.appliedCoupon && (
-                      <div className="flex justify-between text-cyan">
+                      <div className="flex justify-between text-green-600">
                         <span>Descuento ({orderTotals.appliedCoupon.code})</span>
                         <span>-{formatPrice(orderTotals.discount)}</span>
                       </div>
                     )}
 
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Envío</span>
+                      <span className="text-gray-600">Envío</span>
                       {orderTotals.shippingCost === 0 ? (
-                        <span className="text-cyan font-medium">GRATIS</span>
+                        <span className="text-green-600 font-medium">GRATIS</span>
                       ) : (
-                        <span className="text-white">{formatPrice(orderTotals.shippingCost)}</span>
+                        <span>{formatPrice(orderTotals.shippingCost)}</span>
                       )}
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Impuestos</span>
-                      <span className="text-white">{formatPrice(orderTotals.tax)}</span>
+                      <span className="text-gray-600">Impuestos</span>
+                      <span>{formatPrice(orderTotals.tax)}</span>
                     </div>
 
-                    <Separator className="bg-gold/20" />
+                    <Separator />
 
                     <div className="flex justify-between text-lg font-bold">
-                      <span className="text-white">Total</span>
-                      <span className="bg-gradient-to-r from-gold to-cyan bg-clip-text text-transparent">{formatPrice(orderTotals.total)}</span>
+                      <span>Total</span>
+                      <span className="text-primary-700">{formatPrice(orderTotals.total)}</span>
                     </div>
                   </>
                 ) : (
                   <div className="text-center py-4">
-                    <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2 text-gold" />
-                    <p className="text-sm text-gray-400">Calculando totales...</p>
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
+                    <p className="text-sm text-gray-600">Calculando totales...</p>
                   </div>
                 )}
 
                 {/* Cupón de descuento */}
-                <Separator className="bg-gold/20" />
+                <Separator />
                 <div className="space-y-3">
-                  <h3 className="font-medium flex items-center text-white">
-                    <Tag className="h-4 w-4 mr-2 text-gold" />
+                  <h3 className="font-medium flex items-center">
+                    <Tag className="h-4 w-4 mr-2" />
                     Cupón de Descuento
                   </h3>
                   
@@ -1161,21 +930,20 @@ const generateOrderNumber = (): string => {
                           ...prev, 
                           couponCode: e.target.value.toUpperCase() 
                         }))}
-                        className="flex-1 text-sm bg-darkbg border-gold/30 text-white placeholder-gray-500"
+                        className="flex-1 text-sm"
                       />
                       <Button 
                         size="sm"
                         onClick={handleApplyCoupon}
                         disabled={!checkoutState.couponCode.trim()}
-                        className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg"
                       >
                         Aplicar
                       </Button>
                     </div>
                   ) : (
-                    <div className="bg-cyan/20 border border-cyan/30 rounded-lg p-3">
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center text-cyan">
+                        <div className="flex items-center text-green-700">
                           <CheckCircle className="h-4 w-4 mr-2" />
                           <span className="text-sm font-medium">
                             {checkoutState.appliedCoupon.code}
@@ -1183,7 +951,7 @@ const generateOrderNumber = (): string => {
                         </div>
                         <button
                           onClick={handleRemoveCoupon}
-                          className="text-red-400 hover:text-red-300"
+                          className="text-red-500 hover:text-red-700"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -1193,18 +961,18 @@ const generateOrderNumber = (): string => {
                 </div>
 
                 {/* Garantías */}
-                <Separator className="bg-gold/20" />
-                <div className="space-y-2 text-xs text-gray-400">
+                <Separator />
+                <div className="space-y-2 text-xs text-gray-600">
                   <div className="flex items-center">
-                    <Shield className="h-3 w-3 mr-2 text-cyan" />
+                    <Shield className="h-3 w-3 mr-2 text-green-600" />
                     <span>Compra 100% segura</span>
                   </div>
                   <div className="flex items-center">
-                    <Truck className="h-3 w-3 mr-2 text-cyan" />
+                    <Truck className="h-3 w-3 mr-2 text-green-600" />
                     <span>Envío con seguimiento</span>
                   </div>
                   <div className="flex items-center">
-                    <Package className="h-3 w-3 mr-2 text-cyan" />
+                    <Package className="h-3 w-3 mr-2 text-green-600" />
                     <span>Garantía de satisfacción</span>
                   </div>
                 </div>
@@ -1215,22 +983,22 @@ const generateOrderNumber = (): string => {
 
         {/* Dialog de éxito */}
         <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-          <AlertDialogContent className="bg-darkbg-light border-gold/30">
+          <AlertDialogContent>
             <AlertDialogHeader>
-              <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-cyan/20 rounded-full">
-                <CheckCircle className="h-8 w-8 text-cyan" />
+              <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full">
+                <CheckCircle className="h-8 w-8 text-green-600" />
               </div>
-              <AlertDialogTitle className="text-center text-white">
+              <AlertDialogTitle className="text-center">
                 ¡Pedido Confirmado!
               </AlertDialogTitle>
-              <AlertDialogDescription className="text-center text-gray-400">
+              <AlertDialogDescription className="text-center">
                 Tu pedido ha sido procesado exitosamente.
                 {orderResult && (
-                  <div className="mt-4 p-4 bg-darkbg/50 rounded-lg border border-gold/20">
+                  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                     <div className="text-sm">
-                      <div className="text-white"><strong>Número de pedido:</strong> {orderResult.order.orderNumber}</div>
-                      <div className="text-white"><strong>Total:</strong> {formatPrice(orderResult.order.total)}</div>
-                      <div className="text-white"><strong>Estado:</strong> {orderResult.order.status}</div>
+                      <div><strong>Número de pedido:</strong> {orderResult.order.orderNumber}</div>
+                      <div><strong>Total:</strong> {formatPrice(orderResult.order.total)}</div>
+                      <div><strong>Estado:</strong> Confirmado</div>
                     </div>
                   </div>
                 )}
@@ -1245,7 +1013,7 @@ const generateOrderNumber = (): string => {
                     router.push('/account/orders');
                   }
                 }}
-                className="w-full sm:w-auto bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg"
+                className="w-full sm:w-auto"
               >
                 Ver Detalles del Pedido
               </AlertDialogAction>

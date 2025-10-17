@@ -742,3 +742,4 @@ export const reviewsApi = {
 
 export default api;
 export { accountApi };
+export { mercadolibreApi } from './mercadolibreApi';
