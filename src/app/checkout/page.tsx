@@ -367,12 +367,12 @@ export default function CheckoutPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+      <div className="min-h-screen bg-gradient-to-br from-darkbg via-darkbg-light to-darkbg">
         <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-            <div className="text-lg">Cargando checkout...</div>
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-gold" />
+            <div className="text-lg text-white">Cargando checkout...</div>
           </div>
         </div>
       </div>
@@ -380,27 +380,27 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+    <div className="min-h-screen bg-gradient-to-br from-darkbg via-darkbg-light to-darkbg">
       <Header />
       
       <main className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-6">
-          <Link href="/" className="hover:text-primary-600 transition-colors">Inicio</Link>
+        <nav className="flex items-center space-x-2 text-sm text-gray-400 mb-6">
+          <Link href="/" className="hover:text-gold transition-colors">Inicio</Link>
           <span>/</span>
-          <Link href="/cart" className="hover:text-primary-600 transition-colors">Carrito</Link>
+          <Link href="/cart" className="hover:text-cyan transition-colors">Carrito</Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Checkout</span>
+          <span className="text-white font-medium">Checkout</span>
         </nav>
 
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-              <ShoppingCart className="h-8 w-8 mr-3 text-primary-600" />
+            <h1 className="text-3xl font-bold text-white flex items-center">
+              <ShoppingCart className="h-8 w-8 mr-3 text-gold" />
               Finalizar Compra
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-400 mt-2">
               {totalItems} producto{totalItems !== 1 ? 's' : ''} en tu carrito
             </p>
           </div>
@@ -408,7 +408,7 @@ export default function CheckoutPage() {
           <Button 
             asChild 
             variant="outline" 
-            className="hidden sm:flex"
+            className="hidden sm:flex border-gold/30 text-white hover:bg-gold/10 hover:border-gold"
           >
             <Link href="/cart">
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -433,23 +433,23 @@ export default function CheckoutPage() {
                 <div key={step.number} className="flex items-center">
                   <div className={`
                     flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors
-                    ${status === 'completed' ? 'bg-green-500 border-green-500 text-white' :
-                      status === 'current' ? 'bg-primary-500 border-primary-500 text-white' :
-                      'bg-gray-100 border-gray-300 text-gray-500'}
+                    ${status === 'completed' ? 'bg-green-400 border-green-400 text-darkbg' :
+                      status === 'current' ? 'bg-gold border-gold text-darkbg' :
+                      'bg-darkbg-light border-gold/30 text-gray-400'}
                   `}>
                     <Icon className="h-5 w-5" />
                   </div>
                   <div className="ml-3 hidden sm:block">
                     <div className={`text-sm font-medium ${
-                      status === 'current' ? 'text-primary-600' : 
-                      status === 'completed' ? 'text-green-600' : 'text-gray-500'
+                      status === 'current' ? 'text-gold' : 
+                      status === 'completed' ? 'text-green-400' : 'text-gray-400'
                     }`}>
                       {step.title}
                     </div>
                   </div>
                   {index < 3 && (
                     <div className={`flex-1 h-0.5 mx-4 ${
-                      step.number < checkoutState.currentStep ? 'bg-green-500' : 'bg-gray-300'
+                      step.number < checkoutState.currentStep ? 'bg-green-400' : 'bg-gold/30'
                     }`} />
                   )}
                 </div>
@@ -464,17 +464,17 @@ export default function CheckoutPage() {
             
             {/* Paso 1: Dirección de Envío */}
             {checkoutState.currentStep === 1 && (
-              <Card>
+              <Card className="bg-darkbg-light border-gold/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <MapPin className="h-5 w-5 mr-2" />
+                  <CardTitle className="flex items-center text-white">
+                    <MapPin className="h-5 w-5 mr-2 text-gold" />
                     Dirección de Envío
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {checkoutSession?.addresses.length ? (
                     <div className="space-y-4">
-                      <h3 className="font-medium">Direcciones Guardadas</h3>
+                      <h3 className="font-medium text-white">Direcciones Guardadas</h3>
                       <RadioGroup
                         value={checkoutState.shippingAddress?.id || 'new'}
                         onValueChange={(value) => {
@@ -487,24 +487,24 @@ export default function CheckoutPage() {
                         }}
                       >
                         {checkoutSession.addresses.map((address) => (
-                          <div key={address.id} className="flex items-start space-x-3 p-4 border rounded-lg">
+                          <div key={address.id} className="flex items-start space-x-3 p-4 border border-gold/20 rounded-lg bg-darkbg hover:border-gold/40 transition-colors">
                             <RadioGroupItem value={address.id} className="mt-1" />
                             <div className="flex-1">
-                              <div className="font-medium">{address.name}</div>
-                              <div className="text-sm text-gray-600 mt-1">
+                              <div className="font-medium text-white">{address.name}</div>
+                              <div className="text-sm text-gray-400 mt-1">
                                 {checkoutApi.formatAddress(address)}
                               </div>
                               {address.isDefault && (
-                                <Badge variant="outline" className="mt-2">Predeterminada</Badge>
+                                <Badge variant="outline" className="mt-2 border-gold/30 text-gold">Predeterminada</Badge>
                               )}
                             </div>
                           </div>
                         ))}
-                        <div className="flex items-start space-x-3 p-4 border rounded-lg">
+                        <div className="flex items-start space-x-3 p-4 border border-gold/20 rounded-lg bg-darkbg hover:border-gold/40 transition-colors">
                           <RadioGroupItem value="new" className="mt-1" />
                           <div className="flex-1">
-                            <div className="font-medium">Nueva Dirección</div>
-                            <div className="text-sm text-gray-600">Agregar una nueva dirección de envío</div>
+                            <div className="font-medium text-white">Nueva Dirección</div>
+                            <div className="text-sm text-gray-400">Agregar una nueva dirección de envío</div>
                           </div>
                         </div>
                       </RadioGroup>
@@ -513,12 +513,12 @@ export default function CheckoutPage() {
 
                   {(!checkoutState.shippingAddress) && (
                     <div className="space-y-4">
-                      <h3 className="font-medium">
+                      <h3 className="font-medium text-white">
                         {checkoutSession?.addresses.length ? 'Nueva Dirección' : 'Dirección de Envío'}
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="name">Nombre completo</Label>
+                          <Label htmlFor="name" className="text-gray-300">Nombre completo</Label>
                           <Input
                             id="name"
                             value={checkoutState.newAddress.name}
@@ -527,10 +527,11 @@ export default function CheckoutPage() {
                               newAddress: { ...prev.newAddress, name: e.target.value }
                             }))}
                             placeholder="Juan Pérez"
+                            className="bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="phone">Teléfono</Label>
+                          <Label htmlFor="phone" className="text-gray-300">Teléfono</Label>
                           <Input
                             id="phone"
                             value={checkoutState.newAddress.phone}
@@ -539,12 +540,13 @@ export default function CheckoutPage() {
                               newAddress: { ...prev.newAddress, phone: e.target.value }
                             }))}
                             placeholder="+1 555 234 5678"
+                            className="bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold"
                           />
                         </div>
                       </div>
                       
                       <div>
-                        <Label htmlFor="street">Dirección</Label>
+                        <Label htmlFor="street" className="text-gray-300">Dirección</Label>
                         <Input
                           id="street"
                           value={checkoutState.newAddress.street}
@@ -552,12 +554,13 @@ export default function CheckoutPage() {
                             ...prev,
                             newAddress: { ...prev.newAddress, street: e.target.value }
                           }))}
+                          className="bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold"
                         />
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
-                          <Label htmlFor="city">Ciudad</Label>
+                          <Label htmlFor="city" className="text-gray-300">Ciudad</Label>
                           <Input
                             id="city"
                             value={checkoutState.newAddress.city}
@@ -565,10 +568,11 @@ export default function CheckoutPage() {
                               ...prev,
                               newAddress: { ...prev.newAddress, city: e.target.value }
                             }))}
+                            className="bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="state">Estado</Label>
+                          <Label htmlFor="state" className="text-gray-300">Estado</Label>
                           <Input
                             id="state"
                             value={checkoutState.newAddress.state}
@@ -576,10 +580,11 @@ export default function CheckoutPage() {
                               ...prev,
                               newAddress: { ...prev.newAddress, state: e.target.value }
                             }))}
+                            className="bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="country">País</Label>
+                          <Label htmlFor="country" className="text-gray-300">País</Label>
                           <CountrySelect
                             value={checkoutState.newAddress.country}
                             onValueChange={(value) => setCheckoutState(prev => ({
@@ -590,7 +595,7 @@ export default function CheckoutPage() {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="zipCode">Código Postal</Label>
+                          <Label htmlFor="zipCode" className="text-gray-300">Código Postal</Label>
                           <Input
                             id="zipCode"
                             value={checkoutState.newAddress.zipCode}
@@ -599,6 +604,7 @@ export default function CheckoutPage() {
                               newAddress: { ...prev.newAddress, zipCode: e.target.value }
                             }))}
                             placeholder="01000"
+                            className="bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold"
                           />
                         </div>
                       </div>
@@ -609,6 +615,7 @@ export default function CheckoutPage() {
                     <Button
                       onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 2 }))}
                       disabled={!canProceedToNextStep()}
+                      className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-bold shadow-glow-gold"
                     >
                       Continuar
                       <ArrowRight className="h-4 w-4 ml-2" />
@@ -620,10 +627,10 @@ export default function CheckoutPage() {
 
             {/* Paso 2: Método de Envío */}
             {checkoutState.currentStep === 2 && (
-              <Card>
+              <Card className="bg-darkbg-light border-gold/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Truck className="h-5 w-5 mr-2" />
+                  <CardTitle className="flex items-center text-white">
+                    <Truck className="h-5 w-5 mr-2 text-gold" />
                     Método de Envío
                   </CardTitle>
                 </CardHeader>
@@ -635,22 +642,22 @@ export default function CheckoutPage() {
                     }
                   >
                     {checkoutSession?.shippingMethods.map((method) => (
-                      <div key={method.id} className="flex items-center space-x-3 p-4 border rounded-lg">
+                      <div key={method.id} className="flex items-center space-x-3 p-4 border border-gold/20 rounded-lg bg-darkbg hover:border-gold/40 transition-colors">
                         <RadioGroupItem value={method.id} />
                         <div className="flex-1">
                           <div className="flex justify-between items-start">
                             <div>
-                              <div className="font-medium">{method.name}</div>
-                              <div className="text-sm text-gray-600">{method.description}</div>
+                              <div className="font-medium text-white">{method.name}</div>
+                              <div className="text-sm text-gray-400">{method.description}</div>
                               <div className="text-sm text-gray-500 mt-1">
                                 Entrega estimada: {checkoutApi.getEstimatedDelivery(method.id)}
                               </div>
                             </div>
                             <div className="text-right">
                               {method.isFree ? (
-                                <span className="font-bold text-green-600">GRATIS</span>
+                                <span className="font-bold text-green-400">GRATIS</span>
                               ) : (
-                                <span className="font-medium">{formatPrice(method.price)}</span>
+                                <span className="font-medium text-white">{formatPrice(method.price)}</span>
                               )}
                             </div>
                           </div>
@@ -663,6 +670,7 @@ export default function CheckoutPage() {
                     <Button
                       variant="outline"
                       onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 1 }))}
+                      className="border-gold/30 text-white hover:bg-gold/10 hover:border-gold"
                     >
                       <ArrowLeft className="h-4 w-4 mr-2" />
                       Atrás
@@ -670,6 +678,7 @@ export default function CheckoutPage() {
                     <Button
                       onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 3 }))}
                       disabled={!canProceedToNextStep()}
+                      className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-bold shadow-glow-gold"
                     >
                       Revisar Pedido
                       <ArrowRight className="h-4 w-4 ml-2" />
@@ -681,29 +690,29 @@ export default function CheckoutPage() {
 
             {/* Paso 3: Revisar y Confirmar */}
             {checkoutState.currentStep === 3 && (
-              <Card>
+              <Card className="bg-darkbg-light border-gold/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <CheckCircle className="h-5 w-5 mr-2" />
+                  <CardTitle className="flex items-center text-white">
+                    <CheckCircle className="h-5 w-5 mr-2 text-gold" />
                     Continuar al Pago
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <h3 className="font-medium mb-3">Dirección de Envío</h3>
-                      <div className="p-4 bg-gray-50 rounded-lg text-sm">
+                      <h3 className="font-medium mb-3 text-white">Dirección de Envío</h3>
+                      <div className="p-4 bg-darkbg rounded-lg text-sm border border-gold/20">
                         {checkoutState.shippingAddress ? (
                           <>
-                            <div className="font-medium">{checkoutState.shippingAddress.name}</div>
-                            <div className="text-gray-600 mt-1">
+                            <div className="font-medium text-white">{checkoutState.shippingAddress.name}</div>
+                            <div className="text-gray-400 mt-1">
                               {checkoutApi.formatAddress(checkoutState.shippingAddress)}
                             </div>
                           </>
                         ) : (
                           <>
-                            <div className="font-medium">{checkoutState.newAddress.name}</div>
-                            <div className="text-gray-600 mt-1">
+                            <div className="font-medium text-white">{checkoutState.newAddress.name}</div>
+                            <div className="text-gray-400 mt-1">
                               {checkoutState.newAddress.street}<br />
                               {checkoutState.newAddress.city}, {checkoutState.newAddress.state} {checkoutState.newAddress.zipCode}<br />
                               {checkoutState.newAddress.country}
@@ -714,15 +723,15 @@ export default function CheckoutPage() {
                     </div>
 
                     <div>
-                      <h3 className="font-medium mb-3">Método de Pago</h3>
-                      <div className="p-4 bg-gray-50 rounded-lg text-sm">
-                        <div className="font-medium">Tarjeta de Crédito/Débito</div>                        
+                      <h3 className="font-medium mb-3 text-white">Método de Pago</h3>
+                      <div className="p-4 bg-darkbg rounded-lg text-sm border border-gold/20">
+                        <div className="font-medium text-white">Tarjeta de Crédito/Débito</div>                        
                       </div>
                     </div>
                   </div>                 
 
                   <div>
-                    <Label htmlFor="customerNotes">Notas del Pedido (Opcional)</Label>
+                    <Label htmlFor="customerNotes" className="text-gray-300">Notas del Pedido (Opcional)</Label>
                     <Textarea
                       id="customerNotes"
                       value={checkoutState.customerNotes}
@@ -731,7 +740,7 @@ export default function CheckoutPage() {
                         customerNotes: e.target.value 
                       }))}
                       placeholder="Instrucciones especiales para la entrega..."
-                      className="mt-2"
+                      className="mt-2 bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold"
                     />
                   </div>
 
@@ -740,6 +749,7 @@ export default function CheckoutPage() {
                       variant="outline"
                       onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 2 }))}
                       disabled={isProcessing}
+                      className="border-gold/30 text-white hover:bg-gold/10 hover:border-gold"
                     >
                       <ArrowLeft className="h-4 w-4 mr-2" />
                       Atrás
@@ -747,7 +757,7 @@ export default function CheckoutPage() {
                     <Button
                       onClick={handleProceedToPayment}
                       disabled={isProcessing}
-                      className="bg-green-600 hover:bg-green-700"
+                      className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-bold shadow-glow-gold"
                     >
                       {isProcessing ? (
                         <>
@@ -768,10 +778,10 @@ export default function CheckoutPage() {
 
             {/* Paso 4: Pago con Stripe */}
             {checkoutState.currentStep === 4 && (
-              <Card>
+              <Card className="bg-darkbg-light border-gold/20">
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <CreditCard className="h-5 w-5 mr-2" />
+                  <CardTitle className="flex items-center text-white">
+                    <CreditCard className="h-5 w-5 mr-2 text-gold" />
                     Completar Pago
                   </CardTitle>
                 </CardHeader>
@@ -789,14 +799,15 @@ export default function CheckoutPage() {
                       variant="outline"
                       onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 3 }))}
                       disabled={isProcessing}
+                      className="border-gold/30 text-white hover:bg-gold/10 hover:border-gold"
                     >
                       <ArrowLeft className="h-4 w-4 mr-2" />
                       Volver
                     </Button>
                     
-                    <div className="text-right text-xs text-gray-500">
+                    <div className="text-right text-xs text-gray-400">
                       <div className="flex items-center">
-                        <Shield className="h-3 w-3 mr-1" />
+                        <Shield className="h-3 w-3 mr-1 text-gold" />
                         Transacción 100% segura
                       </div>
                     </div>
@@ -806,10 +817,10 @@ export default function CheckoutPage() {
             )}
 
             {/* Productos en el pedido */}
-            <Card>
+            <Card className="bg-darkbg-light border-gold/20">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Package className="h-5 w-5 mr-2" />
+                <CardTitle className="flex items-center text-white">
+                  <Package className="h-5 w-5 mr-2 text-gold" />
                   Productos ({totalItems})
                 </CardTitle>
               </CardHeader>
@@ -827,23 +838,23 @@ export default function CheckoutPage() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-sm line-clamp-2">
+                        <h3 className="font-medium text-sm line-clamp-2 text-white">
                           {item.product.name}
                         </h3>
                         {item.variant && (
-                          <p className="text-xs text-gray-600 mt-1">
+                          <p className="text-xs text-gray-400 mt-1">
                             {item.variant.type}: {item.variant.value}
                           </p>
                         )}
-                        <p className="text-xs text-gray-600">
+                        <p className="text-xs text-gray-400">
                           Cantidad: {item.quantity}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium">
+                        <p className="font-medium text-white">
                           {formatPrice(item.product.price * item.quantity)}
                         </p>
-                        <p className="text-xs text-gray-600">
+                        <p className="text-xs text-gray-400">
                           {formatPrice(item.product.price)} c/u
                         </p>
                       </div>
@@ -866,58 +877,58 @@ export default function CheckoutPage() {
 
           {/* Resumen del Pedido */}
           <div className="lg:col-span-1">
-            <Card className="sticky top-24">
+            <Card className="sticky top-24 bg-darkbg-light border-gold/20">
               <CardHeader>
-                <CardTitle>Resumen del Pedido</CardTitle>
+                <CardTitle className="text-white">Resumen del Pedido</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {orderTotals ? (
                   <>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Subtotal</span>
-                      <span>{formatPrice(orderTotals.subtotal)}</span>
+                      <span className="text-gray-400">Subtotal</span>
+                      <span className="text-white">{formatPrice(orderTotals.subtotal)}</span>
                     </div>
 
                     {orderTotals.appliedCoupon && (
-                      <div className="flex justify-between text-green-600">
+                      <div className="flex justify-between text-green-400">
                         <span>Descuento ({orderTotals.appliedCoupon.code})</span>
                         <span>-{formatPrice(orderTotals.discount)}</span>
                       </div>
                     )}
 
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Envío</span>
+                      <span className="text-gray-400">Envío</span>
                       {orderTotals.shippingCost === 0 ? (
-                        <span className="text-green-600 font-medium">GRATIS</span>
+                        <span className="text-green-400 font-medium">GRATIS</span>
                       ) : (
-                        <span>{formatPrice(orderTotals.shippingCost)}</span>
+                        <span className="text-white">{formatPrice(orderTotals.shippingCost)}</span>
                       )}
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Impuestos</span>
-                      <span>{formatPrice(orderTotals.tax)}</span>
+                      <span className="text-gray-400">Impuestos</span>
+                      <span className="text-white">{formatPrice(orderTotals.tax)}</span>
                     </div>
 
-                    <Separator />
+                    <Separator className="bg-gold/20" />
 
                     <div className="flex justify-between text-lg font-bold">
-                      <span>Total</span>
-                      <span className="text-primary-700">{formatPrice(orderTotals.total)}</span>
+                      <span className="text-white">Total</span>
+                      <span className="text-gold">{formatPrice(orderTotals.total)}</span>
                     </div>
                   </>
                 ) : (
                   <div className="text-center py-4">
-                    <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
-                    <p className="text-sm text-gray-600">Calculando totales...</p>
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2 text-gold" />
+                    <p className="text-sm text-gray-400">Calculando totales...</p>
                   </div>
                 )}
 
                 {/* Cupón de descuento */}
-                <Separator />
+                <Separator className="bg-gold/20" />
                 <div className="space-y-3">
-                  <h3 className="font-medium flex items-center">
-                    <Tag className="h-4 w-4 mr-2" />
+                  <h3 className="font-medium flex items-center text-white">
+                    <Tag className="h-4 w-4 mr-2 text-gold" />
                     Cupón de Descuento
                   </h3>
                   
@@ -930,20 +941,21 @@ export default function CheckoutPage() {
                           ...prev, 
                           couponCode: e.target.value.toUpperCase() 
                         }))}
-                        className="flex-1 text-sm"
+                        className="flex-1 text-sm bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold"
                       />
                       <Button 
                         size="sm"
                         onClick={handleApplyCoupon}
                         disabled={!checkoutState.couponCode.trim()}
+                        className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-bold"
                       >
                         Aplicar
                       </Button>
                     </div>
                   ) : (
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                    <div className="bg-green-400/20 border border-green-400/30 rounded-lg p-3">
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center text-green-700">
+                        <div className="flex items-center text-green-400">
                           <CheckCircle className="h-4 w-4 mr-2" />
                           <span className="text-sm font-medium">
                             {checkoutState.appliedCoupon.code}
@@ -951,7 +963,7 @@ export default function CheckoutPage() {
                         </div>
                         <button
                           onClick={handleRemoveCoupon}
-                          className="text-red-500 hover:text-red-700"
+                          className="text-red-400 hover:text-red-300 transition-colors"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -961,18 +973,18 @@ export default function CheckoutPage() {
                 </div>
 
                 {/* Garantías */}
-                <Separator />
-                <div className="space-y-2 text-xs text-gray-600">
+                <Separator className="bg-gold/20" />
+                <div className="space-y-2 text-xs text-gray-400">
                   <div className="flex items-center">
-                    <Shield className="h-3 w-3 mr-2 text-green-600" />
+                    <Shield className="h-3 w-3 mr-2 text-green-400" />
                     <span>Compra 100% segura</span>
                   </div>
                   <div className="flex items-center">
-                    <Truck className="h-3 w-3 mr-2 text-green-600" />
+                    <Truck className="h-3 w-3 mr-2 text-green-400" />
                     <span>Envío con seguimiento</span>
                   </div>
                   <div className="flex items-center">
-                    <Package className="h-3 w-3 mr-2 text-green-600" />
+                    <Package className="h-3 w-3 mr-2 text-green-400" />
                     <span>Garantía de satisfacción</span>
                   </div>
                 </div>
@@ -983,19 +995,19 @@ export default function CheckoutPage() {
 
         {/* Dialog de éxito */}
         <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-          <AlertDialogContent>
+          <AlertDialogContent className="bg-darkbg-light border-gold/20">
             <AlertDialogHeader>
-              <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full">
-                <CheckCircle className="h-8 w-8 text-green-600" />
+              <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-400/20 rounded-full border-2 border-green-400">
+                <CheckCircle className="h-8 w-8 text-green-400" />
               </div>
-              <AlertDialogTitle className="text-center">
+              <AlertDialogTitle className="text-center text-white">
                 ¡Pedido Confirmado!
               </AlertDialogTitle>
-              <AlertDialogDescription className="text-center">
+              <AlertDialogDescription className="text-center text-gray-400">
                 Tu pedido ha sido procesado exitosamente.
                 {orderResult && (
-                  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                    <div className="text-sm">
+                  <div className="mt-4 p-4 bg-darkbg rounded-lg border border-gold/20">
+                    <div className="text-sm text-white">
                       <div><strong>Número de pedido:</strong> {orderResult.order.orderNumber}</div>
                       <div><strong>Total:</strong> {formatPrice(orderResult.order.total)}</div>
                       <div><strong>Estado:</strong> Confirmado</div>
@@ -1013,7 +1025,7 @@ export default function CheckoutPage() {
                     router.push('/account/orders');
                   }
                 }}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-bold"
               >
                 Ver Detalles del Pedido
               </AlertDialogAction>

@@ -58,158 +58,182 @@ export default function Header() {
   return (
     <>
       <header className="bg-darkbg shadow-lg border-b-2 border-gold/20 sticky top-0 z-50">
-        {/* Top bar Dark Tech */}
-        <div className="bg-gradient-to-r from-darkbg via-darkbg-light to-darkbg text-white text-sm border-b border-gold/10">
-          <div className="container mx-auto px-4 py-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4 md:space-x-6">
-                <div className="flex items-center space-x-2">
-                  <Zap className="h-4 w-4 text-gold animate-pulse" />
-                  <span className="font-medium">Envío rápido a todo el mundo</span>
-                </div>
-                <div className="hidden lg:flex items-center space-x-1">
-                  <Bell className="h-4 w-4 text-cyan" />
-                  <span>Soporte Premium 24/7</span>
-                </div>
-              </div>
-              <div className="flex items-center text-xs md:text-sm">
-                <span className="bg-gradient-to-r from-gold to-cyan text-darkbg px-2 py-1 md:px-3 md:py-1 rounded-full font-bold animate-pulse">
-                  Envío gratis $200+
-                </span>
-              </div>
-            </div>
+  {/* Top bar Dark Tech */}
+  <div className="bg-gradient-to-r from-darkbg via-darkbg-light to-darkbg text-white text-sm border-b border-gold/10">
+    <div className="container mx-auto px-4 py-2">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4 md:space-x-6">
+          <div className="flex items-center space-x-2">
+            <Zap className="h-4 w-4 text-gold animate-pulse" />
+            <span className="font-medium">Envío rápido en todo México</span>
+          </div>
+          <div className="hidden lg:flex items-center space-x-1">
+            <Bell className="h-4 w-4 text-cyan" />
+            <span>Soporte Premium 24/7</span>
           </div>
         </div>
-
-        {/* Main header Dark Tech */}
-        <div className="bg-gradient-to-r from-darkbg via-darkbg-light to-darkbg text-white shadow-xl h-20">
-          <div className="container mx-auto px-4 h-full">
-            <div className="flex items-center justify-between gap-6 h-full">
-              
-              {/* Logo */}
-              <Link href="/" className="flex items-center space-x-4 group">
-                <div className="relative">
-                  <div className="absolute inset-0 blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                  <Image
-                    src="/logo.png"
-                    alt="BeztShop Logo"
-                    width={150}
-                    height={150}
-                    className="relative h-20 md:h-32 w-auto transition-transform duration-300 group-hover:scale-110 drop-shadow-2xl"
-                    priority
-                  />
-                </div>
-                <div className="hidden sm:block">
-                  <div className="font-black text-2xl bg-gradient-to-r from-gold via-cyan to-gold bg-clip-text text-transparent group-hover:from-cyan group-hover:via-gold group-hover:to-cyan transition-all duration-500 animate-neon-glow">
-                    Tech Store
-                  </div>
-                  <div className="text-sm text-cyan font-semibold -mt-1 drop-shadow-sm">
-                    Premium
-                  </div>
-                </div>
-              </Link>
-
-              {/* Search bar Dark Tech */}
-<form onSubmit={handleSearch} className="flex-1 max-w-2xl mx-2 md:mx-4">
-  <div className="relative group">
-    <Input
-      type="text"
-      placeholder="Buscar productos, marcas, categorías..."
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-      className="w-full pl-4 pr-32 py-4 md:pl-4 md:pr-14 md:py-3 text-base md:text-lg bg-darkbg-light/80 backdrop-blur-sm border-2 border-gold/20 text-white placeholder-gray-400 rounded-xl focus:ring-4 focus:ring-gold/50 focus:border-gold group-hover:border-gold/30 transition-all duration-300 shadow-lg"
-    />
-    <Button
-      type="submit"
-      className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg px-4 py-0 md:px-4 md:py-2 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-glow-gold transform hover:scale-105"
-    >
-      <Search className="h-4 w-4 md:h-4 md:w-4" />
-    </Button>
+        <div className="flex items-center text-xs md:text-sm">
+          <span className="bg-gradient-to-r from-gold to-cyan text-darkbg px-2 py-1 md:px-3 md:py-1 rounded-full font-bold animate-pulse">
+            Envío gratis $200+
+          </span>
+        </div>
+      </div>
+    </div>
   </div>
-</form>
 
-              {/* Right section */}
-              <div className="flex items-center space-x-3">
-                {/* Favorites */}
-                {isAuthenticated && (
-                  <Link href="/wishlist">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="hidden sm:flex items-center space-x-2 hover:bg-darkbg-light hover:text-cyan text-white transition-all duration-300 rounded-xl px-3 py-2 border border-transparent hover:border-cyan/20"
-                    >
-                      <Heart className="h-5 w-5" />
-                      <span className="hidden lg:inline font-medium text-base">Favoritos</span>
-                    </Button>
-                  </Link>
-                )}
-
-                {/* User account */}
-                <div className="hidden sm:block">
-                  {isAuthenticated ? (
-                    <Link href="/account">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="flex items-center space-x-2 hover:bg-darkbg-light hover:text-gold text-white transition-all duration-300 rounded-xl px-3 py-2 border border-transparent hover:border-gold/20"
-                      >
-                        <div className="w-8 h-8 bg-gradient-to-r from-gold to-cyan rounded-full flex items-center justify-center shadow-lg">
-                          <span className="text-darkbg font-bold text-sm">
-                            {user?.firstName?.charAt(0) || 'U'}
-                          </span>
-                        </div>
-                        <span className="hidden lg:inline font-medium text-base">
-                          {user?.firstName ? `Hola, ${user.firstName}` : isInitialized ? 'Hola' : 'Loading...'}
-                        </span>
-                      </Button>
-                    </Link>
-                  ) : (
-                    <Link href="/auth/login">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="flex items-center space-x-2 hover:bg-darkbg-light hover:text-gold text-white transition-all duration-300 rounded-xl px-3 py-2 border border-transparent hover:border-gold/20"
-                      >
-                        <User className="h-5 w-5" />
-                        <span className="hidden lg:inline font-medium text-base">Inicia sesión</span>
-                      </Button>
-                    </Link>
-                  )}
-                </div>
-
-                {/* Cart */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={toggleCart}
-                  className="relative flex items-center space-x-2 hover:bg-darkbg-light hover:text-cyan text-white transition-all duration-300 rounded-xl px-3 py-2 border border-transparent hover:border-cyan/20"
-                >
-                  <div className="relative">
-                    <ShoppingCart className="h-5 w-5" />
-                    {totalItems > 0 && (
-                      <Badge 
-                        className="absolute -top-2 -right-2 bg-gradient-to-r from-gold to-cyan text-darkbg rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold animate-pulse shadow-lg"
-                      >
-                        {totalItems}
-                      </Badge>
-                    )}
-                  </div>
-                  <span className="hidden lg:inline font-medium text-base">Carrito</span>
-                </Button>
-
-                {/* Mobile menu button */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="md:hidden hover:bg-darkbg-light text-white rounded-xl p-2 border border-transparent hover:border-gold/20"
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-                >
-                  {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                </Button>
-              </div>
-            </div>
+  {/* Main header Dark Tech */}
+  <div className="bg-gradient-to-r from-darkbg via-darkbg-light to-darkbg text-white shadow-xl">
+    <div className="container mx-auto px-4">
+      {/* Fila principal con logo y botones - altura fija */}
+      <div className="flex items-center justify-between gap-4 h-16 md:h-20">              
+        
+        {/* Logo */}
+        <Link href="/" className="flex items-center space-x-2 md:space-x-4 group flex-shrink-0">
+          <div className="relative">
+            <div className="absolute inset-0 blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
+            <Image
+              src="/logo.png"
+              alt="BeztShop Logo"
+              width={150}
+              height={150}
+              className="relative h-20 md:h-32 w-auto transition-transform duration-300 group-hover:scale-110 drop-shadow-2xl"
+              priority
+            />
           </div>
-        </div>
+          <div className="hidden sm:block">
+            <div className="font-black text-xl md:text-2xl bg-gradient-to-r from-gold via-cyan to-gold bg-clip-text text-transparent group-hover:from-cyan group-hover:via-gold group-hover:to-cyan transition-all duration-500 animate-neon-glow">
+              Tech Store
+            </div>
+            <div className="text-xs md:text-sm text-cyan font-semibold -mt-1 drop-shadow-sm">
+              Premium
+            </div>
+          </div>                
+        </Link>
+        
+        {/* Search bar Desktop */}
+        <form onSubmit={handleSearch} className="flex-1 max-w-2xl mx-2 md:mx-4 hidden md:block">
+          <div className="relative group">
+            <Input
+              type="text"
+              placeholder="Buscar productos, marcas, categorías...en BeztShop"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-4 pr-14 py-5 md:pr-14 md:py-3 text-base md:text-lg bg-darkbg-light/80 backdrop-blur-sm border-2 border-gold/20 text-white placeholder-gray-400 rounded-xl focus:ring-4 focus:ring-gold/50 focus:border-gold group-hover:border-gold/30 transition-all duration-300 shadow-lg"
+              style={{ textAlign: 'left' }}
+            />
+            <Button
+              type="submit"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg px-4 py-2 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-glow-gold transform hover:scale-105"
+            >
+              <Search className="h-4 w-4" />
+            </Button>
+          </div>
+        </form>
+
+        {/* Right section */}
+        <div className="flex items-center space-x-2 md:space-x-3 flex-shrink-0">
+          {/* Favorites */}
+          {isAuthenticated && (
+            <Link href="/wishlist">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="hidden sm:flex items-center space-x-2 hover:bg-darkbg-light hover:text-cyan text-white transition-all duration-300 rounded-xl px-3 py-2 border border-transparent hover:border-cyan/20"
+              >
+                <Heart className="h-5 w-5" />
+                <span className="hidden lg:inline font-medium text-base">Favoritos</span>
+              </Button>
+            </Link>
+          )}
+
+          {/* User account */}
+          <div className="hidden sm:block">
+            {isAuthenticated ? (
+              <Link href="/account">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="flex items-center space-x-2 hover:bg-darkbg-light hover:text-gold text-white transition-all duration-300 rounded-xl px-3 py-2 border border-transparent hover:border-gold/20"
+                >
+                  <div className="w-8 h-8 bg-gradient-to-r from-gold to-cyan rounded-full flex items-center justify-center shadow-lg">
+                    <span className="text-darkbg font-bold text-sm">
+                      {user?.firstName?.charAt(0) || 'U'}
+                    </span>
+                  </div>
+                  <span className="hidden lg:inline font-medium text-base">
+                    {user?.firstName ? `Hola, ${user.firstName}` : isInitialized ? 'Hola' : 'Loading...'}
+                  </span>
+                </Button>
+              </Link>
+            ) : (
+              <Link href="/auth/login">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="flex items-center space-x-2 hover:bg-darkbg-light hover:text-gold text-white transition-all duration-300 rounded-xl px-3 py-2 border border-transparent hover:border-gold/20"
+                >
+                  <User className="h-5 w-5" />
+                  <span className="hidden lg:inline font-medium text-base">Inicia sesión</span>
+                </Button>
+              </Link>
+            )}
+          </div>
+
+          {/* Cart */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleCart}
+            className="relative flex items-center space-x-2 hover:bg-darkbg-light hover:text-cyan text-white transition-all duration-300 rounded-xl px-3 py-2 border border-transparent hover:border-cyan/20"
+          >
+            <div className="relative">
+              <ShoppingCart className="h-5 w-5" />
+              {totalItems > 0 && (
+                <Badge 
+                  className="absolute -top-2 -right-2 bg-gradient-to-r from-gold to-cyan text-darkbg rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold animate-pulse shadow-lg"
+                >
+                  {totalItems}
+                </Badge>
+              )}
+            </div>
+            <span className="hidden lg:inline font-medium text-base">Carrito</span>
+          </Button>
+
+          {/* Mobile menu button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="md:hidden hover:bg-darkbg-light text-white rounded-xl p-2 border border-transparent hover:border-gold/20"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>              
+      </div>
+
+      {/* Search bar móvil - Pegado justo debajo del header principal */}
+      <div className="md:hidden pb-3 pt-2">
+        <form onSubmit={handleSearch} className="w-full">
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Buscar en BeztShop..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-4 pr-12 py-2.5 text-base bg-darkbg-light/80 backdrop-blur-sm border-2 border-gold/20 text-white placeholder-gray-400 rounded-xl focus:ring-4 focus:ring-gold/50 focus:border-gold transition-all duration-300 shadow-lg"
+            />
+            <Button
+              type="submit"
+              size="sm"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg px-3 py-1.5 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-glow-gold"
+            >
+              <Search className="h-4 w-4" />
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>          
+  </div>
 
         {/* Categories navigation Dark Tech */}
         <div className="bg-gradient-to-r from-darkbg-light via-darkbg-lighter to-darkbg-light border-t border-gold/10">

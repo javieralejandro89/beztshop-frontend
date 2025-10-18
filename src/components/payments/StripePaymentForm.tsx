@@ -94,22 +94,22 @@ function CheckoutForm({ paymentData, onSuccess, onError }: StripePaymentFormProp
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <div className="flex items-center text-blue-700 mb-2">
+      <div className="bg-darkbg-light border border-gold/30 rounded-lg p-4">
+        <div className="flex items-center text-gold mb-2">
           <Shield className="h-4 w-4 mr-2" />
           <span className="text-sm font-medium">Pago 100% Seguro</span>
         </div>
-        <p className="text-xs text-blue-600">
+        <p className="text-xs text-gray-400">
           Los datos de tu tarjeta están encriptados
         </p>
       </div>
 
       <PaymentElement />
 
-      <div className="bg-gray-50 p-4 rounded-lg">
+      <div className="bg-darkbg-light p-4 rounded-lg border border-gold/20">
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Total a pagar:</span>
-          <span className="text-2xl font-bold text-primary-600">
+          <span className="text-sm text-gray-400">Total a pagar:</span>
+          <span className="text-2xl font-bold bg-gradient-to-r from-gold to-cyan bg-clip-text text-transparent">
             ${paymentData.amount.toFixed(2)} {paymentData.currency}
           </span>
         </div>
@@ -118,7 +118,7 @@ function CheckoutForm({ paymentData, onSuccess, onError }: StripePaymentFormProp
       <Button
         type="submit"
         disabled={!stripe || isProcessing}
-        className="w-full bg-green-600 hover:bg-green-700 text-white py-6 text-lg"
+        className="w-full bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg py-6 text-lg font-bold shadow-glow-gold hover:shadow-glow-cyan transition-all"
       >
         {isProcessing ? (
           <>
@@ -133,12 +133,12 @@ function CheckoutForm({ paymentData, onSuccess, onError }: StripePaymentFormProp
         )}
       </Button>
 
-      <p className="text-xs text-center text-gray-500">
+      <p className="text-xs text-center text-gray-400">
   Al hacer clic en "Pagar" aceptas nuestros{' '}
   <Link 
     href="/terms" 
     target="_blank"
-    className="text-primary-600 hover:text-primary-700 underline"
+    className="text-gold hover:text-cyan underline transition-colors"
   >
     términos y condiciones
   </Link>
@@ -182,15 +182,15 @@ export default function StripePaymentForm({ paymentData, onSuccess, onError }: S
   if (isLoading) {
     return (
       <div className="text-center py-8">
-        <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-        <p className="text-gray-600">Inicializando pago seguro...</p>
+        <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-gold" />
+        <p className="text-gray-400">Inicializando pago seguro...</p>
       </div>
     );
   }
 
   if (!clientSecret) {
     return (
-      <div className="text-center py-8 text-red-600">
+      <div className="text-center py-8 text-red-400 bg-darkbg-light border border-red-500/30 rounded-lg p-4">
         Error al inicializar el pago. Por favor intenta nuevamente.
       </div>
     );
@@ -199,9 +199,15 @@ export default function StripePaymentForm({ paymentData, onSuccess, onError }: S
   const options: StripeElementsOptions = {
     clientSecret,
     appearance: {
-      theme: 'stripe',
+      theme: 'night',
       variables: {
-        colorPrimary: '#059669'
+        colorPrimary: '#FFD700',
+        colorBackground: '#1F1F1F',
+        colorText: '#FFFFFF',
+        colorDanger: '#EF4444',
+        fontFamily: 'Inter, system-ui, sans-serif',
+        spacingUnit: '4px',
+        borderRadius: '8px'
       }
     }       
   };
