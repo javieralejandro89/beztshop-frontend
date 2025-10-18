@@ -2,20 +2,9 @@
 import api from './api';
 import type { Address, PaymentMethod } from './accountApi';
 
-// Interfaces específicas para checkout
-export interface ShippingMethod {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  estimatedDays: string;
-  isFree?: boolean;
-}
-
 export interface CheckoutSession {
   addresses: Address[];
-  paymentMethods: PaymentMethod[];
-  shippingMethods: ShippingMethod[];
+  paymentMethods: PaymentMethod[];  
   config: {
     freeShippingThreshold: number;
     taxRate: number;
@@ -71,8 +60,7 @@ export interface CreateOrderRequest {
     zipCode: string;
     country?: string;
     phone?: string;
-  };
-  shippingMethod: 'standard' | 'express' | 'overnight';
+  };  
   paymentMethod: 'card' | 'paypal' | 'bank_transfer' | 'cash_on_delivery';
   couponCode?: string;
   customerNotes?: string;
@@ -105,13 +93,7 @@ export const checkoutApi = {
   getCheckoutSession: async (): Promise<CheckoutSession> => {
     const { data } = await api.get('/checkout/session');
     return data;
-  },
-
-  // ==== MÉTODOS DE ENVÍO ====
-  getShippingMethods: async (params?: { subtotal?: number }): Promise<{ shippingMethods: ShippingMethod[] }> => {
-    const { data } = await api.get('/checkout/shipping-methods', { params });
-    return data;
-  },
+  },  
 
   // ==== CUPONES ====
   validateCoupon: async (code: string, subtotal: number): Promise<{ 
@@ -132,8 +114,7 @@ export const checkoutApi = {
 
   // ==== CÁLCULOS ====
   calculateOrderTotals: async (params: {
-    items: CartItem[];
-    shippingMethod?: string;
+    items: CartItem[];    
     couponCode?: string;
   }): Promise<OrderTotals> => {
     const { data } = await api.post('/checkout/calculate-totals', params);
@@ -187,30 +168,18 @@ export const checkoutApi = {
   },
 
   // Calcular tiempo estimado de entrega
-  getEstimatedDelivery: (shippingMethod: string): string => {
-    const now = new Date();
-    let days = 7; // Por defecto
-
-    switch (shippingMethod) {
-      case 'standard':
-        days = 7;
-        break;
-      case 'express':
-        days = 3;
-        break;
-      case 'overnight':
-        days = 1;
-        break;
-    }
-
-    const deliveryDate = new Date(now.getTime() + (days * 24 * 60 * 60 * 1000));
-    return deliveryDate.toLocaleDateString('es-MX', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  }
+  getEstimatedDelivery: (): string => {
+  const now = new Date();
+  const days = 5; // 3-7 días hábiles aproximadamente
+  
+  const deliveryDate = new Date(now.getTime() + (days * 24 * 60 * 60 * 1000));
+  return deliveryDate.toLocaleDateString('es-MX', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
 };
 
 export default checkoutApi;

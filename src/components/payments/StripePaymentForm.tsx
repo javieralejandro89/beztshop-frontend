@@ -110,7 +110,7 @@ function CheckoutForm({ paymentData, onSuccess, onError }: StripePaymentFormProp
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-400">Total a pagar:</span>
           <span className="text-2xl font-bold bg-gradient-to-r from-gold to-cyan bg-clip-text text-transparent">
-            ${paymentData.amount.toFixed(2)} {paymentData.currency}
+            ${paymentData.amount.toFixed(2)} MXN
           </span>
         </div>
       </div>

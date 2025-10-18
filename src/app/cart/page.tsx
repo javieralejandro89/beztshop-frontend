@@ -58,8 +58,7 @@ export default function CartPage() {
 
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
-  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
-  const [shippingMethod, setShippingMethod] = useState('standard');
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);  
   const [recommendedProducts, setRecommendedProducts] = useState<Product[]>([]);
   const [removingItems, setRemovingItems] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
@@ -127,20 +126,40 @@ export default function CartPage() {
   };
 
   // Cálculos
-  const subtotal = totalPrice;
-  const couponDiscount = appliedCoupon ? appliedCoupon.discount : 0;
-  const freeShippingThreshold = 100;
-  const shippingCost = subtotal >= freeShippingThreshold ? 0 : 15;
-  const tax = (subtotal - couponDiscount) * 0.08; // 8% impuesto
-  const total = subtotal - couponDiscount + shippingCost + tax;
-  const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
-  const freeShippingProgress = Math.min(100, (subtotal / freeShippingThreshold) * 100);
+  // Cálculos con nuevo sistema de envío
+const subtotal = totalPrice;
+const couponDiscount = appliedCoupon ? appliedCoupon.discount : 0;
+const freeShippingThreshold = 299; // MXN - Alineado con Mercado Libre
 
-  const shippingOptions = [
-    { id: 'standard', name: 'Envío Estándar', time: '5-7 días', cost: 15 },
-    { id: 'express', name: 'Envío Rápido', time: '2-3 días', cost: 25 },
-    { id: 'overnight', name: 'Envío Overnight', time: '1 día', cost: 45 },
-  ];
+// Calcular peso total del carrito
+const totalWeight = items.reduce((total, item) => {
+  const weight = item.product.weight ? Number(item.product.weight) : 0.5;
+  return total + (weight * item.quantity);
+}, 0);
+
+// Calcular costo de envío automático basado en peso
+let shippingCost = 0;
+if (subtotal >= freeShippingThreshold) {
+  shippingCost = 0; // Envío gratis
+} else {
+  if (totalWeight <= 1) {
+    shippingCost = 70;
+  } else if (totalWeight <= 3) {
+    shippingCost = 80;
+  } else if (totalWeight <= 5) {
+    shippingCost = 90;
+  } else if (totalWeight <= 10) {
+    shippingCost = 95;
+  } else {
+    shippingCost = 150 + ((totalWeight - 10) * 15);
+  }
+  shippingCost = Math.min(shippingCost, 250); // Máximo $250 MXN
+}
+
+const tax = 0; // IVA incluido en precios
+const total = subtotal - couponDiscount + shippingCost;
+const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
+const freeShippingProgress = Math.min(100, (subtotal / freeShippingThreshold) * 100);
 
   if (isLoading) {
     return (
@@ -240,24 +259,27 @@ export default function CartPage() {
             <div className="lg:col-span-2 space-y-6">
               {/* Barra de envío gratuito */}
               {remainingForFreeShipping > 0 && (
-                <Card className="border-gold/30 bg-gradient-to-r from-gold/10 to-cyan/10 shadow-card-hover animate-fade-in">
-                  <CardContent className="p-6">
-                    <div className="text-center mb-4">
-                      <p className="text-white">
-                        <span className="font-bold text-gold">
-                          {formatPrice(remainingForFreeShipping)}
-                        </span> más para obtener <span className="font-bold text-cyan">ENVÍO GRATIS</span>
-                      </p>
-                    </div>
-                    <div className="w-full bg-darkbg-light rounded-full h-3 overflow-hidden">
-                      <div 
-                        className="bg-gradient-to-r from-gold to-cyan h-3 rounded-full transition-all duration-700 shadow-glow-gold animate-pulse-gentle"
-                        style={{ width: `${freeShippingProgress}%` }}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+  <Card className="border-gold/30 bg-gradient-to-r from-gold/10 to-cyan/10 shadow-card-hover animate-fade-in">
+    <CardContent className="p-6">
+      <div className="text-center mb-4">
+        <p className="text-white">
+          <span className="font-bold text-gold">
+            {formatPrice(remainingForFreeShipping)}
+          </span> más para obtener <span className="font-bold text-cyan">ENVÍO GRATIS</span>
+        </p>
+        <p className="text-xs text-gray-400 mt-1">
+          En compras desde $299 MXN
+        </p>
+      </div>
+      <div className="w-full bg-darkbg-light rounded-full h-3 overflow-hidden">
+        <div 
+          className="bg-gradient-to-r from-gold to-cyan h-3 rounded-full transition-all duration-700 shadow-glow-gold animate-pulse-gentle"
+          style={{ width: `${freeShippingProgress}%` }}
+        />
+      </div>
+    </CardContent>
+  </Card>
+)}
 
               {subtotal >= freeShippingThreshold && (
                 <Card className="border-cyan/30 bg-gradient-to-r from-cyan/20 to-gold/20 shadow-card-hover animate-bounce-gentle">
@@ -485,42 +507,37 @@ export default function CartPage() {
                   )}
 
                   {/* Envío */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Envío</span>
-                      {shippingCost === 0 ? (
-                        <span className="font-medium text-cyan">GRATIS</span>
-                      ) : (
-                        <span className="font-medium text-white">{formatPrice(shippingCost)}</span>
-                      )}
-                    </div>
-                    
-                    <Select value={shippingMethod} onValueChange={setShippingMethod}>
-                      <SelectTrigger className="text-sm bg-darkbg border-gold/30 text-white">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {shippingOptions.map((option) => (
-                          <SelectItem key={option.id} value={option.id}>
-                            <div className="flex justify-between w-full">
-                              <span>{option.name} ({option.time})</span>
-                              <span className="ml-2">
-                                {subtotal >= freeShippingThreshold && option.id === 'standard' 
-                                  ? 'GRATIS' 
-                                  : formatPrice(option.cost)
-                                }
-                              </span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+<div className="space-y-2">
+  <div className="flex justify-between">
+    <span className="text-gray-400">Envío</span>
+    {shippingCost === 0 ? (
+      <span className="font-medium text-cyan">GRATIS</span>
+    ) : (
+      <div className="text-right">
+        <span className="font-medium text-white">{formatPrice(shippingCost)}</span>        
+      </div>
+    )}
+  </div>
+  
+  {/* Info de envío */}
+  <div className="bg-darkbg/50 rounded-lg p-3 space-y-2">
+    <div className="flex items-center text-xs text-gray-400">
+      <Truck className="h-3 w-3 mr-2 text-cyan" />
+      <span>Envío Estándar (3-7 días hábiles)</span>
+    </div>    
+  </div>
+  
+  {shippingCost > 0 && remainingForFreeShipping > 0 && (
+    <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-2 text-xs text-blue-400">
+      💡 Solo {formatPrice(remainingForFreeShipping)} más para envío gratis
+    </div>
+  )}
+</div>
 
                   {/* Impuestos */}
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Impuestos</span>
-                    <span className="text-white">{formatPrice(tax)}</span>
+                  <div className="flex justify-between">
+                     <span className="text-gray-400">IVA</span>
+                     <span className="text-green-400 text-sm">Incluido en precios</span>
                   </div>
 
                   <Separator className="bg-gold/20" />

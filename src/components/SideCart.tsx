@@ -74,7 +74,7 @@ export default function SideCart() {
     }, 500);
   };
 
-  const freeShippingThreshold = 100;
+  const freeShippingThreshold = 299;
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - totalPrice);
   const freeShippingProgress = Math.min(100, (totalPrice / freeShippingThreshold) * 100);
 

@@ -7,9 +7,9 @@ export function cn(...inputs: ClassValue[]) {
 
 // Función para formatear precios
 export function formatPrice(price: number): string {
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('es-MX', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'MXN',
     minimumFractionDigits: 2,
   }).format(price);
 }

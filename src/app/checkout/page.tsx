@@ -180,8 +180,7 @@ export default function CheckoutPage() {
       }));
 
       const totals = await checkoutApi.calculateOrderTotals({
-        items: cartItems,
-        shippingMethod: checkoutState.shippingMethod,
+        items: cartItems,        
         couponCode: checkoutState.appliedCoupon?.code
       });
 
@@ -314,7 +313,7 @@ export default function CheckoutPage() {
 
       setPaymentData({
         amount: orderTotals.total,
-        currency: 'USD',
+        currency: 'MXN',
         orderData
       });
 
@@ -421,8 +420,8 @@ export default function CheckoutPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             {[
-              { number: 1, title: 'Envío', icon: MapPin },
-              { number: 2, title: 'Método', icon: Truck },
+              { number: 1, title: 'Dirección', icon: MapPin },
+              { number: 2, title: 'Envío', icon: Truck },
               { number: 3, title: 'Confirmar', icon: CheckCircle },
               { number: 4, title: 'Pago', icon: CreditCard }
             ].map((step, index) => {
@@ -625,68 +624,145 @@ export default function CheckoutPage() {
               </Card>
             )}
 
-            {/* Paso 2: Método de Envío */}
-            {checkoutState.currentStep === 2 && (
-              <Card className="bg-darkbg-light border-gold/20">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-white">
-                    <Truck className="h-5 w-5 mr-2 text-gold" />
-                    Método de Envío
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <RadioGroup
-                    value={checkoutState.shippingMethod}
-                    onValueChange={(value) => 
-                      setCheckoutState(prev => ({ ...prev, shippingMethod: value }))
-                    }
-                  >
-                    {checkoutSession?.shippingMethods.map((method) => (
-                      <div key={method.id} className="flex items-center space-x-3 p-4 border border-gold/20 rounded-lg bg-darkbg hover:border-gold/40 transition-colors">
-                        <RadioGroupItem value={method.id} />
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <div className="font-medium text-white">{method.name}</div>
-                              <div className="text-sm text-gray-400">{method.description}</div>
-                              <div className="text-sm text-gray-500 mt-1">
-                                Entrega estimada: {checkoutApi.getEstimatedDelivery(method.id)}
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              {method.isFree ? (
-                                <span className="font-bold text-green-400">GRATIS</span>
-                              ) : (
-                                <span className="font-medium text-white">{formatPrice(method.price)}</span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </RadioGroup>
-
-                  <div className="flex justify-between">
-                    <Button
-                      variant="outline"
-                      onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 1 }))}
-                      className="border-gold/30 text-white hover:bg-gold/10 hover:border-gold"
-                    >
-                      <ArrowLeft className="h-4 w-4 mr-2" />
-                      Atrás
-                    </Button>
-                    <Button
-                      onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 3 }))}
-                      disabled={!canProceedToNextStep()}
-                      className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-bold shadow-glow-gold"
-                    >
-                      Revisar Pedido
-                      <ArrowRight className="h-4 w-4 ml-2" />
-                    </Button>
+            {/* Paso 2: Información de Envío */}
+{checkoutState.currentStep === 2 && (
+  <Card className="bg-darkbg-light border-gold/20">
+    <CardHeader>
+      <CardTitle className="flex items-center text-white">
+        <Truck className="h-5 w-5 mr-2 text-gold" />
+        Información de Envío
+      </CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-6">
+      {orderTotals ? (
+        <div className="space-y-4">
+          {/* Método de envío automático */}
+          <div className="border-2 border-gold/40 rounded-lg bg-darkbg p-5">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <div className="flex items-center mb-2">
+                  <div className="w-5 h-5 rounded-full border-2 border-gold bg-gold flex items-center justify-center mr-3">
+                    <div className="w-2.5 h-2.5 rounded-full bg-darkbg"></div>
                   </div>
-                </CardContent>
-              </Card>
-            )}           
+                  <div className="font-bold text-lg text-white">
+                    Envío Estándar
+                  </div>
+                </div>
+                
+                <div className="ml-8 space-y-2">
+                  <p className="text-gray-400 text-sm">
+                    {orderTotals.shippingCost === 0 
+                      ? '¡Felicidades! Tu envío es gratis'
+                      : ''
+                    }
+                  </p>
+                  
+                  {/* Tiempo estimado */}
+                  <div className="flex items-center text-sm text-gray-300">
+                    <Package className="h-4 w-4 mr-2 text-cyan" />
+                    <span>Entrega estimada: {
+                      (() => {
+                        const now = new Date();
+                        const deliveryDate = new Date(now.getTime() + (5 * 24 * 60 * 60 * 1000));
+                        return deliveryDate.toLocaleDateString('es-MX', {
+                          weekday: 'long',
+                          day: 'numeric',
+                          month: 'long'
+                        });
+                      })()
+                    }</span>
+                  </div>
+                  
+                  {/* Detalles del envío */}
+                  <div className="flex items-center text-sm text-gray-400">
+                    <CheckCircle className="h-4 w-4 mr-2 text-green-400" />
+                    <span>Envío con seguimiento incluido</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Precio */}
+              <div className="text-right ml-4">
+                {orderTotals.shippingCost === 0 ? (
+                  <div>
+                    <span className="text-2xl font-bold text-green-400">GRATIS</span>
+                    <p className="text-xs text-gray-400 mt-1">Ahorras hasta $150</p>
+                  </div>
+                ) : (
+                  <div>
+                    <span className="text-2xl font-bold text-white">
+                      {formatPrice(orderTotals.shippingCost)}
+                    </span>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Tarifa estándar
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Mensaje de envío gratis */}
+            {orderTotals.shippingCost > 0 && orderTotals.subtotal < 299 && (
+              <div className="mt-4 ml-8 bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+                <div className="flex items-start">
+                  <div className="text-blue-400 text-xs">
+                    💡 <strong>¡Estás cerca del envío gratis!</strong> Agrega {formatPrice(299 - orderTotals.subtotal)} más para obtener envío sin costo
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Información adicional */}
+          <div className="bg-darkbg rounded-lg p-4 space-y-3">
+            <h3 className="font-medium text-white text-sm flex items-center">
+              <Shield className="h-4 w-4 mr-2 text-gold" />
+              Protección de envío incluida
+            </h3>
+            <div className="space-y-2 text-xs text-gray-400 ml-6">
+              <div className="flex items-center">
+                <CheckCircle className="h-3 w-3 mr-2 text-green-400" />
+                <span>Tu paquete está asegurado contra pérdida o daño</span>
+              </div>
+              <div className="flex items-center">
+                <CheckCircle className="h-3 w-3 mr-2 text-green-400" />
+                <span>Rastreo en tiempo real disponible</span>
+              </div>
+              <div className="flex items-center">
+                <CheckCircle className="h-3 w-3 mr-2 text-green-400" />
+                <span>Soporte 24/7 para seguimiento de tu pedido</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="text-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-gold" />
+          <p className="text-gray-400">Calculando información de envío...</p>
+        </div>
+      )}
+
+      <div className="flex justify-between pt-4">
+        <Button
+          variant="outline"
+          onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 1 }))}
+          className="border-gold/30 text-white hover:bg-gold/10 hover:border-gold"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Atrás
+        </Button>
+        <Button
+          onClick={() => setCheckoutState(prev => ({ ...prev, currentStep: 3 }))}
+          disabled={!orderTotals}
+          className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-bold shadow-glow-gold"
+        >
+          Revisar Pedido
+          <ArrowRight className="h-4 w-4 ml-2" />
+        </Button>
+      </div>
+    </CardContent>
+  </Card>
+)}  
 
             {/* Paso 3: Revisar y Confirmar */}
             {checkoutState.currentStep === 3 && (
@@ -889,6 +965,11 @@ export default function CheckoutPage() {
                       <span className="text-white">{formatPrice(orderTotals.subtotal)}</span>
                     </div>
 
+                    {/* ← AGREGAR ESTO: */}
+                    <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-2 text-xs text-blue-400">
+                    * Todos los precios incluyen IVA (16%)
+                    </div>
+
                     {orderTotals.appliedCoupon && (
                       <div className="flex justify-between text-green-400">
                         <span>Descuento ({orderTotals.appliedCoupon.code})</span>
@@ -906,8 +987,8 @@ export default function CheckoutPage() {
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Impuestos</span>
-                      <span className="text-white">{formatPrice(orderTotals.tax)}</span>
+                     <span className="text-gray-400">IVA</span>
+                     <span className="text-green-400 text-sm">Incluido en precios</span>
                     </div>
 
                     <Separator className="bg-gold/20" />
