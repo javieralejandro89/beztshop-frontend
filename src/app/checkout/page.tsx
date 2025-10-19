@@ -538,7 +538,7 @@ export default function CheckoutPage() {
                               ...prev,
                               newAddress: { ...prev.newAddress, phone: e.target.value }
                             }))}
-                            placeholder="+1 555 234 5678"
+                            placeholder="+52 55 5234 5678"
                             className="bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold"
                           />
                         </div>
@@ -553,20 +553,21 @@ export default function CheckoutPage() {
                             ...prev,
                             newAddress: { ...prev.newAddress, street: e.target.value }
                           }))}
+                          placeholder="Calle, número, colonia"
                           className="bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold"
                         />
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
-                          <Label htmlFor="city" className="text-gray-300">Ciudad</Label>
+                          <Label htmlFor="city" className="text-gray-300">Alcaldía</Label>
                           <Input
                             id="city"
                             value={checkoutState.newAddress.city}
                             onChange={(e) => setCheckoutState(prev => ({
                               ...prev,
                               newAddress: { ...prev.newAddress, city: e.target.value }
-                            }))}
+                            }))}                            
                             className="bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold"
                           />
                         </div>

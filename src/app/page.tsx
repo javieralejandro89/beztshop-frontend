@@ -300,7 +300,7 @@ export default function HomePage() {
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
               {[
-                { icon: Truck, text: 'Envío Gratis +$200', color: 'text-gold' },
+                { icon: Truck, text: 'Envío Gratis +$299', color: 'text-gold' },
                 { icon: Shield, text: 'Compra Segura', color: 'text-cyan' },
                 { icon: RefreshCw, text: 'Devoluciones 30 días', color: 'text-gold' },
                 { icon: Headphones, text: 'Soporte 24/7', color: 'text-cyan' }

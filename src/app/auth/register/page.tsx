@@ -221,7 +221,7 @@ export default function RegisterPage() {
               </div>
               <div className="flex items-center text-cyan">
                 <Shield className="h-4 w-4 mr-2" />
-                <span className="text-sm">Envío gratuito en pedidos +$100</span>
+                <span className="text-sm">Envío gratuito en pedidos +$299</span>
               </div>
               <div className="flex items-center text-cyan">
                 <Star className="h-4 w-4 mr-2" />
@@ -306,7 +306,7 @@ export default function RegisterPage() {
                 </div>
                 <div className="flex items-center">
                   <Check className="h-4 w-4 mr-2 text-cyan" />
-                  <span>Envío gratis en compras +$100</span>
+                  <span>Envío gratis en compras +$299</span>
                 </div>
                 <div className="flex items-center">
                   <Check className="h-4 w-4 mr-2 text-cyan" />

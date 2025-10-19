@@ -207,10 +207,10 @@ export default function AddressModal({
           {/* Ciudad y Estado */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="city">Ciudad *</Label>
+              <Label htmlFor="city">Alcaldía *</Label>
               <Input
                 id="city"
-                placeholder="Ciudad"
+                placeholder="Alcaldía"
                 value={formData.city}
                 onChange={(e) => handleInputChange('city', e.target.value)}
                 className={errors.city ? 'border-red-500' : ''}

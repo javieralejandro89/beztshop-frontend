@@ -525,7 +525,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="flex items-center text-gray-300">
                   <Truck className="h-5 w-5 mr-3 text-cyan" />
-                  <span>Envío gratuito +$200</span>
+                  <span>Envío gratuito +$299</span>
                 </div>
                 <div className="flex items-center text-gray-300">
                   <RotateCcw className="h-5 w-5 mr-3 text-gold" />

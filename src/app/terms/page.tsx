@@ -262,7 +262,7 @@ export default function TermsOfServicePage() {
               <div className="mb-4">
                 <h3 className="text-lg font-medium text-white mb-2">7.3 Costos de Envío</h3>
                 <ul className="list-disc pl-6 mb-4 text-gray-300">
-                  <li><strong className="text-[#FFD700]">Envío Gratis:</strong> Pedidos mayores a $1,500 MXN (México) o $100 USD (EE.UU.)</li>
+                  <li><strong className="text-[#FFD700]">Envío Gratis:</strong> Pedidos mayores a $299 MXN (México) o $100 USD (EE.UU.)</li>
                   <li><strong className="text-[#FFD700]">Envío Estándar:</strong> Calculado según peso, dimensiones y destino</li>
                   <li><strong className="text-[#FFD700]">Envío Express:</strong> Disponible con costo adicional</li>
                 </ul>

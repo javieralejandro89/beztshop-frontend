@@ -74,7 +74,7 @@ export default function Header() {
         </div>
         <div className="flex items-center text-xs md:text-sm">
           <span className="bg-gradient-to-r from-gold to-cyan text-darkbg px-2 py-1 md:px-3 md:py-1 rounded-full font-bold animate-pulse">
-            Envío gratis $200+
+            Envío gratis $299+
           </span>
         </div>
       </div>
