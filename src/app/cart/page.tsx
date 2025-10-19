@@ -597,7 +597,7 @@ const freeShippingProgress = Math.min(100, (subtotal / freeShippingThreshold) * 
                 <CardContent className="p-4">
                   <div className="flex items-center justify-center space-x-4">
                     {/* Visa */}
-                    <div className="w-14 h-9 bg-darkbg border border-gold/20 rounded flex items-center justify-center shadow-sm">
+                    <div className="w-14 h-10 bg-darkbg border border-gold/20 rounded flex items-center justify-center shadow-sm">
                       <span className="text-blue-400 font-bold text-sm tracking-wider">VISA</span>
                     </div>
                     
@@ -610,13 +610,17 @@ const freeShippingProgress = Math.min(100, (subtotal / freeShippingThreshold) * 
                       </svg>
                     </div>
                     
-                    {/* Zelle */}
-                    <div className="w-14 h-9 bg-darkbg border border-gold/20 rounded flex items-center justify-center shadow-sm">
-                      <span className="text-cyan font-bold text-xs tracking-wider">ZELLE</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                    {/* Mercado Pago */}
+<div className="bg-darkbg border border-gold/20 rounded-lg overflow-hidden shadow-sm p-1.5 flex items-center justify-center w-14 h-10">
+  <img 
+    src="/mercadopago-logo.png"
+    alt="Mercado Pago"
+    className="h-10 w-auto object-contain"
+  />
+</div>
+    </div>
+  </CardContent>
+</Card>
             </div>
           </div>
         )}
