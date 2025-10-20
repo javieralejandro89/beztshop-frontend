@@ -24,6 +24,11 @@ export interface CheckoutCoupon {
   value: number;
   discount: number;
   freeShipping?: boolean;
+  description?: string; // 🆕
+  applicationType?: string; // 🆕
+  applicableProducts?: string[]; // 🆕
+  usageLimitPerUser?: number; // 🆕
+  remainingUses?: number | null; // 🆕
 }
 
 export interface OrderTotals {

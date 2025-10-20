@@ -1006,53 +1006,68 @@ export default function CheckoutPage() {
                   </div>
                 )}
 
-                {/* Cupón de descuento */}
-                <Separator className="bg-gold/20" />
-                <div className="space-y-3">
-                  <h3 className="font-medium flex items-center text-white">
-                    <Tag className="h-4 w-4 mr-2 text-gold" />
-                    Cupón de Descuento
-                  </h3>
-                  
-                  {!checkoutState.appliedCoupon ? (
-                    <div className="flex space-x-2">
-                      <Input
-                        placeholder="Código de cupón"
-                        value={checkoutState.couponCode}
-                        onChange={(e) => setCheckoutState(prev => ({ 
-                          ...prev, 
-                          couponCode: e.target.value.toUpperCase() 
-                        }))}
-                        className="flex-1 text-sm bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold"
-                      />
-                      <Button 
-                        size="sm"
-                        onClick={handleApplyCoupon}
-                        disabled={!checkoutState.couponCode.trim()}
-                        className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-bold"
-                      >
-                        Aplicar
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="bg-green-400/20 border border-green-400/30 rounded-lg p-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center text-green-400">
-                          <CheckCircle className="h-4 w-4 mr-2" />
-                          <span className="text-sm font-medium">
-                            {checkoutState.appliedCoupon.code}
-                          </span>
-                        </div>
-                        <button
-                          onClick={handleRemoveCoupon}
-                          className="text-red-400 hover:text-red-300 transition-colors"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                {/* Cupón de descuento - MEJORADO */}
+<Separator className="bg-gold/20" />
+<div className="space-y-3">
+  <h3 className="font-medium flex items-center text-white">
+    <Tag className="h-4 w-4 mr-2 text-gold" />
+    Cupón de Descuento
+  </h3>
+  
+  {!checkoutState.appliedCoupon ? (
+    <div className="flex space-x-2">
+      <Input
+        placeholder="Código de cupón"
+        value={checkoutState.couponCode}
+        onChange={(e) => setCheckoutState(prev => ({ 
+          ...prev, 
+          couponCode: e.target.value.toUpperCase() 
+        }))}
+        className="flex-1 text-sm bg-darkbg border-gold/30 text-white placeholder-gray-500 focus:border-gold"
+      />
+      <Button 
+        size="sm"
+        onClick={handleApplyCoupon}
+        disabled={!checkoutState.couponCode.trim()}
+        className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-bold"
+      >
+        Aplicar
+      </Button>
+    </div>
+  ) : (
+    <div className="bg-green-400/20 border border-green-400/30 rounded-lg p-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center text-green-400">
+          <CheckCircle className="h-4 w-4 mr-2" />
+          <div>
+            <span className="text-sm font-medium">
+              {checkoutState.appliedCoupon.code}
+            </span>
+            {/* 🆕 Mostrar descripción del cupón */}
+            {checkoutState.appliedCoupon.description && (
+              <p className="text-xs text-gray-400 mt-1">
+                {checkoutState.appliedCoupon.description}
+              </p>
+            )}
+            {/* 🆕 Mostrar usos restantes */}
+            {checkoutState.appliedCoupon.remainingUses !== null && 
+             checkoutState.appliedCoupon.remainingUses !== undefined && (
+              <p className="text-xs text-gray-400 mt-1">
+                Te quedan {checkoutState.appliedCoupon.remainingUses} uso(s)
+              </p>
+            )}
+          </div>
+        </div>
+        <button
+          onClick={handleRemoveCoupon}
+          className="text-red-400 hover:text-red-300 transition-colors"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  )}
+</div>
 
                 {/* Garantías */}
                 <Separator className="bg-gold/20" />

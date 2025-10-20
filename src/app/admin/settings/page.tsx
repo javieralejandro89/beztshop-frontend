@@ -58,7 +58,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { formatPrice, formatDate } from '@/lib/utils';
 import { useToast } from '@/hooks/useToast';
-import { adminApi, reviewsApi } from '@/lib/api';
+import { adminApi, reviewsApi, productsApi } from '@/lib/api';
 
 interface Coupon {
   id: string;
@@ -68,8 +68,14 @@ interface Coupon {
   minAmount?: number;
   maxDiscount?: number;
   usageLimit?: number;
+  usageLimitPerUser?: number;
   usageCount: number;
   isActive: boolean;
+  description?: string;
+  applicationType?: string; // 🆕
+  applicableProductIds?: string; // 🆕 (viene como string del backend)
+  applicableCategoryIds?: string; // 🆕
+  excludedProductIds?: string; // 🆕
   startsAt?: Date;
   expiresAt?: Date;
   createdAt: Date;
@@ -89,16 +95,22 @@ export default function AdminSettingsPage() {
   const [isCreatingCoupon, setIsCreatingCoupon] = useState(false);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [couponForm, setCouponForm] = useState({
-    code: '',
-    type: 'PERCENTAGE' as 'PERCENTAGE' | 'FIXED_AMOUNT' | 'FREE_SHIPPING',
-    value: 0,
-    minAmount: '',
-    maxDiscount: '',
-    usageLimit: '',
-    isActive: true,
-    startsAt: '',
-    expiresAt: ''
-  });
+  code: '',
+  type: 'PERCENTAGE' as 'PERCENTAGE' | 'FIXED_AMOUNT' | 'FREE_SHIPPING',
+  value: 0,
+  minAmount: '',
+  maxDiscount: '',
+  usageLimit: '',
+  usageLimitPerUser: 1,
+  description: '',
+  applicationType: 'ALL_PRODUCTS' as 'ALL_PRODUCTS' | 'SPECIFIC_PRODUCTS' | 'SPECIFIC_CATEGORIES' | 'EXCLUDE_PRODUCTS', // 🆕
+  applicableProductIds: [] as string[], // 🆕
+  applicableCategoryIds: [] as string[], // 🆕
+  excludedProductIds: [] as string[], // 🆕
+  isActive: true,
+  startsAt: '',
+  expiresAt: ''
+});
 
   // Estados para Reseñas
 const [reviews, setReviews] = useState<any[]>([]);
@@ -151,6 +163,40 @@ const [reviewToDelete, setReviewToDelete] = useState<any>(null);
     }
   };
 
+  // 🆕 Estados para productos y categorías
+const [products, setProducts] = useState<any[]>([]);
+const [categories, setCategories] = useState<any[]>([]);
+const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+
+// 🆕 Cargar productos
+const loadProducts = async () => {
+  try {
+    setIsLoadingProducts(true);
+    const response = await productsApi.getProductsAdmin({ limit: 1000 });
+    setProducts(response.products || []);
+  } catch (err) {
+    console.error('Error loading products:', err);
+  } finally {
+    setIsLoadingProducts(false);
+  }
+};
+
+// 🆕 Cargar categorías
+const loadCategories = async () => {
+  try {
+    const cats = await productsApi.getCategories();
+    setCategories(cats);
+  } catch (err) {
+    console.error('Error loading categories:', err);
+  }
+};
+
+// 🆕 Cargar al montar el componente
+useEffect(() => {
+  loadProducts();
+  loadCategories();
+}, []);
+
   // ==================== FUNCIONES DE CUPONES ====================
   const loadCoupons = async () => {
     try {
@@ -163,37 +209,49 @@ const [reviewToDelete, setReviewToDelete] = useState<any>(null);
   };
 
   const openCouponModal = (coupon?: Coupon) => {
-    if (coupon) {
-      setCouponForm({
-        code: coupon.code,
-        type: coupon.type,
-        value: coupon.value,
-        minAmount: coupon.minAmount?.toString() || '',
-        maxDiscount: coupon.maxDiscount?.toString() || '',
-        usageLimit: coupon.usageLimit?.toString() || '',
-        isActive: coupon.isActive,
-        startsAt: coupon.startsAt ? new Date(coupon.startsAt).toISOString().split('T')[0] : '',
-        expiresAt: coupon.expiresAt ? new Date(coupon.expiresAt).toISOString().split('T')[0] : ''
-      });
-      setSelectedCoupon(coupon);
-      setIsCreatingCoupon(false);
-    } else {
-      setCouponForm({
-        code: '',
-        type: 'PERCENTAGE',
-        value: 0,
-        minAmount: '',
-        maxDiscount: '',
-        usageLimit: '',
-        isActive: true,
-        startsAt: '',
-        expiresAt: ''
-      });
-      setSelectedCoupon(null);
-      setIsCreatingCoupon(true);
-    }
-    setShowCouponModal(true);
-  };
+  if (coupon) {
+    setCouponForm({
+      code: coupon.code,
+      type: coupon.type,
+      value: coupon.value,
+      minAmount: coupon.minAmount?.toString() || '',
+      maxDiscount: coupon.maxDiscount?.toString() || '',
+      usageLimit: coupon.usageLimit?.toString() || '',
+      usageLimitPerUser: coupon.usageLimitPerUser || 1,
+      description: coupon.description || '',
+      applicationType: (coupon.applicationType as any) || 'ALL_PRODUCTS', // 🆕
+      applicableProductIds: coupon.applicableProductIds?.split(',').filter(Boolean) || [], // 🆕
+      applicableCategoryIds: coupon.applicableCategoryIds?.split(',').filter(Boolean) || [], // 🆕
+      excludedProductIds: coupon.excludedProductIds?.split(',').filter(Boolean) || [], // 🆕
+      isActive: coupon.isActive,
+      startsAt: coupon.startsAt ? new Date(coupon.startsAt).toISOString().split('T')[0] : '',
+      expiresAt: coupon.expiresAt ? new Date(coupon.expiresAt).toISOString().split('T')[0] : ''
+    });
+    setSelectedCoupon(coupon);
+    setIsCreatingCoupon(false);
+  } else {
+    setCouponForm({
+      code: '',
+      type: 'PERCENTAGE',
+      value: 0,
+      minAmount: '',
+      maxDiscount: '',
+      usageLimit: '',
+      usageLimitPerUser: 1,
+      description: '',
+      applicationType: 'ALL_PRODUCTS', // 🆕
+      applicableProductIds: [], // 🆕
+      applicableCategoryIds: [], // 🆕
+      excludedProductIds: [], // 🆕
+      isActive: true,
+      startsAt: '',
+      expiresAt: ''
+    });
+    setSelectedCoupon(null);
+    setIsCreatingCoupon(true);
+  }
+  setShowCouponModal(true);
+};
 
   const handleCouponSubmit = async () => {
     try {
@@ -1075,7 +1133,7 @@ const handleToggleReviewStatus = async (review: any) => {
 
         {/* Modal de Cupón */}
         <Dialog open={showCouponModal} onOpenChange={setShowCouponModal}>
-          <DialogContent className="max-w-md bg-[#1F1F1F] border-[#FFD700]/30">
+          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-[#1F1F1F] border-[#FFD700]/30">
             <DialogHeader>
               <DialogTitle className="text-white">
                 {isCreatingCoupon ? 'Crear Nuevo Cupón' : 'Editar Cupón'}
@@ -1088,9 +1146,9 @@ const handleToggleReviewStatus = async (review: any) => {
               </DialogDescription>
             </DialogHeader>
             
-            <div className="space-y-4">
+            <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
               <div>
-                <Label htmlFor="couponCode" className="text-white">Código del Cupón</Label>
+               <Label htmlFor="couponCode" className="text-white">Código del Cupón</Label>
                 <Input
                   id="couponCode"
                   value={couponForm.code}
@@ -1161,6 +1219,203 @@ const handleToggleReviewStatus = async (review: any) => {
                     className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                   />
                 </div>
+                {/* 🆕 Límite de usos por usuario */}
+<div>
+  <Label htmlFor="usageLimitPerUser" className="text-white">Usos por Usuario</Label>
+  <Input
+    id="usageLimitPerUser"
+    type="number"
+    min="1"
+    value={couponForm.usageLimitPerUser || 1}
+    onChange={(e) => setCouponForm({...couponForm, usageLimitPerUser: parseInt(e.target.value) || 1})}
+    placeholder="1"
+    className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
+  />
+  <p className="text-xs text-gray-400 mt-1">Cuántas veces puede usar cada usuario este cupón</p>
+</div>
+
+{/* 🆕 Descripción del cupón */}
+<div>
+  <Label htmlFor="couponDescription" className="text-white">Descripción (opcional)</Label>
+  <Input
+    id="couponDescription"
+    value={couponForm.description || ''}
+    onChange={(e) => setCouponForm({...couponForm, description: e.target.value})}
+    placeholder="15% de descuento en tu primera compra"
+    maxLength={500}
+    className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
+  />
+</div>
+{/* 🆕 Tipo de aplicación del cupón */}
+<div>
+  <Label className="text-white">¿A qué productos aplica?</Label>
+  <Select 
+    value={couponForm.applicationType} 
+    onValueChange={(value) => setCouponForm({
+      ...couponForm, 
+      applicationType: value as any,
+      // Limpiar arrays cuando cambia el tipo
+      applicableProductIds: [],
+      applicableCategoryIds: [],
+      excludedProductIds: []
+    })}
+  >
+    <SelectTrigger className="bg-[#0D0D0D] border-[#FFD700]/30 text-white">
+      <SelectValue />
+    </SelectTrigger>
+    <SelectContent className="bg-[#1F1F1F] border-[#FFD700]/30">
+      <SelectItem value="ALL_PRODUCTS" className="text-white hover:bg-[#FFD700]/20">
+        Todos los productos
+      </SelectItem>
+      <SelectItem value="SPECIFIC_PRODUCTS" className="text-white hover:bg-[#FFD700]/20">
+        Productos específicos
+      </SelectItem>
+      <SelectItem value="SPECIFIC_CATEGORIES" className="text-white hover:bg-[#FFD700]/20">
+        Categorías específicas
+      </SelectItem>
+      <SelectItem value="EXCLUDE_PRODUCTS" className="text-white hover:bg-[#FFD700]/20">
+        Todos excepto algunos
+      </SelectItem>
+    </SelectContent>
+  </Select>
+</div>
+
+{/* 🆕 Selector de productos específicos */}
+{couponForm.applicationType === 'SPECIFIC_PRODUCTS' && (
+  <div>
+    <Label className="text-white">Seleccionar Productos</Label>
+    <div className="border border-[#FFD700]/30 rounded-lg p-3 max-h-[200px] overflow-y-auto bg-[#0D0D0D]">
+      {isLoadingProducts ? (
+        <p className="text-gray-400 text-sm">Cargando productos...</p>
+      ) : (
+        <div className="space-y-2">
+          {products.map((product) => (
+            <div key={product.id} className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id={`product-${product.id}`}
+                checked={couponForm.applicableProductIds.includes(product.id)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setCouponForm({
+                      ...couponForm,
+                      applicableProductIds: [...couponForm.applicableProductIds, product.id]
+                    });
+                  } else {
+                    setCouponForm({
+                      ...couponForm,
+                      applicableProductIds: couponForm.applicableProductIds.filter(id => id !== product.id)
+                    });
+                  }
+                }}
+                className="rounded border-[#FFD700]/30"
+              />
+              <label 
+                htmlFor={`product-${product.id}`} 
+                className="text-sm text-white cursor-pointer flex-1"
+              >
+                {product.name}
+              </label>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+    <p className="text-xs text-gray-400 mt-1">
+      Seleccionados: {couponForm.applicableProductIds.length}
+    </p>
+  </div>
+)}
+
+{/* 🆕 Selector de categorías específicas */}
+{couponForm.applicationType === 'SPECIFIC_CATEGORIES' && (
+  <div>
+    <Label className="text-white">Seleccionar Categorías</Label>
+    <div className="border border-[#FFD700]/30 rounded-lg p-3 max-h-[200px] overflow-y-auto bg-[#0D0D0D]">
+      <div className="space-y-2">
+        {categories.map((category) => (
+          <div key={category.id} className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id={`category-${category.id}`}
+              checked={couponForm.applicableCategoryIds.includes(category.id)}
+              onChange={(e) => {
+                if (e.target.checked) {
+                  setCouponForm({
+                    ...couponForm,
+                    applicableCategoryIds: [...couponForm.applicableCategoryIds, category.id]
+                  });
+                } else {
+                  setCouponForm({
+                    ...couponForm,
+                    applicableCategoryIds: couponForm.applicableCategoryIds.filter(id => id !== category.id)
+                  });
+                }
+              }}
+              className="rounded border-[#FFD700]/30"
+            />
+            <label 
+              htmlFor={`category-${category.id}`} 
+              className="text-sm text-white cursor-pointer flex-1"
+            >
+              {category.name}
+            </label>
+          </div>
+        ))}
+      </div>
+    </div>
+    <p className="text-xs text-gray-400 mt-1">
+      Seleccionadas: {couponForm.applicableCategoryIds.length}
+    </p>
+  </div>
+)}
+
+{/* 🆕 Selector de productos a excluir */}
+{couponForm.applicationType === 'EXCLUDE_PRODUCTS' && (
+  <div>
+    <Label className="text-white">Productos a Excluir</Label>
+    <div className="border border-[#FFD700]/30 rounded-lg p-3 max-h-[200px] overflow-y-auto bg-[#0D0D0D]">
+      {isLoadingProducts ? (
+        <p className="text-gray-400 text-sm">Cargando productos...</p>
+      ) : (
+        <div className="space-y-2">
+          {products.map((product) => (
+            <div key={product.id} className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id={`exclude-${product.id}`}
+                checked={couponForm.excludedProductIds.includes(product.id)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setCouponForm({
+                      ...couponForm,
+                      excludedProductIds: [...couponForm.excludedProductIds, product.id]
+                    });
+                  } else {
+                    setCouponForm({
+                      ...couponForm,
+                      excludedProductIds: couponForm.excludedProductIds.filter(id => id !== product.id)
+                    });
+                  }
+                }}
+                className="rounded border-[#FFD700]/30"
+              />
+              <label 
+                htmlFor={`exclude-${product.id}`} 
+                className="text-sm text-white cursor-pointer flex-1"
+              >
+                {product.name}
+              </label>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+    <p className="text-xs text-gray-400 mt-1">
+      Excluidos: {couponForm.excludedProductIds.length}
+    </p>
+  </div>
+)}
               </div>
 
               {couponForm.type === 'PERCENTAGE' && (
