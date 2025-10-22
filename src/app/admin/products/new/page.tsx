@@ -52,6 +52,7 @@ const productSchema = z.object({
   isDigital: z.boolean(),
   metaTitle: z.string().optional(),
   metaDesc: z.string().optional(),
+  tags: z.array(z.string()).optional(),
 });
 
 type ProductForm = z.infer<typeof productSchema>;
@@ -80,6 +81,7 @@ export default function NewProductPage() {
       isActive: true,
       isFeatured: false,
       isDigital: false,
+      tags: [],
     },
   });
 
@@ -242,6 +244,44 @@ export default function NewProductPage() {
                       placeholder="Ej: iPhone 15 Pro"
                       className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
                     />
+                  </div>
+                </div>
+
+                {/* NUEVO: Atributos opcionales para Mercado Libre */}
+                <div className="border-t border-gold/20 pt-4 mt-4">
+                  <h3 className="text-sm font-medium text-white mb-3">
+                    Atributos para Mercado Libre (Opcional)
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="mlColor" className="text-gray-300">Color</Label>
+                      <Input
+                        id="mlColor"
+                        placeholder="Ej: Negro, Blanco, Azul"
+                        className="bg-[#0D0D0D] border-[#FFD700]/30 text-white placeholder:text-gray-500"
+                        onChange={(e) => {
+                          const currentTags = watch('tags') || [];
+                          setValue('tags', [...currentTags.filter((t: any) => !t.startsWith('ML_COLOR:')), `ML_COLOR:${e.target.value}`]);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="mlCarrier" className="text-gray-300">Compañía (para celulares)</Label>
+                      <Select onValueChange={(value) => {
+                        const currentTags = watch('tags') || [];
+                        setValue('tags', [...currentTags.filter((t: any) => !t.startsWith('ML_CARRIER:')), `ML_CARRIER:${value}`]);
+                      }}>
+                        <SelectTrigger className="bg-[#0D0D0D] border-[#FFD700]/30 text-white">
+                          <SelectValue placeholder="Seleccionar" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-[#1F1F1F] border-[#FFD700]/30">
+                          <SelectItem value="Desbloqueado" className="text-white">Desbloqueado</SelectItem>
+                          <SelectItem value="Telcel" className="text-white">Telcel</SelectItem>
+                          <SelectItem value="Movistar" className="text-white">Movistar</SelectItem>
+                          <SelectItem value="AT&T" className="text-white">AT&T</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                 </div>
               </CardContent>
