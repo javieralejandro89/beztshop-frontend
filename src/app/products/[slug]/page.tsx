@@ -492,6 +492,21 @@ export default function ProductDetailPage() {
                       </div>
                     )}
                   </Button>
+                  <Button
+  onClick={() => {
+    // Agregar al carrito y ir directo al checkout
+    addItem(product, quantity, selectedVariant);
+    // Redirigir al checkout
+    window.location.href = '/checkout';
+  }}
+  disabled={isAddingToCart}
+  className="w-full py-4 text-lg font-medium transition-all duration-300 bg-gradient-to-r from-cyan-dark to-primary-500 hover:from-primary-500 hover:to-cyan-dark text-slate-950 shadow-glow hover:shadow-glow-green transform hover:scale-105"
+>
+  <div className="flex items-center justify-center">
+    <Zap className="h-5 w-5 mr-2" />
+    Comprar Ahora
+  </div>
+</Button>
 
                   <div className="flex space-x-3">
   <WishlistButton
