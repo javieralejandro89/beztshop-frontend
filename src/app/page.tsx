@@ -212,10 +212,10 @@ export default function HomePage() {
                         <div className="inline-block px-6 py-3 rounded-full text-sm font-bold mb-6 shadow-lg bg-gradient-to-r from-gold to-cyan text-darkbg">
                           ⭐ PRODUCTO DESTACADO
                         </div>
-                        <h1 className="text-2xl sm:text-3xl md:text-6xl font-black mb-3 md:mb-4 leading-tight text-white animate-neon-glow">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 md:mb-6 leading-tight text-white animate-neon-glow">
                           {product.name}
                         </h1>
-                        <p className="text-sm sm:text-base md:text-2xl mb-4 md:mb-6 text-gray-300 leading-relaxed line-clamp-3 md:line-clamp-none">
+                        <p className="text-sm sm:text-base md:text-xl mb-4 md:mb-4 text-gray-300 leading-relaxed line-clamp-3 md:line-clamp-none">
                           {product.shortDesc && product.shortDesc.trim() 
                             ? product.shortDesc
                             : product.description && product.description.trim()

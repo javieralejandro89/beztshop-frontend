@@ -100,7 +100,7 @@ export default function Header() {
               priority
             />
           </div>
-          <div className="hidden sm:block">
+          <div className="sm:block">
             <div className="font-black text-xl md:text-2xl bg-gradient-to-r from-gold via-cyan to-gold bg-clip-text text-transparent group-hover:from-cyan group-hover:via-gold group-hover:to-cyan transition-all duration-500 animate-neon-glow">
               Tech Store
             </div>
