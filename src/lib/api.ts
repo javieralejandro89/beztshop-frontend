@@ -519,6 +519,10 @@ export const adminApi = {
     const { data } = await api.get('/admin/orders/stats');
     return data;
   },
+  deleteOrder: async (id: string) => {
+    const { data } = await api.delete(`/admin/orders/${id}`);
+    return data;
+  },
 
   // === USERS ===
   getUsers: async (params?: {

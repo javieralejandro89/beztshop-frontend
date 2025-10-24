@@ -114,6 +114,7 @@ export default function AdminOrdersPage() {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showNotifyModal, setShowNotifyModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // Estado para debounce de búsqueda
   const [searchInput, setSearchInput] = useState('');
@@ -234,6 +235,11 @@ export default function AdminOrdersPage() {
     setShowNotifyModal(true);
   };
 
+  const openDeleteModal = (order: Order) => {
+    setSelectedOrder(order);
+    setShowDeleteModal(true);
+  };
+
   const handleStatusUpdate = async () => {
     if (!selectedOrder) return;
 
@@ -277,6 +283,28 @@ export default function AdminOrdersPage() {
 
     } catch (err: any) {
       console.error('Error sending notification:', err);
+    }
+  };
+
+  const handleDeleteOrder = async () => {
+    if (!selectedOrder) return;
+
+    try {
+      await promise(
+        adminApi.deleteOrder(selectedOrder.id),
+        {
+          loading: 'Eliminando pedido...',
+          success: 'Pedido eliminado exitosamente',
+          error: 'Error al eliminar pedido'
+        }
+      );
+
+      setShowDeleteModal(false);
+      setSelectedOrder(null);
+      loadOrders();
+
+    } catch (err: any) {
+      console.error('Error deleting order:', err);
     }
   };
 
@@ -662,6 +690,16 @@ export default function AdminOrdersPage() {
                           <Send className="h-4 w-4 mr-2" />
                           Notificar
                         </Button>
+
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openDeleteModal(order)}
+                          className="bg-darkbg border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white hover:border-red-500"
+                        >
+                          <XCircle className="h-4 w-4 mr-2" />
+                          Eliminar
+                        </Button>
                         {['CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED'].includes(order.status) && (
                           <Button
                             variant="outline"
@@ -1029,6 +1067,57 @@ export default function AdminOrdersPage() {
               <Button onClick={handleSendNotification} className="bg-gradient-to-r from-gold to-cyan hover:from-cyan hover:to-gold text-darkbg font-semibold">
                 <Send className="h-4 w-4 mr-2" />
                 Enviar Notificación
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        {/* Modal de confirmación de eliminación */}
+        <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+          <DialogContent className="max-w-md bg-darkbg-light border-red-500/20">
+            <DialogHeader className="border-b border-red-500/10 pb-4">
+              <DialogTitle className="text-white flex items-center gap-2">
+                <XCircle className="h-5 w-5 text-red-500" />
+                Confirmar Eliminación
+              </DialogTitle>
+              <DialogDescription className="text-gray-400">
+                Esta acción no se puede deshacer
+              </DialogDescription>
+            </DialogHeader>
+            
+            {selectedOrder && (
+              <div className="space-y-4">
+                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+                  <p className="text-red-400 font-medium mb-2">
+                    ¿Estás seguro de eliminar este pedido?
+                  </p>
+                  <div className="text-sm text-gray-300 space-y-1">
+                    <p><strong>Pedido:</strong> #{selectedOrder.orderNumber}</p>
+                    <p><strong>Cliente:</strong> {selectedOrder.user ? `${selectedOrder.user.firstName} ${selectedOrder.user.lastName}` : selectedOrder.guestEmail}</p>
+                    <p><strong>Total:</strong> {formatPrice(selectedOrder.totalAmount)}</p>
+                    <p><strong>Estado:</strong> {getStatusText(selectedOrder.status)}</p>
+                  </div>
+                </div>
+                
+                <p className="text-sm text-gray-400">
+                  El pedido será eliminado permanentemente de la base de datos y no podrá ser recuperado.
+                </p>
+              </div>
+            )}
+
+            <DialogFooter className="border-t border-red-500/10 pt-4">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowDeleteModal(false)}
+                className="bg-darkbg border-gray-600 text-white hover:bg-darkbg-light"
+              >
+                Cancelar
+              </Button>
+              <Button 
+                onClick={handleDeleteOrder}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold"
+              >
+                <XCircle className="h-4 w-4 mr-2" />
+                Eliminar Pedido
               </Button>
             </DialogFooter>
           </DialogContent>
